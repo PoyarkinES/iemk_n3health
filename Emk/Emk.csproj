@@ -72,6 +72,7 @@
     <Compile Include="Models\InternalDocType.cs" />
     <Compile Include="Models\Patient.cs" />
     <Compile Include="Models\PatientTreat.cs" />
+    <Compile Include="Models\PayType.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\ProcedureDescriptionEmk.cs" />
     <Compile Include="Models\SendingType.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Repository\DoctorRepository.cs" />
     <Compile Include="Repository\EmkRepository.cs" />
     <Compile Include="Repository\InsuranceCompanyRepository.cs" />
+    <Compile Include="Repository\LicenseRepository.cs" />
     <Compile Include="Repository\PatientRepository.cs" />
     <Compile Include="Repository\SettingsRepository.cs" />
     <Compile Include="Repository\TreatRepository.cs" />
@@ -141,15 +143,47 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Connected Services\EmkSvc\Emk.EmkSvc.VersionInfo.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\EmkSvc\EmkService1.wsdl" />
-    <None Include="Connected Services\PixSvc\Emk.PixSvc.PatientDto.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
+    <None Include="Connected Services\EmkSvc\EmkService.wsdl" />
+    <None Include="Connected Services\EmkSvc\EMKService.xsd">
+      <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\PixSvc\Emk.PixSvc.VersionInfo.datasource">
+    <None Include="Connected Services\EmkSvc\EMKService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\EmkSvc\EMKService9.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PixSvc\Emk.PixSvc.PatientDto.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
   </ItemGroup>
@@ -164,7 +198,28 @@
     <None Include="Connected Services\PixSvc\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\PixSvc\PixService1.wsdl" />
+    <None Include="Connected Services\PixSvc\Emk.PixSvc.VersionInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PixSvc\PixService.wsdl" />
+    <None Include="Connected Services\PixSvc\PixService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PixSvc\PixService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PixSvc\PixService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PixSvc\PixService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PixSvc\PixService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PixSvc\PixService5.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Connected Services\PixSvc\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -182,6 +237,5 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

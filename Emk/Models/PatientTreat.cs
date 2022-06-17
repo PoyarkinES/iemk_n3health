@@ -11,5 +11,8 @@ namespace Emk.Models
         public int PracticeId { get; set; }
         public int PatientId { get; set; }
         public DateTime TreatDate { get; set; }
+        public int SpecialityCode { get; set; }
+        public string SpecialityName { get; set; }
+        public int TreatId { get; set; }
     }
 }

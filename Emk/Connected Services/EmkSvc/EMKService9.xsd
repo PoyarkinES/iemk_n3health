@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" />
+  <xs:complexType name="ArrayOfStepAmb">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StepAmb" nillable="true" type="tns:StepAmb" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStepAmb" nillable="true" type="tns:ArrayOfStepAmb" />
+  <xs:complexType name="StepAmb">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StepBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IdVisitPlace" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IdVisitPurpose" type="xs:unsignedByte" />
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="MedRecords" nillable="true" type="q1:ArrayOfMedRecord" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StepAmb" nillable="true" type="tns:StepAmb" />
+  <xs:complexType name="StepBase">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DateStart" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DateEnd" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdPaymentType" type="xs:unsignedByte" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Doctor" nillable="true" type="q2:MedicalStaff" />
+      <xs:element minOccurs="0" name="IdStepMis" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StepBase" nillable="true" type="tns:StepBase" />
+  <xs:complexType name="StepStat">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:StepBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="HospitalDepartmentName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IdHospitalDepartment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IdRegimen" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="WardNumber" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="BedNumber" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="BedProfile" type="xs:int" />
+          <xs:element minOccurs="0" name="DaySpend" type="xs:unsignedShort" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="MedRecords" nillable="true" type="q3:ArrayOfMedRecord" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StepStat" nillable="true" type="tns:StepStat" />
+  <xs:complexType name="ArrayOfStepStat">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="StepStat" nillable="true" type="tns:StepStat" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfStepStat" nillable="true" type="tns:ArrayOfStepStat" />
+</xs:schema>

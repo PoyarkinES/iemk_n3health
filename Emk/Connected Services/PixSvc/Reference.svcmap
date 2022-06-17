@@ -19,10 +19,16 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="c:\WorkTL\iemk-arkh-spb\PixService.xml" Protocol="file" SourceId="1" />
+    <MetadataSource Address="http://b2b-demo.n3health.ru/emk/PixService.svc?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="PixService1.wsdl" MetadataType="Wsdl" ID="38d3edf9-f848-44b9-847c-fe2f46fa86be" SourceId="1" SourceUrl="file:///c:/WorkTL/iemk-arkh-spb/PixService.xml" />
+    <MetadataFile FileName="PixService.xsd" MetadataType="Schema" ID="94a7209c-3ae6-48ff-8234-a7e880597de9" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?xsd=xsd2" />
+    <MetadataFile FileName="PixService.wsdl" MetadataType="Wsdl" ID="29629fb2-94f5-4e77-b278-b8e9ea2a667d" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?wsdl" />
+    <MetadataFile FileName="PixService1.xsd" MetadataType="Schema" ID="340c627b-fe35-46f3-9f1b-1e630f4ecf08" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?xsd=xsd1" />
+    <MetadataFile FileName="PixService2.xsd" MetadataType="Schema" ID="b577c35f-6c51-40f7-a548-5e221fb3430f" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?xsd=xsd4" />
+    <MetadataFile FileName="PixService3.xsd" MetadataType="Schema" ID="ca19c549-1c40-4101-8682-547e226818d5" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?xsd=xsd0" />
+    <MetadataFile FileName="PixService4.xsd" MetadataType="Schema" ID="0edda7c0-a6ba-4daf-9a5a-384711a46b13" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?xsd=xsd5" />
+    <MetadataFile FileName="PixService5.xsd" MetadataType="Schema" ID="e0b9f0fa-2385-46d6-bb48-2021d26fe7a7" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/PixService.svc?xsd=xsd3" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

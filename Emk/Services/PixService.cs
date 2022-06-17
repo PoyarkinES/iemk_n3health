@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 
 namespace Emk.Services
 {
@@ -38,12 +39,13 @@ namespace Emk.Services
 
 			try {
 				var binding = new BasicHttpBinding();
-				var endpointAddress = new EndpointAddress(new Uri(Url));
-				var client = new PixServiceClient(binding, endpointAddress);
+				var endpointAddress = new EndpointAddress(new Uri(Url), Array.Empty<AddressHeader>());
+                var client = new PixServiceClient(binding, endpointAddress);
                 
                 SetPatient(patientId);
 					
 				Log.Info($"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
+                
 				client.AddPatient(guid, idLPU, _patient1);
 				client.Close();
 				Log.Info($"PIX Пациент добавлен.");
@@ -72,7 +74,7 @@ namespace Emk.Services
 				PixServiceClient client = new PixServiceClient(binding, endpointAddress);
                 
 				SetPatient(patientId);
-
+                
 				client.UpdatePatient(guid, idLPU, _patient1);
 				client.Close();
 				Log.Info($"PIX Пациент обновлен.");
@@ -105,12 +107,19 @@ namespace Emk.Services
 				BirthDate = patient.DateOfBirth,
 				Sex = (byte)patient.SexInt
 			};
+            if (patient.SexInt == 0)
+            {
+                Log.Error("Для пациента не указан ПОЛ");
+                throw new ArgumentException("Для пациента не указан ПОЛ");
+            }
+
             if (string.IsNullOrWhiteSpace(patient.Snils))
             {
+                return;
                 Log.Error("Для пациента не указан СНИЛС");
                 throw new ArgumentException("Для пациента не указан снилс");
             }
-
+            
             if (_patient1.Documents == null)
             {
                 _patient1.Documents = new DocumentDto[1];
@@ -168,9 +177,10 @@ namespace Emk.Services
 				};
 
 				SourceType idSource1 = SourceType.Reg;
-                
 
+                
                 PatientDto[] patientResult = client.GetPatient(guid, idLPU, patient, idSource1);
+                 
                 
 				if (patientResult.Length == 1) {
                     Patient p = new Patient

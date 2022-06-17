@@ -17,7 +17,8 @@ namespace Emk
 		private static List<EmkSettings> _settings;
 		public static OdbcConnection GetDbConnection()
         {
-            LoadSettings();
+            if(string.IsNullOrEmpty(_conStr))
+                LoadSettings();
 			if (string.IsNullOrEmpty(_conStr))
 			{
 				MessageBox.Show("Не заданы настройки подключения к базе данных", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -57,16 +58,15 @@ namespace Emk
 			}
             return _settings;
 		}
-
-
-
 	}
 
 	public class Log
 	{
-		private Log()
-		{ }
-		static ILoggerService log => new LogToFile();
+        private Log()
+        {}
+        
+
+		static ILoggerService log = new LogToFile();
 
 		public static void Error(string msg) => log.Error(msg);
 

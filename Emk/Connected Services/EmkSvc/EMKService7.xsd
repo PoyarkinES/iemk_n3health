@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" />
+  <xs:complexType name="Diagnosis">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q1="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" base="q1:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DiagnosisInfo" nillable="true" type="tns:DiagnosisInfo" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Doctor" nillable="true" type="q2:MedicalStaff" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Diagnosis" nillable="true" type="tns:Diagnosis" />
+  <xs:complexType name="DiagnosisInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IdDiseaseType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="DiagnosedDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdDiagnosisType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DiagnosisChangeReason" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="DiagnosisStage" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="IdDispensaryState" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="IdTraumaType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="MESImplementationFeature" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="MedicalStandard" type="xs:int" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="Params" nillable="true" type="q3:ArrayOfParam" />
+      <xs:element minOccurs="0" name="MkbCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DiseaseStatus" nillable="true" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="MkbCodeChange" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DiagnosisInfo" nillable="true" type="tns:DiagnosisInfo" />
+  <xs:complexType name="ClinicMainDiagnosis">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Diagnosis">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Complications" nillable="true" type="tns:ArrayOfDiagnosis" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ClinicMainDiagnosis" nillable="true" type="tns:ClinicMainDiagnosis" />
+  <xs:complexType name="ArrayOfDiagnosis">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Diagnosis" nillable="true" type="tns:Diagnosis" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfDiagnosis" nillable="true" type="tns:ArrayOfDiagnosis" />
+  <xs:complexType name="AnatomopathologicalClinicMainDiagnosis">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ClinicMainDiagnosis">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AnatomopathologicalClinicMainDiagnosis" nillable="true" type="tns:AnatomopathologicalClinicMainDiagnosis" />
+</xs:schema>

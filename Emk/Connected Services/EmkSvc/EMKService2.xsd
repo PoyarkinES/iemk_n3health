@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="MedicalStaff">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Person" nillable="true" type="tns:PersonWithIdentity" />
+      <xs:element minOccurs="0" name="IdLpu" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdSpeciality" type="xs:unsignedShort" />
+      <xs:element minOccurs="0" name="IdPosition" type="xs:unsignedShort" />
+      <xs:element minOccurs="0" name="IdMedicalStaff" type="xs:int" />
+      <xs:element minOccurs="0" name="SpecialityName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PositionName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MedicalStaff" nillable="true" type="tns:MedicalStaff" />
+  <xs:complexType name="PersonWithIdentity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Person">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Documents" nillable="true" type="tns:ArrayOfIdentityDocument" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PersonWithIdentity" nillable="true" type="tns:PersonWithIdentity" />
+  <xs:complexType name="Person">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="HumanName" nillable="true" type="tns:HumanName" />
+      <xs:element minOccurs="0" name="Sex" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Birthdate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdPersonMis" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Person" nillable="true" type="tns:Person" />
+  <xs:complexType name="HumanName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GivenName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MiddleName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FamilyName" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="HumanName" nillable="true" type="tns:HumanName" />
+  <xs:complexType name="ArrayOfIdentityDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="IdentityDocument" nillable="true" type="tns:IdentityDocument" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfIdentityDocument" nillable="true" type="tns:ArrayOfIdentityDocument" />
+  <xs:complexType name="IdentityDocument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DocN" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocS" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DocumentName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ExpiredDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="IdDocumentType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="IdProvider" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="IssuedDate" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="ProviderName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RegionCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="IdentityDocument" nillable="true" type="tns:IdentityDocument" />
+  <xs:complexType name="Participant">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Doctor" nillable="true" type="tns:MedicalStaff" />
+      <xs:element minOccurs="0" name="IdRole" type="xs:unsignedByte" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Participant" nillable="true" type="tns:Participant" />
+  <xs:complexType name="Guardian">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Person" nillable="true" type="tns:PersonWithIdentity" />
+      <xs:element minOccurs="0" name="IdRelationType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="UnderlyingDocument" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Guardian" nillable="true" type="tns:Guardian" />
+  <xs:complexType name="Quantity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="IdUnit" type="xs:int" />
+      <xs:element minOccurs="0" name="Value" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Quantity" nillable="true" type="tns:Quantity" />
+  <xs:complexType name="Initiator">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="InitiatorType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Doctor" nillable="true" type="tns:MedicalStaff" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Initiator" nillable="true" type="tns:Initiator" />
+</xs:schema>

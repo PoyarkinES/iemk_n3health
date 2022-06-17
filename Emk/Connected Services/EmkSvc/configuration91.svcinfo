@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="JzPpXghTVEoI460v+ZmHn8W843U=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="Q8F4u0oMYbmbauLR7mOAeqDxdWw=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IEmkService">
       <properties>
@@ -263,10 +263,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="BasicHttpBinding_IEmkService" contract="EmkSvc.IEmkService" bindingType="basicHttpBinding" address="http://10.1.4.47/EMK/EMKService.svc" bindingConfiguration="BasicHttpBinding_IEmkService">
+    <endpoint name="BasicHttpBinding_IEmkService" contract="EmkSvc.IEmkService" bindingType="basicHttpBinding" address="http://b2b-demo.n3health.ru/emk/EMKService.svc" bindingConfiguration="BasicHttpBinding_IEmkService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://10.1.4.47/EMK/EMKService.svc</serializedValue>
+          <serializedValue>http://b2b-demo.n3health.ru/emk/EMKService.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -348,10 +348,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="Soap12_EmkService" contract="EmkSvc.IEmkService" bindingType="customBinding" address="http://10.1.4.47/EMK/EMKService.svc/soap12" bindingConfiguration="Soap12_EmkService">
+    <endpoint name="Soap12_EmkService" contract="EmkSvc.IEmkService" bindingType="customBinding" address="http://b2b-demo.n3health.ru/emk/EMKService.svc/soap12" bindingConfiguration="Soap12_EmkService">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://10.1.4.47/EMK/EMKService.svc/soap12</serializedValue>
+          <serializedValue>http://b2b-demo.n3health.ru/emk/EMKService.svc/soap12</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

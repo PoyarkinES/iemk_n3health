@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/N3.Shared.Core" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" />
+  <xs:element name="GetVersion">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetVersionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/N3.Shared.Core" minOccurs="0" name="GetVersionResult" nillable="true" type="q1:VersionInfo" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" minOccurs="0" name="caseDto" nillable="true" type="q2:CaseBase" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddCaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" minOccurs="0" name="createCaseDto" nillable="true" type="q3:CaseBase" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CreateCaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CloseCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" minOccurs="0" name="caseDto" nillable="true" type="q4:CaseBase" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CloseCaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" minOccurs="0" name="caseDto" nillable="true" type="q5:CaseBase" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateCaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddMedRecord">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idLpu" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idPatientMis" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idCaseMis" nillable="true" type="xs:string" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="medRecord" nillable="true" type="q6:MedRecord" />
+        <xs:element minOccurs="0" name="confidentiality" nillable="true" type="xs:unsignedByte" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddMedRecordResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddStepToCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idLpu" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idPatientMis" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idCaseMis" nillable="true" type="xs:string" />
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" minOccurs="0" name="step" nillable="true" type="q7:StepBase" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AddStepToCaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CancelCase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="guid" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idLpu" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idPatientMis" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="idCaseMis" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CancelCaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

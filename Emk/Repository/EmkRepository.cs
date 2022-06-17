@@ -13,13 +13,21 @@ namespace Emk.Repository
    //                "' and treat.provider_id = staff.member_id ";
 			//sql += "order by treat_id";
 
-            string sql = "select top 1 surname, firstname, middlename, birthdate, account_id, dict_value_11, member_id, f.spec_fed_code , p.pos_fed_code, dict_value_1 " +
-                " from treat t " +
-                " join staff s on  t.provider_id = s.member_id " +
-                " left join aoms_dicts_provs adp on adp.dict_key = s.pers_code " +
-                " left join nsr_fedspecs f on adp.dict_value_3 = f.spec_oms_code " +
-                " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code " +
-                $" where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}' order by t.treat_id ";
+            //string sql = "select top 1 surname, firstname, middlename, birthdate, account_id, dict_value_11, member_id, f.spec_fed_code , p.pos_fed_code, dict_value_1 " +
+            //    " from treat t " +
+            //    " join staff s on  t.provider_id = s.member_id " +
+            //    " left join aoms_dicts_provs adp on adp.dict_key = s.pers_code " +
+            //    " left join nsr_fedspecs f on adp.dict_value_3 = f.spec_oms_code " +
+            //    " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code " +
+            //    $" where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}' order by t.treat_id ";
+
+            string sql =
+                "select top 1 surname, firstname, middlename, birthdate, account_id, provider_id, n.Code, s.snils " +
+                "                from treat t  " +
+                "               join staff s on  t.provider_id = s.member_id  " +
+                "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
+                "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
+                $"           where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}'  and t.ref_status is null order by t.treat_id ";
 
 
             DoctorEmk doc = new DoctorEmk();
@@ -36,11 +44,11 @@ namespace Emk.Repository
                             doc.MiddleName = reader[2].ToString();
                             doc.BirthDay = (DateTime)reader[3];
                             doc.AccountId = reader.IsDBNull(4) ? 0 : (int)reader[4];
-                            doc.IdLpu = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
-                            doc.MemberId = (short)reader[6];
-                            doc.Speciality = reader.IsDBNull(7) ? 0 : int.Parse(reader[7].ToString());
-                            doc.Position = reader.IsDBNull(8) ? 0 : int.Parse(reader[8].ToString());
-                            doc.Snils = reader.IsDBNull(9) ? string.Empty : reader[9].ToString();
+                            //doc.IdLpu = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
+                            doc.MemberId = (short)reader[5];
+                           // doc.Speciality = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
+                            doc.Position = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
+                            doc.Snils = reader.IsDBNull(7) ? string.Empty : reader[7].ToString();
                         }
                     }
                 }
@@ -82,14 +90,19 @@ namespace Emk.Repository
 
         private DoctorEmk GetDepartmentHead(int memberId, string idLpu)
         {
-            string cmd =
-                "SELECT member_id, surname, firstname, middlename, birthdate, dict_value_11, f.spec_fed_code , p.pos_fed_code, dict_value_1 from staff s " +
-                " left join aoms_dicts_provs adp on adp.dict_key = s.pers_code" +
-                " left join nsr_fedspecs f on adp.dict_value_3 = f.spec_oms_code" +
-                " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code" +
+            //string cmd =
+            //    "SELECT member_id, surname, firstname, middlename, birthdate, dict_value_11, f.spec_fed_code , p.pos_fed_code, dict_value_1 from staff s " +
+            //    " left join aoms_dicts_provs adp on adp.dict_key = s.pers_code" +
+            //    " left join nsr_fedspecs f on adp.dict_value_3 = f.spec_oms_code" +
+            //    " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code" +
             
-                $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
+            //    $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
 
+            string cmd = "select member_id, surname, firstname, middlename, birthdate, n.Code, s.snils " +
+                         "               from staff s  " +
+                         "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
+                         "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
+                         $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
             try
             {
                 using (var r =
@@ -99,14 +112,14 @@ namespace Emk.Repository
                     DoctorEmk doc = new DoctorEmk();
                     while (r.Read()) {
                         doc.MemberId = (short)r[0];
-                        doc.Surname = r[3].ToString();
-                        doc.Name = r[1].ToString();
-                        doc.MiddleName = r[2].ToString();
+                        doc.Surname = r[1].ToString();
+                        doc.Name = r[2].ToString();
+                        doc.MiddleName = r[3].ToString();
                         doc.BirthDay = (DateTime)r[4];
                         doc.IdLpu = idLpu;
-                        doc.Speciality = r.IsDBNull(6) ? 0 : int.Parse(r[6].ToString());
-                        doc.Position = r.IsDBNull(7) ? 0 : int.Parse(r[7].ToString());
-                        doc.Snils = r[8].ToString().Replace("-", "").Replace(" ", "");
+                        //doc.Speciality = r.IsDBNull(6) ? 0 : int.Parse(r[6].ToString());
+                        doc.Position = r.IsDBNull(5) ? 0 : int.Parse(r[5].ToString());
+                        doc.Snils = r[6].ToString().Replace("-", "").Replace(" ", "");
                     }
                     return doc;
                 }
@@ -123,7 +136,11 @@ namespace Emk.Repository
 		public DiagnosisEmk GetPatientDiagnosis(int patientId, DateTime treatDate)
 		{
 			DiagnosisEmk doc = new DiagnosisEmk();
-			using (var r = Connection.Query($"select top 1 diagnosis_name, diagnosis_code from treat_diagnosis, diagnoses, treat where treat.treat_id = treat_diagnosis.treat_id and diagnoses.diagnosis_id = treat_diagnosis.diagnosis_id and treat.patient_id = {patientId} and treat.treat_date = '{treatDate:yyyy-MM-dd}'")) {
+            //string sql =
+                //$"select top 1 diagnosis_name, diagnosis_code from treat_diagnosis, diagnoses, treat where treat.treat_id = treat_diagnosis.treat_id and diagnoses.diagnosis_id = treat_diagnosis.diagnosis_id and treat.patient_id = {patientId} and treat.treat_date = '{treatDate:yyyy-MM-dd}'";
+            string sql = $"select top (1) COALESCE(diagnosis_name,item,''), COALESCE(diagnosis_code,code,'') from treat left join treat_diagnosis left join diagnoses left join treat_diagnosis_mkb10 left join mkb10 where (treat_diagnosis.treat_id is not null OR treat_diagnosis_mkb10.treat_id is not null) and treat.patient_id = {patientId} and treat.treat_date = '{treatDate:yyyy-MM-dd}' order by treat.treat_id DESC";
+
+            using (var r = Connection.Query(sql)) {
 				if (r.HasRows) {
 					while (r.Read()) {
 						doc.DiagnosisName = r[0].ToString();
@@ -138,7 +155,7 @@ namespace Emk.Repository
 
 		public IEnumerable<ProcedureDescriptionEmk> GetProcedureDescriptions(int patientId, DateTime procedureDate)
 		{
-			var query = $"SELECT item, \"description\", full_description FROM procedures WHERE item_id IN (SELECT item_id FROM treat WHERE treat.patient_id = {patientId} and treat.treat_date = \'{$"{procedureDate:yyyy-MM-dd}"}\' ) AND item_id IN (	SELECT procedures.item_id FROM procedures WHERE procedures.level_2_id IN (SELECT general_procedures_lev_2.\"id\" FROM general_procedures_lev_2 WHERE general_procedures_lev_2.level_1_id = (SELECT general_procedures_lev_1.\"id\" FROM general_procedures_lev_1 WHERE general_procedures_lev_1.\"description\" = 'ОМС'))) AND item NOT LIKE 'мп%'";
+			var query = $"SELECT p.item, n.code, n.name FROM procedures p left join n3h_dict n on p.n3h_code = n.code WHERE item_id IN  (SELECT item_id FROM treat WHERE treat.patient_id = {patientId} and treat.treat_date = '{procedureDate:yyyy-MM-dd}' )";
 			List<ProcedureDescriptionEmk> list = new List<ProcedureDescriptionEmk>();
 			using (var r = Connection.Query(query)) {
 				if (r.HasRows) {
@@ -157,5 +174,50 @@ namespace Emk.Repository
 			return list;
 		}
 
+
+        public PayType GetPayType(int accountId)
+        {
+            var query = "SELECT distinct " +
+                        "send_acc_to_third_party_id " +
+                        ",IF send_acc_to_pat_id IS NOT NULL  " +
+                        "THEN  " +
+                        "'Собственные средства' " +
+                        "ELSE  " +
+                        "COALESCE((SELECT scheme_name FROM insur_schemes WHERE scheme_id =  " +
+                        "    (SELECT scheme_id FROM hf_plans WHERE hf_plan_id =  " +
+                        "          (SELECT MAX(hf_plan_id) FROM hf_plans WHERE hf_id = send_acc_to_third_party_id)   " +
+                        "            AND hf_id = send_acc_to_third_party_id)),'Бюджет') " +
+                        "END IF AS pay_metod " +
+                        $"FROM treat JOIN patients_accounts WHERE treat.ref_status IS NULL AND account_id = {accountId}";
+
+
+            using (var r = Connection.Query(query)) {
+                if (r.HasRows) {
+                    while (r.Read())
+                    {
+                        if (r[1] == DBNull.Value)
+                            return PayType.Unknown;
+
+                        switch (r[1].ToString().ToLower().Trim())
+                        {
+                            case "бюджет":
+                                return PayType.Budget;
+                            case "омс":
+                                return PayType.OMS;
+                            case "дмс":
+                                return PayType.DMS;
+                            case "собственные средства":
+                                return PayType.Own;
+                            default:
+                                return PayType.Unknown;
+
+                        }
+                    }
+                }
+
+            }
+
+            return PayType.Unknown;
+        }
 	}
 }

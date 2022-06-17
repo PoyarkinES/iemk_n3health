@@ -21,7 +21,7 @@ namespace Emk.Models
 
         public override string ToString()
 		{
-			return $"SMOPath: {SmoSettingsPath} Db: {DbConnectionString} PatDir: {PatientDirectory} Pix: {PixUrl} EMK: {EmkUrl} Interval: {DateInterval} Time: {UpdateTime}";
+			return $"PatDir: {PatientDirectory} Pix: {PixUrl} EMK: {EmkUrl} Interval: {DateInterval} Time: {UpdateTime}";
 		}
 	}
 }

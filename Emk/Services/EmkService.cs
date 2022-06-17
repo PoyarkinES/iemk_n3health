@@ -40,37 +40,47 @@ namespace Emk.Services
 			patientsBaseDir = s.PatientDirectory;
 			_smoSrv = Factory.GetSmoService;
 			_rep = Factory.GetEmkRepository;
-		}
+            _conn = Factory.GetDbConnection();
+        }
         
 
-		public int AddCase(int patient_id, DateTime ProcedureDate, ref int ErrNum, ref string ErrDescription)
+		public int AddCase(PatientTreat treat)
 		{
-			ErrNum = 0;
-			ErrDescription = "";
-			Log.Info($"EMK Добавляю случай медицинского обслуживания для пациента ИД {patient_id} от {ProcedureDate.ToString("dd.MM.yyyy")}");
+			Log.Info($"EMK Добавляю случай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy}");
 			try
 			{
+                if (!IsValid(treat))
+                {
+                    Log.Error($"ЕМК СМО для пациента ИД {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy} не прошел валидацию и будет пропущен.");
+                    return -1;
+                }
+
+
 				var binding = new BasicHttpBinding();
 				var endpointAddress = new EndpointAddress(new Uri(Url));
 				var client = new EmkServiceClient(binding, endpointAddress);
 
 				case1 = new CaseAmb();
                 
-				if (_conn == null || _conn.State != ConnectionState.Open)
-				{
-					_conn = new OdbcConnection(conString);
+				if (_conn.State != ConnectionState.Open)
 					_conn.Open();
-				}
-
 				
-                var doc = _rep.GetDoctorOfPatientTreat(patient_id, ProcedureDate);
+
+                var doc = _rep.GetDoctorOfPatientTreat(treat.PatientId, treat.TreatDate);
+                doc.Speciality = treat.SpecialityCode;
                 if (doc.AccountId == 0)
                 {
-                    Log.Warning($"Для СМО для пациента с ИД {patient_id} от {ProcedureDate.ToString("dd.MM.yyyy")} не найден счет. СМО пропущен.");
+                    Log.Warning($"Для СМО для пациента с ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} не найден счет. СМО пропущен.");
                     return -1;
                 }
-                var patient = Factory.GetPatientRepository.GetPatient(patient_id);
-                var diag = GetDiagnose(patient_id, ProcedureDate);
+                var patient = Factory.GetPatientRepository.GetPatient(treat.PatientId);
+                var diag = GetDiagnose(treat.PatientId, treat.TreatDate);
+                if (string.IsNullOrWhiteSpace(diag.DiagnosisCode) || string.IsNullOrWhiteSpace(diag.DiagnosisName))
+                {
+                    Log.Warning($"Для СМО для пациента с ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} не задан диагноз. СМО пропущен.");
+                    return -1;
+                }
+
 				Log.Info($"Доктор: {doc.Surname} {doc.Name} {doc.MiddleName} Диагноз: {diag.DiagnosisCode} {diag.DiagnosisName}");
 				
 
@@ -88,15 +98,15 @@ namespace Emk.Services
 
                 var def = _smoSrv.LoadDefaults();
 
-				case1.OpenDate = ProcedureDate.Date;
-				case1.CloseDate = ProcedureDate.Date;
+				case1.OpenDate = treat.TreatDate.Date;
+				case1.CloseDate = treat.TreatDate.Date;
 				case1.HistoryNumber = patient.CartNum;
 
 				case1.IdCaseMis = $"{patient.CartNum}-{doc.AccountId}";
 				
 				case1.IdCaseAidType = 1;
 				case1.IdCaseType = 2;
-				case1.IdPaymentType = 1;
+                case1.IdPaymentType = (byte)_rep.GetPayType(doc.AccountId);
 				case1.IdCasePurpose = Convert.ToByte(def.VisitPurpose);
 
 				case1.Confidentiality = Convert.ToByte(def.ConfidentialityLevel); 
@@ -118,9 +128,9 @@ namespace Emk.Services
 				{
 					 new StepAmb
 					{
-						DateStart = ProcedureDate.Date,
-						DateEnd = ProcedureDate.Date,
-						IdStepMis = doc.Snils,
+						DateStart = treat.TreatDate.Date,
+						DateEnd = treat.TreatDate.Date,
+						IdStepMis = $"{doc.AccountId}-{patient.CartNum}" ,
 						Doctor = doctor,
 						IdVisitPlace = Convert.ToByte(def.VisitPlace),
 						IdVisitPurpose = Convert.ToByte(def.VisitPurpose)
@@ -133,15 +143,15 @@ namespace Emk.Services
 						DiagnosisInfo = new DiagnosisInfo
 						{
 							IdDiseaseType = 1,
-							DiagnosedDate = ProcedureDate.Date,
+							DiagnosedDate = treat.TreatDate.Date,
 							IdDiagnosisType = 1,
 							Comment = diag.DiagnosisName,
-							DiagnosisChangeReason = 2,
-							DiagnosisStage = 3,
-							IdDispensaryState = 8,
-							IdTraumaType = 1,
-							MESImplementationFeature = 10,
-							MedicalStandard = 211010,
+							//DiagnosisChangeReason = 2,
+							//DiagnosisStage = 3,
+							//IdDispensaryState = 8,
+							//IdTraumaType = 1,
+							//MESImplementationFeature = 10,
+							//MedicalStandard = 211010,
 							MkbCode = diag.DiagnosisCode
 						},
 						Doctor = doctor
@@ -149,16 +159,21 @@ namespace Emk.Services
 				};
 				var medRecords = new List<MedRecord>();
 
-				foreach (var d in _rep.GetProcedureDescriptions(patient_id, ProcedureDate))
-					medRecords.Add(new Service
-					{
-						DateEnd = d.ProcedureDate.Date,
-						DateStart = d.ProcedureDate.Date,
-						IdServiceType = d.FullDescription,
-						ServiceName = d.Description,
-						Performer = new Participant { IdRole = 3, Doctor = doctor }
-					});
-				try
+                foreach (var d in _rep.GetProcedureDescriptions(treat.PatientId, treat.TreatDate))
+                {
+                    if (string.IsNullOrEmpty(d.Description))
+                        continue;
+                    medRecords.Add(new Service
+                    {
+                        DateEnd = d.ProcedureDate.Date,
+                        DateStart = d.ProcedureDate.Date,
+                        IdServiceType = d.Description,
+                        ServiceName = d.FullDescription,
+                        Performer = new Participant { IdRole = 3, Doctor = doctor }
+                    });
+                }
+
+                try
 				{
 					_conn = _conn ?? new OdbcConnection(conString);
 					if (_conn.State != ConnectionState.Open)
@@ -171,7 +186,7 @@ namespace Emk.Services
                     if (!Directory.Exists(dir))
                         dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
 
-                    var docs = new DocSelector(patient, ProcedureDate, dir).GetDocs();
+                    var docs = new DocSelector(patient, treat.TreatDate, dir).GetDocs();
 					if(docs != null)
 						medDocuments.AddRange(docs);
                     
@@ -239,55 +254,59 @@ namespace Emk.Services
                 Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено записей: {medRecords.Count}");
 				client.AddCase(guid, case1);
 				client.Close();
-				Log.Info($"EMK Cлучай мединского обслуживания для пациента ИД {patient_id} от {ProcedureDate.ToString("dd.MM.yyyy")} добавлен.");
+				Log.Info($"EMK Cлучай мединского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
 				return 0;
 			}
 			catch (FaultException<RequestFault[]> ex)
 			{
-				ErrNum = -1;
 				foreach (var err1 in ex.Detail)
 				{
 					Log.Error(err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message);
-					ErrDescription += err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message + "\r\n";
-					ErrDescription = ErrDescription.Trim();
 				}
 				return -1;
 			}
 			catch (FaultException<RequestFault> ex)
 			{
-				ErrNum = -1;
-				ErrDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
-				Log.Error(ErrDescription);
+				var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
+				Log.Error(errDescription);
 				return -1;
 			}
 			catch (FaultException<RequestWarning> ex)
 			{
-				ErrNum = -1;
-				ErrDescription = ex.Detail.WarningCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
-				Log.Warning(ErrDescription);
+				Log.Warning(ex.Detail.WarningCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n");
 				return -1;
 			}
 			catch (FaultException<RequestWarning[]> ex)
 			{
-				ErrNum = -1;
+			
 				foreach (var err1 in ex.Detail)
 				{
 					Log.Warning(err1.WarningCode + ": " + err1.PropertyName + " " + err1.Message);
 					foreach (var e in err1.Warnings)
 						Log.Warning(e.WarningCode + ": " + e.PropertyName + " " + e.Message);
-					ErrDescription += err1.WarningCode + ": " + err1.PropertyName + " " + err1.Message + "\r\n";
-					ErrDescription = ErrDescription.Trim();
 				}
 				return -1;
 			}
 			catch (Exception ex)
 			{
-				ErrNum = -1;
-				ErrDescription = $"{ex.Message}\n\n{ex.StackTrace}";
 				Log.Error(ex.ToString());
 				return -1;
 			}
 		}
+
+        private bool IsValid(object obj)
+        {
+            if (!(obj is PatientTreat treat))
+                return false;
+
+            if(treat.SpecialityCode == 0){
+                Log.Error("Не задана специализация");
+                return false;
+            }
+
+            return true;
+
+        }
 
 		private Doctor GetDoctorByName(string LastName1, string FirstName1, string MiddleName1)
 		{
@@ -317,12 +336,6 @@ namespace Emk.Services
         private DiagnosisEmk GetDiagnose(int patientId, DateTime date)
         {
             var diag = _rep.GetPatientDiagnosis(patientId, date);
-            var def = _smoSrv.LoadDefaults();
-
-            if (string.IsNullOrEmpty(diag.DiagnosisCode))
-                diag.DiagnosisCode = def.DiagnosisDiseaseCode;
-            if (string.IsNullOrEmpty(diag.DiagnosisName))
-                diag.DiagnosisName = def.Comment;
             return diag;
         }
 

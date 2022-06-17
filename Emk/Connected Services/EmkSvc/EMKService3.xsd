@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Case" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd9" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="CaseBase">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="OpenDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="CloseDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="HistoryNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdCaseMis" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdCaseAidType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="IdPaymentType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Confidentiality" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="DoctorConfidentiality" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="CuratorConfidentiality" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="IdLpu" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IdCaseResult" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="DoctorInCharge" nillable="true" type="q1:MedicalStaff" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Authenticator" nillable="true" type="q2:Participant" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Author" nillable="true" type="q3:Participant" />
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="LegalAuthenticator" nillable="true" type="q4:Participant" />
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Guardian" nillable="true" type="q5:Guardian" />
+      <xs:element minOccurs="0" name="IdPatientMis" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="AdmissionCondition" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="CaseVisitType" type="xs:unsignedByte" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CaseBase" nillable="true" type="tns:CaseBase" />
+  <xs:complexType name="CaseAmb">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:CaseBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IdCasePurpose" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IdCaseType" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IdAmbResult" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IsActive" type="xs:boolean" />
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" minOccurs="0" name="Steps" nillable="true" type="q6:ArrayOfStepAmb" />
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="MedRecords" nillable="true" type="q7:ArrayOfMedRecord" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CaseAmb" nillable="true" type="tns:CaseAmb" />
+  <xs:complexType name="CaseStat">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:CaseBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DeliveryCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IdIntoxicationType" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IdTypeFromDiseaseStart" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IdRepetition" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="HospitalizationOrder" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="IdTransportIntern" type="xs:unsignedByte" />
+          <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Step" minOccurs="0" name="Steps" nillable="true" type="q8:ArrayOfStepStat" />
+          <xs:element minOccurs="0" name="HospResult" type="xs:unsignedByte" />
+          <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="MedRecords" nillable="true" type="q9:ArrayOfMedRecord" />
+          <xs:element minOccurs="0" name="IdHospChannel" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="RW1Mark" type="xs:boolean" />
+          <xs:element minOccurs="0" name="AIDSMark" type="xs:boolean" />
+          <xs:element xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="PrehospitalDefects" nillable="true" type="q10:ArrayOfunsignedByte" />
+          <xs:element minOccurs="0" name="AdmissionComment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DischargeCondition" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="DischargeComment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DietComment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TreatComment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="WorkComment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="OtherComment" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CaseStat" nillable="true" type="tns:CaseStat" />
+  <xs:complexType name="CaseAcps">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:CaseBase">
+        <xs:sequence>
+          <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="MedRecords" nillable="true" type="q11:ArrayOfMedRecord" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CaseAcps" nillable="true" type="tns:CaseAcps" />
+  <xs:complexType name="CaseTmc">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:CaseBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="TmcID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TmcForm" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="TmcGoal" type="xs:unsignedByte" />
+          <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Initiator" nillable="true" type="q12:Initiator" />
+          <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" minOccurs="0" name="MedRecords" nillable="true" type="q13:ArrayOfMedRecord" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CaseTmc" nillable="true" type="tns:CaseTmc" />
+</xs:schema>

@@ -1706,9 +1706,6 @@ namespace Emk.EmkSvc {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AllergyDrug))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AllergyNonDrug))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.SocialAnamnesis))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.Diagnosis))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ClinicMainDiagnosis))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AnatomopathologicalClinicMainDiagnosis))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.MedDocument))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ConsultNote))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.DischargeSummary))]
@@ -1729,6 +1726,10 @@ namespace Emk.EmkSvc {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ReferralMSE))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.BirthCertificate))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.DriveCertificate))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.PrenatalDeathCertificate))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.Diagnosis))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ClinicMainDiagnosis))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AnatomopathologicalClinicMainDiagnosis))]
     public partial class MedRecord : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
@@ -1903,7 +1904,7 @@ namespace Emk.EmkSvc {
         private string BedNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte BedProfileField;
+        private int BedProfileField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private ushort DaySpendField;
@@ -1977,7 +1978,7 @@ namespace Emk.EmkSvc {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
-        public byte BedProfile {
+        public int BedProfile {
             get {
                 return this.BedProfileField;
             }
@@ -2193,6 +2194,24 @@ namespace Emk.EmkSvc {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Nullable<bool> StatusField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> CourseStartDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> CourseEndDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string FrequencyAdmissionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> TradeNameField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> CancellationReasonField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> CancellationDateField;
+        
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string AnatomicTherapeuticChemicalClassification {
             get {
@@ -2384,6 +2403,84 @@ namespace Emk.EmkSvc {
                 if ((this.StatusField.Equals(value) != true)) {
                     this.StatusField = value;
                     this.RaisePropertyChanged("Status");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=15)]
+        public System.Nullable<System.DateTime> CourseStartDate {
+            get {
+                return this.CourseStartDateField;
+            }
+            set {
+                if ((this.CourseStartDateField.Equals(value) != true)) {
+                    this.CourseStartDateField = value;
+                    this.RaisePropertyChanged("CourseStartDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=16)]
+        public System.Nullable<System.DateTime> CourseEndDate {
+            get {
+                return this.CourseEndDateField;
+            }
+            set {
+                if ((this.CourseEndDateField.Equals(value) != true)) {
+                    this.CourseEndDateField = value;
+                    this.RaisePropertyChanged("CourseEndDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=17)]
+        public string FrequencyAdmission {
+            get {
+                return this.FrequencyAdmissionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.FrequencyAdmissionField, value) != true)) {
+                    this.FrequencyAdmissionField = value;
+                    this.RaisePropertyChanged("FrequencyAdmission");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=18)]
+        public System.Nullable<int> TradeName {
+            get {
+                return this.TradeNameField;
+            }
+            set {
+                if ((this.TradeNameField.Equals(value) != true)) {
+                    this.TradeNameField = value;
+                    this.RaisePropertyChanged("TradeName");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=19)]
+        public System.Nullable<int> CancellationReason {
+            get {
+                return this.CancellationReasonField;
+            }
+            set {
+                if ((this.CancellationReasonField.Equals(value) != true)) {
+                    this.CancellationReasonField = value;
+                    this.RaisePropertyChanged("CancellationReason");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=20)]
+        public System.Nullable<System.DateTime> CancellationDate {
+            get {
+                return this.CancellationDateField;
+            }
+            set {
+                if ((this.CancellationDateField.Equals(value) != true)) {
+                    this.CancellationDateField = value;
+                    this.RaisePropertyChanged("CancellationDate");
                 }
             }
         }
@@ -3698,78 +3795,6 @@ namespace Emk.EmkSvc {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Diagnosis", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
-    [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ClinicMainDiagnosis))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AnatomopathologicalClinicMainDiagnosis))]
-    public partial class Diagnosis : Emk.EmkSvc.MedRecord {
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Emk.EmkSvc.DiagnosisInfo DiagnosisInfoField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Emk.EmkSvc.MedicalStaff DoctorField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Emk.EmkSvc.DiagnosisInfo DiagnosisInfo {
-            get {
-                return this.DiagnosisInfoField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DiagnosisInfoField, value) != true)) {
-                    this.DiagnosisInfoField = value;
-                    this.RaisePropertyChanged("DiagnosisInfo");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Emk.EmkSvc.MedicalStaff Doctor {
-            get {
-                return this.DoctorField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.DoctorField, value) != true)) {
-                    this.DoctorField = value;
-                    this.RaisePropertyChanged("Doctor");
-                }
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ClinicMainDiagnosis", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
-    [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AnatomopathologicalClinicMainDiagnosis))]
-    public partial class ClinicMainDiagnosis : Emk.EmkSvc.Diagnosis {
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Emk.EmkSvc.Diagnosis[] ComplicationsField;
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public Emk.EmkSvc.Diagnosis[] Complications {
-            get {
-                return this.ComplicationsField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ComplicationsField, value) != true)) {
-                    this.ComplicationsField = value;
-                    this.RaisePropertyChanged("Complications");
-                }
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="AnatomopathologicalClinicMainDiagnosis", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
-    [System.SerializableAttribute()]
-    public partial class AnatomopathologicalClinicMainDiagnosis : Emk.EmkSvc.ClinicMainDiagnosis {
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="MedDocument", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
     [System.SerializableAttribute()]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ConsultNote))]
@@ -3791,6 +3816,7 @@ namespace Emk.EmkSvc {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ReferralMSE))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.BirthCertificate))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.DriveCertificate))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.PrenatalDeathCertificate))]
     public partial class MedDocument : Emk.EmkSvc.MedRecord {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
@@ -3812,7 +3838,13 @@ namespace Emk.EmkSvc {
         private string IdDocumentMisField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<byte> IdMedDocumentTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
         private Emk.EmkSvc.Observation[] ObservationsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string[] RelatedMedDocField;
         
         [System.Runtime.Serialization.DataMemberAttribute()]
         public Emk.EmkSvc.MedDocumentDtoDocumentAttachment[] Attachments {
@@ -3893,6 +3925,19 @@ namespace Emk.EmkSvc {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<byte> IdMedDocumentType {
+            get {
+                return this.IdMedDocumentTypeField;
+            }
+            set {
+                if ((this.IdMedDocumentTypeField.Equals(value) != true)) {
+                    this.IdMedDocumentTypeField = value;
+                    this.RaisePropertyChanged("IdMedDocumentType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public Emk.EmkSvc.Observation[] Observations {
             get {
                 return this.ObservationsField;
@@ -3901,6 +3946,19 @@ namespace Emk.EmkSvc {
                 if ((object.ReferenceEquals(this.ObservationsField, value) != true)) {
                     this.ObservationsField = value;
                     this.RaisePropertyChanged("Observations");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string[] RelatedMedDoc {
+            get {
+                return this.RelatedMedDocField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.RelatedMedDocField, value) != true)) {
+                    this.RelatedMedDocField = value;
+                    this.RaisePropertyChanged("RelatedMedDoc");
                 }
             }
         }
@@ -4138,7 +4196,7 @@ namespace Emk.EmkSvc {
         private string BrigadeNumberField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte MedResultField;
+        private System.Nullable<short> MedResultField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private Emk.EmkSvc.AssisNote[] AssisListField;
@@ -4176,7 +4234,7 @@ namespace Emk.EmkSvc {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-        public byte MedResult {
+        public System.Nullable<short> MedResult {
             get {
                 return this.MedResultField;
             }
@@ -4515,6 +4573,30 @@ namespace Emk.EmkSvc {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string DeathReasonField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> CertificateDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CertificateSField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CertificateNField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DeathDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeathReasonImmediateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeathReasonIntermediateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeathReasonInitialField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeathReasonExternalField;
+        
         [System.Runtime.Serialization.DataMemberAttribute()]
         public string DeathReason {
             get {
@@ -4524,6 +4606,110 @@ namespace Emk.EmkSvc {
                 if ((object.ReferenceEquals(this.DeathReasonField, value) != true)) {
                     this.DeathReasonField = value;
                     this.RaisePropertyChanged("DeathReason");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+        public System.Nullable<System.DateTime> CertificateDate {
+            get {
+                return this.CertificateDateField;
+            }
+            set {
+                if ((this.CertificateDateField.Equals(value) != true)) {
+                    this.CertificateDateField = value;
+                    this.RaisePropertyChanged("CertificateDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public string CertificateS {
+            get {
+                return this.CertificateSField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CertificateSField, value) != true)) {
+                    this.CertificateSField = value;
+                    this.RaisePropertyChanged("CertificateS");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public string CertificateN {
+            get {
+                return this.CertificateNField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CertificateNField, value) != true)) {
+                    this.CertificateNField = value;
+                    this.RaisePropertyChanged("CertificateN");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public System.Nullable<System.DateTime> DeathDate {
+            get {
+                return this.DeathDateField;
+            }
+            set {
+                if ((this.DeathDateField.Equals(value) != true)) {
+                    this.DeathDateField = value;
+                    this.RaisePropertyChanged("DeathDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+        public string DeathReasonImmediate {
+            get {
+                return this.DeathReasonImmediateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeathReasonImmediateField, value) != true)) {
+                    this.DeathReasonImmediateField = value;
+                    this.RaisePropertyChanged("DeathReasonImmediate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+        public string DeathReasonIntermediate {
+            get {
+                return this.DeathReasonIntermediateField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeathReasonIntermediateField, value) != true)) {
+                    this.DeathReasonIntermediateField = value;
+                    this.RaisePropertyChanged("DeathReasonIntermediate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+        public string DeathReasonInitial {
+            get {
+                return this.DeathReasonInitialField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeathReasonInitialField, value) != true)) {
+                    this.DeathReasonInitialField = value;
+                    this.RaisePropertyChanged("DeathReasonInitial");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+        public string DeathReasonExternal {
+            get {
+                return this.DeathReasonExternalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeathReasonExternalField, value) != true)) {
+                    this.DeathReasonExternalField = value;
+                    this.RaisePropertyChanged("DeathReasonExternal");
                 }
             }
         }
@@ -4541,6 +4727,102 @@ namespace Emk.EmkSvc {
     [System.Runtime.Serialization.DataContractAttribute(Name="BirthCertificate", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
     [System.SerializableAttribute()]
     public partial class BirthCertificate : Emk.EmkSvc.MedDocument {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> CertificateDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CertificateSField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CertificateNField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> BirthDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> SexField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> BirthOrderField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> CertificateDate {
+            get {
+                return this.CertificateDateField;
+            }
+            set {
+                if ((this.CertificateDateField.Equals(value) != true)) {
+                    this.CertificateDateField = value;
+                    this.RaisePropertyChanged("CertificateDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CertificateS {
+            get {
+                return this.CertificateSField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CertificateSField, value) != true)) {
+                    this.CertificateSField = value;
+                    this.RaisePropertyChanged("CertificateS");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public string CertificateN {
+            get {
+                return this.CertificateNField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CertificateNField, value) != true)) {
+                    this.CertificateNField = value;
+                    this.RaisePropertyChanged("CertificateN");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public System.Nullable<System.DateTime> BirthDate {
+            get {
+                return this.BirthDateField;
+            }
+            set {
+                if ((this.BirthDateField.Equals(value) != true)) {
+                    this.BirthDateField = value;
+                    this.RaisePropertyChanged("BirthDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public System.Nullable<int> Sex {
+            get {
+                return this.SexField;
+            }
+            set {
+                if ((this.SexField.Equals(value) != true)) {
+                    this.SexField = value;
+                    this.RaisePropertyChanged("Sex");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+        public System.Nullable<int> BirthOrder {
+            get {
+                return this.BirthOrderField;
+            }
+            set {
+                if ((this.BirthOrderField.Equals(value) != true)) {
+                    this.BirthOrderField = value;
+                    this.RaisePropertyChanged("BirthOrder");
+                }
+            }
+        }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -4548,6 +4830,245 @@ namespace Emk.EmkSvc {
     [System.Runtime.Serialization.DataContractAttribute(Name="DriveCertificate", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
     [System.SerializableAttribute()]
     public partial class DriveCertificate : Emk.EmkSvc.MedDocument {
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="PrenatalDeathCertificate", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
+    [System.SerializableAttribute()]
+    public partial class PrenatalDeathCertificate : Emk.EmkSvc.MedDocument {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> CertificateDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CertificateSField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CertificateNField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> DeathDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodeMainPrenatalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodeOtherPrenatalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodeMainMotherField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CodeOtherMotherField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeathReasonPrenatalField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string DeathReasonMotherField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> CertificateDate {
+            get {
+                return this.CertificateDateField;
+            }
+            set {
+                if ((this.CertificateDateField.Equals(value) != true)) {
+                    this.CertificateDateField = value;
+                    this.RaisePropertyChanged("CertificateDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CertificateS {
+            get {
+                return this.CertificateSField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CertificateSField, value) != true)) {
+                    this.CertificateSField = value;
+                    this.RaisePropertyChanged("CertificateS");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public string CertificateN {
+            get {
+                return this.CertificateNField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CertificateNField, value) != true)) {
+                    this.CertificateNField = value;
+                    this.RaisePropertyChanged("CertificateN");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public System.Nullable<System.DateTime> DeathDate {
+            get {
+                return this.DeathDateField;
+            }
+            set {
+                if ((this.DeathDateField.Equals(value) != true)) {
+                    this.DeathDateField = value;
+                    this.RaisePropertyChanged("DeathDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public string CodeMainPrenatal {
+            get {
+                return this.CodeMainPrenatalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodeMainPrenatalField, value) != true)) {
+                    this.CodeMainPrenatalField = value;
+                    this.RaisePropertyChanged("CodeMainPrenatal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+        public string CodeOtherPrenatal {
+            get {
+                return this.CodeOtherPrenatalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodeOtherPrenatalField, value) != true)) {
+                    this.CodeOtherPrenatalField = value;
+                    this.RaisePropertyChanged("CodeOtherPrenatal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+        public string CodeMainMother {
+            get {
+                return this.CodeMainMotherField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodeMainMotherField, value) != true)) {
+                    this.CodeMainMotherField = value;
+                    this.RaisePropertyChanged("CodeMainMother");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+        public string CodeOtherMother {
+            get {
+                return this.CodeOtherMotherField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CodeOtherMotherField, value) != true)) {
+                    this.CodeOtherMotherField = value;
+                    this.RaisePropertyChanged("CodeOtherMother");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+        public string DeathReasonPrenatal {
+            get {
+                return this.DeathReasonPrenatalField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeathReasonPrenatalField, value) != true)) {
+                    this.DeathReasonPrenatalField = value;
+                    this.RaisePropertyChanged("DeathReasonPrenatal");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+        public string DeathReasonMother {
+            get {
+                return this.DeathReasonMotherField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DeathReasonMotherField, value) != true)) {
+                    this.DeathReasonMotherField = value;
+                    this.RaisePropertyChanged("DeathReasonMother");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Diagnosis", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
+    [System.SerializableAttribute()]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.ClinicMainDiagnosis))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AnatomopathologicalClinicMainDiagnosis))]
+    public partial class Diagnosis : Emk.EmkSvc.MedRecord {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Emk.EmkSvc.DiagnosisInfo DiagnosisInfoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Emk.EmkSvc.MedicalStaff DoctorField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Emk.EmkSvc.DiagnosisInfo DiagnosisInfo {
+            get {
+                return this.DiagnosisInfoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DiagnosisInfoField, value) != true)) {
+                    this.DiagnosisInfoField = value;
+                    this.RaisePropertyChanged("DiagnosisInfo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Emk.EmkSvc.MedicalStaff Doctor {
+            get {
+                return this.DoctorField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DoctorField, value) != true)) {
+                    this.DoctorField = value;
+                    this.RaisePropertyChanged("Doctor");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ClinicMainDiagnosis", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
+    [System.SerializableAttribute()]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.AnatomopathologicalClinicMainDiagnosis))]
+    public partial class ClinicMainDiagnosis : Emk.EmkSvc.Diagnosis {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Emk.EmkSvc.Diagnosis[] ComplicationsField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Emk.EmkSvc.Diagnosis[] Complications {
+            get {
+                return this.ComplicationsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ComplicationsField, value) != true)) {
+                    this.ComplicationsField = value;
+                    this.RaisePropertyChanged("Complications");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="AnatomopathologicalClinicMainDiagnosis", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
+    [System.SerializableAttribute()]
+    public partial class AnatomopathologicalClinicMainDiagnosis : Emk.EmkSvc.ClinicMainDiagnosis {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -4844,6 +5365,12 @@ namespace Emk.EmkSvc {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private System.Nullable<int> OrderField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CausingDiseaseField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<System.DateTime> LastMedicalExaminationDateField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -4893,6 +5420,32 @@ namespace Emk.EmkSvc {
             }
         }
         
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public string CausingDisease {
+            get {
+                return this.CausingDiseaseField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CausingDiseaseField, value) != true)) {
+                    this.CausingDiseaseField = value;
+                    this.RaisePropertyChanged("CausingDisease");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public System.Nullable<System.DateTime> LastMedicalExaminationDate {
+            get {
+                return this.LastMedicalExaminationDateField;
+            }
+            set {
+                if ((this.LastMedicalExaminationDateField.Equals(value) != true)) {
+                    this.LastMedicalExaminationDateField = value;
+                    this.RaisePropertyChanged("LastMedicalExaminationDate");
+                }
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -4917,6 +5470,9 @@ namespace Emk.EmkSvc {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string TextField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> ProfessionCodeField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -4950,6 +5506,19 @@ namespace Emk.EmkSvc {
                 if ((object.ReferenceEquals(this.TextField, value) != true)) {
                     this.TextField = value;
                     this.RaisePropertyChanged("Text");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public System.Nullable<int> ProfessionCode {
+            get {
+                return this.ProfessionCodeField;
+            }
+            set {
+                if ((this.ProfessionCodeField.Equals(value) != true)) {
+                    this.ProfessionCodeField = value;
+                    this.RaisePropertyChanged("ProfessionCode");
                 }
             }
         }
@@ -5027,259 +5596,6 @@ namespace Emk.EmkSvc {
                 if ((this.EndField.Equals(value) != true)) {
                     this.EndField = value;
                     this.RaisePropertyChanged("End");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="DiagnosisInfo", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
-    [System.SerializableAttribute()]
-    public partial class DiagnosisInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte IdDiseaseTypeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime DiagnosedDateField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte IdDiagnosisTypeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string CommentField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte DiagnosisChangeReasonField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte DiagnosisStageField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte IdDispensaryStateField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte IdTraumaTypeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte MESImplementationFeatureField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int MedicalStandardField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private Emk.EmkSvc.Param[] ParamsField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MkbCodeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<byte> DiseaseStatusField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string MkbCodeChangeField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public byte IdDiseaseType {
-            get {
-                return this.IdDiseaseTypeField;
-            }
-            set {
-                if ((this.IdDiseaseTypeField.Equals(value) != true)) {
-                    this.IdDiseaseTypeField = value;
-                    this.RaisePropertyChanged("IdDiseaseType");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-        public System.DateTime DiagnosedDate {
-            get {
-                return this.DiagnosedDateField;
-            }
-            set {
-                if ((this.DiagnosedDateField.Equals(value) != true)) {
-                    this.DiagnosedDateField = value;
-                    this.RaisePropertyChanged("DiagnosedDate");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-        public byte IdDiagnosisType {
-            get {
-                return this.IdDiagnosisTypeField;
-            }
-            set {
-                if ((this.IdDiagnosisTypeField.Equals(value) != true)) {
-                    this.IdDiagnosisTypeField = value;
-                    this.RaisePropertyChanged("IdDiagnosisType");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-        public string Comment {
-            get {
-                return this.CommentField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.CommentField, value) != true)) {
-                    this.CommentField = value;
-                    this.RaisePropertyChanged("Comment");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-        public byte DiagnosisChangeReason {
-            get {
-                return this.DiagnosisChangeReasonField;
-            }
-            set {
-                if ((this.DiagnosisChangeReasonField.Equals(value) != true)) {
-                    this.DiagnosisChangeReasonField = value;
-                    this.RaisePropertyChanged("DiagnosisChangeReason");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
-        public byte DiagnosisStage {
-            get {
-                return this.DiagnosisStageField;
-            }
-            set {
-                if ((this.DiagnosisStageField.Equals(value) != true)) {
-                    this.DiagnosisStageField = value;
-                    this.RaisePropertyChanged("DiagnosisStage");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
-        public byte IdDispensaryState {
-            get {
-                return this.IdDispensaryStateField;
-            }
-            set {
-                if ((this.IdDispensaryStateField.Equals(value) != true)) {
-                    this.IdDispensaryStateField = value;
-                    this.RaisePropertyChanged("IdDispensaryState");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
-        public byte IdTraumaType {
-            get {
-                return this.IdTraumaTypeField;
-            }
-            set {
-                if ((this.IdTraumaTypeField.Equals(value) != true)) {
-                    this.IdTraumaTypeField = value;
-                    this.RaisePropertyChanged("IdTraumaType");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=8)]
-        public byte MESImplementationFeature {
-            get {
-                return this.MESImplementationFeatureField;
-            }
-            set {
-                if ((this.MESImplementationFeatureField.Equals(value) != true)) {
-                    this.MESImplementationFeatureField = value;
-                    this.RaisePropertyChanged("MESImplementationFeature");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=9)]
-        public int MedicalStandard {
-            get {
-                return this.MedicalStandardField;
-            }
-            set {
-                if ((this.MedicalStandardField.Equals(value) != true)) {
-                    this.MedicalStandardField = value;
-                    this.RaisePropertyChanged("MedicalStandard");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=10)]
-        public Emk.EmkSvc.Param[] Params {
-            get {
-                return this.ParamsField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ParamsField, value) != true)) {
-                    this.ParamsField = value;
-                    this.RaisePropertyChanged("Params");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=11)]
-        public string MkbCode {
-            get {
-                return this.MkbCodeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MkbCodeField, value) != true)) {
-                    this.MkbCodeField = value;
-                    this.RaisePropertyChanged("MkbCode");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=12)]
-        public System.Nullable<byte> DiseaseStatus {
-            get {
-                return this.DiseaseStatusField;
-            }
-            set {
-                if ((this.DiseaseStatusField.Equals(value) != true)) {
-                    this.DiseaseStatusField = value;
-                    this.RaisePropertyChanged("DiseaseStatus");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=13)]
-        public string MkbCodeChange {
-            get {
-                return this.MkbCodeChangeField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.MkbCodeChangeField, value) != true)) {
-                    this.MkbCodeChangeField = value;
-                    this.RaisePropertyChanged("MkbCodeChange");
                 }
             }
         }
@@ -5580,6 +5896,9 @@ namespace Emk.EmkSvc {
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.CodeableValue))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.NumericalValue))]
     [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.StringValue))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.FloatValue))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.BooleanValue))]
+    [System.Runtime.Serialization.KnownTypeAttribute(typeof(Emk.EmkSvc.DateTimeValue))]
     public partial class ValueQuantity : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
@@ -5792,6 +6111,91 @@ namespace Emk.EmkSvc {
             }
             set {
                 if ((object.ReferenceEquals(this.ValueField, value) != true)) {
+                    this.ValueField = value;
+                    this.RaisePropertyChanged("Value");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="FloatValue", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
+    [System.SerializableAttribute()]
+    public partial class FloatValue : Emk.EmkSvc.ValueQuantity {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdUnitField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private float ValueField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdUnit {
+            get {
+                return this.IdUnitField;
+            }
+            set {
+                if ((this.IdUnitField.Equals(value) != true)) {
+                    this.IdUnitField = value;
+                    this.RaisePropertyChanged("IdUnit");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float Value {
+            get {
+                return this.ValueField;
+            }
+            set {
+                if ((this.ValueField.Equals(value) != true)) {
+                    this.ValueField = value;
+                    this.RaisePropertyChanged("Value");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="BooleanValue", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
+    [System.SerializableAttribute()]
+    public partial class BooleanValue : Emk.EmkSvc.ValueQuantity {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private bool ValueField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Value {
+            get {
+                return this.ValueField;
+            }
+            set {
+                if ((this.ValueField.Equals(value) != true)) {
+                    this.ValueField = value;
+                    this.RaisePropertyChanged("Value");
+                }
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DateTimeValue", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.MedDoc")]
+    [System.SerializableAttribute()]
+    public partial class DateTimeValue : Emk.EmkSvc.ValueQuantity {
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime ValueField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Value {
+            get {
+                return this.ValueField;
+            }
+            set {
+                if ((this.ValueField.Equals(value) != true)) {
                     this.ValueField = value;
                     this.RaisePropertyChanged("Value");
                 }
@@ -6343,6 +6747,259 @@ namespace Emk.EmkSvc {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DiagnosisInfo", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec.Diag")]
+    [System.SerializableAttribute()]
+    public partial class DiagnosisInfo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte IdDiseaseTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.DateTime DiagnosedDateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte IdDiagnosisTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string CommentField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte DiagnosisChangeReasonField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte DiagnosisStageField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte IdDispensaryStateField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte IdTraumaTypeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte MESImplementationFeatureField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int MedicalStandardField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Emk.EmkSvc.Param[] ParamsField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MkbCodeField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<byte> DiseaseStatusField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string MkbCodeChangeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public byte IdDiseaseType {
+            get {
+                return this.IdDiseaseTypeField;
+            }
+            set {
+                if ((this.IdDiseaseTypeField.Equals(value) != true)) {
+                    this.IdDiseaseTypeField = value;
+                    this.RaisePropertyChanged("IdDiseaseType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+        public System.DateTime DiagnosedDate {
+            get {
+                return this.DiagnosedDateField;
+            }
+            set {
+                if ((this.DiagnosedDateField.Equals(value) != true)) {
+                    this.DiagnosedDateField = value;
+                    this.RaisePropertyChanged("DiagnosedDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+        public byte IdDiagnosisType {
+            get {
+                return this.IdDiagnosisTypeField;
+            }
+            set {
+                if ((this.IdDiagnosisTypeField.Equals(value) != true)) {
+                    this.IdDiagnosisTypeField = value;
+                    this.RaisePropertyChanged("IdDiagnosisType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+        public string Comment {
+            get {
+                return this.CommentField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CommentField, value) != true)) {
+                    this.CommentField = value;
+                    this.RaisePropertyChanged("Comment");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public byte DiagnosisChangeReason {
+            get {
+                return this.DiagnosisChangeReasonField;
+            }
+            set {
+                if ((this.DiagnosisChangeReasonField.Equals(value) != true)) {
+                    this.DiagnosisChangeReasonField = value;
+                    this.RaisePropertyChanged("DiagnosisChangeReason");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+        public byte DiagnosisStage {
+            get {
+                return this.DiagnosisStageField;
+            }
+            set {
+                if ((this.DiagnosisStageField.Equals(value) != true)) {
+                    this.DiagnosisStageField = value;
+                    this.RaisePropertyChanged("DiagnosisStage");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+        public byte IdDispensaryState {
+            get {
+                return this.IdDispensaryStateField;
+            }
+            set {
+                if ((this.IdDispensaryStateField.Equals(value) != true)) {
+                    this.IdDispensaryStateField = value;
+                    this.RaisePropertyChanged("IdDispensaryState");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+        public byte IdTraumaType {
+            get {
+                return this.IdTraumaTypeField;
+            }
+            set {
+                if ((this.IdTraumaTypeField.Equals(value) != true)) {
+                    this.IdTraumaTypeField = value;
+                    this.RaisePropertyChanged("IdTraumaType");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+        public byte MESImplementationFeature {
+            get {
+                return this.MESImplementationFeatureField;
+            }
+            set {
+                if ((this.MESImplementationFeatureField.Equals(value) != true)) {
+                    this.MESImplementationFeatureField = value;
+                    this.RaisePropertyChanged("MESImplementationFeature");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+        public int MedicalStandard {
+            get {
+                return this.MedicalStandardField;
+            }
+            set {
+                if ((this.MedicalStandardField.Equals(value) != true)) {
+                    this.MedicalStandardField = value;
+                    this.RaisePropertyChanged("MedicalStandard");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=10)]
+        public Emk.EmkSvc.Param[] Params {
+            get {
+                return this.ParamsField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ParamsField, value) != true)) {
+                    this.ParamsField = value;
+                    this.RaisePropertyChanged("Params");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=11)]
+        public string MkbCode {
+            get {
+                return this.MkbCodeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MkbCodeField, value) != true)) {
+                    this.MkbCodeField = value;
+                    this.RaisePropertyChanged("MkbCode");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=12)]
+        public System.Nullable<byte> DiseaseStatus {
+            get {
+                return this.DiseaseStatusField;
+            }
+            set {
+                if ((this.DiseaseStatusField.Equals(value) != true)) {
+                    this.DiseaseStatusField = value;
+                    this.RaisePropertyChanged("DiseaseStatus");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=13)]
+        public string MkbCodeChange {
+            get {
+                return this.MkbCodeChangeField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.MkbCodeChangeField, value) != true)) {
+                    this.MkbCodeChangeField = value;
+                    this.RaisePropertyChanged("MkbCodeChange");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Initiator", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto")]
     [System.SerializableAttribute()]
     public partial class Initiator : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
@@ -6643,10 +7300,10 @@ namespace Emk.EmkSvc {
         [System.ServiceModel.FaultContractAttribute(typeof(Emk.EmkSvc.RequestFault[]), Action="http://tempuri.org/IEmkService/AddMedRecordListOf_RequestFaultFault", Name="ArrayOfRequestFault", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Common")]
         [System.ServiceModel.FaultContractAttribute(typeof(Emk.EmkSvc.RequestWarning), Action="http://tempuri.org/IEmkService/AddMedRecordRequestWarningFault", Name="RequestWarning", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Common")]
         [System.ServiceModel.FaultContractAttribute(typeof(Emk.EmkSvc.RequestWarning[]), Action="http://tempuri.org/IEmkService/AddMedRecordListOf_RequestWarningFault", Name="ArrayOfRequestWarning", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Common")]
-        void AddMedRecord(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord);
+        void AddMedRecord(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord, System.Nullable<byte> confidentiality);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IEmkService/AddMedRecord", ReplyAction="http://tempuri.org/IEmkService/AddMedRecordResponse")]
-        System.Threading.Tasks.Task AddMedRecordAsync(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord);
+        System.Threading.Tasks.Task AddMedRecordAsync(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord, System.Nullable<byte> confidentiality);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IEmkService/AddStepToCase", ReplyAction="http://tempuri.org/IEmkService/AddStepToCaseResponse")]
         [System.ServiceModel.FaultContractAttribute(typeof(Emk.EmkSvc.RequestFault), Action="http://tempuri.org/IEmkService/AddStepToCaseRequestFaultFault", Name="RequestFault", Namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.Common")]
@@ -6734,12 +7391,12 @@ namespace Emk.EmkSvc {
             return base.Channel.UpdateCaseAsync(guid, caseDto);
         }
         
-        public void AddMedRecord(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord) {
-            base.Channel.AddMedRecord(guid, idLpu, idPatientMis, idCaseMis, medRecord);
+        public void AddMedRecord(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord, System.Nullable<byte> confidentiality) {
+            base.Channel.AddMedRecord(guid, idLpu, idPatientMis, idCaseMis, medRecord, confidentiality);
         }
         
-        public System.Threading.Tasks.Task AddMedRecordAsync(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord) {
-            return base.Channel.AddMedRecordAsync(guid, idLpu, idPatientMis, idCaseMis, medRecord);
+        public System.Threading.Tasks.Task AddMedRecordAsync(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.MedRecord medRecord, System.Nullable<byte> confidentiality) {
+            return base.Channel.AddMedRecordAsync(guid, idLpu, idPatientMis, idCaseMis, medRecord, confidentiality);
         }
         
         public void AddStepToCase(string guid, string idLpu, string idPatientMis, string idCaseMis, Emk.EmkSvc.StepBase step) {

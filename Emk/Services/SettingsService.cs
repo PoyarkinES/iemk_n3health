@@ -15,7 +15,7 @@ namespace Emk.Services
 		/// <returns></returns>
 		public EmkSettings LoadSettings()
 		{
-			Log.Info($"Загружаю настройки из {path}");
+			Log.Info($"Загружаю настройки.");
 			if (!File.Exists(path))
 				CreateSettingsFile();
 			return ReadSettings();

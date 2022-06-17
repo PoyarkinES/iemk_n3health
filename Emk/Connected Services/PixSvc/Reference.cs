@@ -956,6 +956,12 @@ namespace Emk.PixSvc {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string StringAddressField;
         
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string RegionField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private byte AddressTypeCodingField;
+        
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
             get {
@@ -1066,6 +1072,32 @@ namespace Emk.PixSvc {
                 if ((object.ReferenceEquals(this.StringAddressField, value) != true)) {
                     this.StringAddressField = value;
                     this.RaisePropertyChanged("StringAddress");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+        public string Region {
+            get {
+                return this.RegionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.RegionField, value) != true)) {
+                    this.RegionField = value;
+                    this.RaisePropertyChanged("Region");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+        public byte AddressTypeCoding {
+            get {
+                return this.AddressTypeCodingField;
+            }
+            set {
+                if ((this.AddressTypeCodingField.Equals(value) != true)) {
+                    this.AddressTypeCodingField = value;
+                    this.RaisePropertyChanged("AddressTypeCoding");
                 }
             }
         }

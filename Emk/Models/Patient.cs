@@ -25,7 +25,7 @@ namespace Emk.Models
         public int SexInt { get
             {
                 if (Sex == null)
-                    return 1;
+                    return 0;
                 if (Sex.Trim() == "F")
                     return 2;
                 return 1;

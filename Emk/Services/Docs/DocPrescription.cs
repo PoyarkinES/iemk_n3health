@@ -33,6 +33,7 @@ namespace Emk.Services.Docs
             _doc.MedicineName = data[9];
             _doc.IdINN = int.Parse(data[19]);
             _doc.Doctor = _doctor.ToMedicalStaff();
+            
         }
         private MedDocumentDtoDocumentAttachment[] AddAttachments()
         {

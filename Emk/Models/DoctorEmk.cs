@@ -20,7 +20,7 @@ namespace Emk.Models
                 IdSpeciality = (ushort)Speciality,
                 Person = new PersonWithIdentity
                 {
-                    IdPersonMis = Snils,
+                    IdPersonMis = MemberId.ToString(),
                     Birthdate = BirthDay.Date,
                     HumanName = new HumanName
                     {

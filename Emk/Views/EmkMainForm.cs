@@ -12,6 +12,7 @@ namespace Emk.Views
 		private async void btnSend_Click(object sender, EventArgs e)
 		{
 			btnSend.Enabled = false;
+            btnSend.Text = "Идет отправка...";
 			try
 			{
 				await Task.Factory.StartNew(() => new EmkSendingService().Run());
@@ -21,7 +22,8 @@ namespace Emk.Views
 				MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Log.Error(ex.Message);
 			}
-			btnSend.Enabled = true;
+            btnSend.Text = "Отправить данные";
+            btnSend.Enabled = true;
 		}
 
 		private void btnSettings_Click(object sender, EventArgs e) => new EmkSettingsForm().ShowDialog();

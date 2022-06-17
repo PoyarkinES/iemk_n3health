@@ -2,15 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Emk.Repository;
 
 namespace Emk.Services
 {
 	public class EmkSendingService
-	{
-		private List<EmkSettings> _settings => Factory.LoadSettings();
+    {
+        private List<EmkSettings> _settings;
+
+        public EmkSendingService(bool reloadSettings = false)
+        {
+            _settings = Factory.LoadSettings(reloadSettings);
+        }
+
 
 		public void Run()
 		{
+            if (!new LicenseRepository().IsLicenseValid())
+            {
+                Log.Warning("Отсутствует лицензия на использование обратитесь в техническую поддержку.");
+                return;
+            }
+            
 			Log.Info("Начинаю отправку данных по пациентам...");
 			var p = GetPatientsAndTreatDates();
 			if(p.Count == 0) {
@@ -42,13 +55,14 @@ namespace Emk.Services
                     if (!set.Enabled)
                     {
                         Log.Info($"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId}) пропущен.");
+                        continue;
                     }
 
                     var pix = new PixService(set);
                     var emk = new EmkService(set);
                     pix.AddPatient(i.PatientId);
                     pix.UpdatePatient(i.PatientId);
-                    emk.AddCase(i.PatientId, i.TreatDate, ref errId, ref errDesc);
+                    emk.AddCase(i);
                 }
                 catch (Exception e)
                 {
@@ -72,7 +86,8 @@ namespace Emk.Services
 			var startDate = DateTime.MinValue;
 			var endDate = DateTime.MinValue;
 			if (_settings.First().SendingType == SendingType.DaysBeforeNow) {
-				startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
+				startDate = DateTime.Now.AddDays(-1);
+				//startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
 				Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()}");
 			}
 			else {

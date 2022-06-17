@@ -2,6 +2,7 @@
 using Emk.Models;
 using Emk.Services;
 using System;
+using System.Linq;
 using System.ServiceProcess;
 using System.Timers;
 
@@ -26,16 +27,17 @@ namespace EmkWinService
 			if(!ShouldStart())
 				return;
 			_lastStart = DateTime.Now;
-			_isRunning = true;
-			var s = new EmkSendingService();
-			s.Run();
+            Log.Info("Отправка данных запущена");
+			var s = new EmkSendingService(true);
+            _isRunning = true;
+            s.Run();
 			_isRunning = false;
 		}
 
 		protected override void OnStart(string[] args)
 		{
 			Log.Info("Запуск службы...");
-			_settings = Factory.GetSettingsService.LoadSettings();
+			_settings = Factory.LoadSettings().First();
 			Log.Info(_settings.ToString());
 			_timer.AutoReset = true;
 			_timer.Start();
@@ -56,10 +58,11 @@ namespace EmkWinService
 				Log.Error($"Не удалось распознать значение времени {_settings.UpdateTime}");
 				throw new ArgumentNullException("UpdateTime", $"Не удалось распознать значение времени {_settings.UpdateTime}");
 			}
-			if (DateTime.Now.TimeOfDay >= _settings.UpdateTime && _lastStart.Date < DateTime.Now.Date) {
-				Log.Info(DateTime.Now.TimeOfDay.ToString() + " >= " + _settings.UpdateTime);
-				return true;
+			if (DateTime.Now.TimeOfDay >= _settings.UpdateTime) {
+                if(_lastStart.Date < DateTime.Now.Date)
+                    return true;
 			}
+            
 			return false;
 		}
 
