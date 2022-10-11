@@ -30,6 +30,7 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnSmoSettings = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSend
@@ -45,7 +46,7 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(13, 97);
+            this.btnSettings.Location = new System.Drawing.Point(13, 202);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(4);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(241, 65);
@@ -56,7 +57,7 @@
             // 
             // btnSmoSettings
             // 
-            this.btnSmoSettings.Location = new System.Drawing.Point(13, 180);
+            this.btnSmoSettings.Location = new System.Drawing.Point(13, 294);
             this.btnSmoSettings.Margin = new System.Windows.Forms.Padding(4);
             this.btnSmoSettings.Name = "btnSmoSettings";
             this.btnSmoSettings.Size = new System.Drawing.Size(241, 65);
@@ -65,11 +66,23 @@
             this.btnSmoSettings.UseVisualStyleBackColor = true;
             this.btnSmoSettings.Click += new System.EventHandler(this.btnSmoSettings_Click);
             // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(13, 86);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(4);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(241, 65);
+            this.btnUpdate.TabIndex = 3;
+            this.btnUpdate.Text = "Обновить по номеру счета";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
             // EmkMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(266, 92);
+            this.ClientSize = new System.Drawing.Size(266, 165);
+            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnSmoSettings);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnSend);
@@ -88,5 +101,6 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnSmoSettings;
+        private System.Windows.Forms.Button btnUpdate;
     }
 }

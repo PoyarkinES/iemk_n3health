@@ -71,6 +71,7 @@
     <Compile Include="Models\InsuranceCompany.cs" />
     <Compile Include="Models\InternalDocType.cs" />
     <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\PatientAccount.cs" />
     <Compile Include="Models\PatientTreat.cs" />
     <Compile Include="Models\PayType.cs" />
     <Compile Include="Models\Post.cs" />
@@ -99,7 +100,7 @@
     <Compile Include="Services\DoctorService.cs" />
     <Compile Include="Services\EmkSendingService.cs" />
     <Compile Include="Services\EmkService.cs" />
-    <Compile Include="Services\EmkServiceExt.cs" />
+    <Compile Include="Services\EmkSendingServiceExt.cs" />
     <Compile Include="Services\Files\DoctorFileService.cs" />
     <Compile Include="Services\Files\IDoctorFileService.cs" />
     <Compile Include="Services\ILoggerService.cs" />
@@ -109,6 +110,12 @@
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\XML\BaseXmlService.cs" />
     <Compile Include="Services\XML\DoctorXmlService.cs" />
+    <Compile Include="Views\AccountFinderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AccountFinderForm.Designer.cs">
+      <DependentUpon>AccountFinderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\EmkMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +139,9 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Views\AccountFinderForm.resx">
+      <DependentUpon>AccountFinderForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\EmkMainForm.resx">
       <DependentUpon>EmkMainForm.cs</DependentUpon>
     </EmbeddedResource>

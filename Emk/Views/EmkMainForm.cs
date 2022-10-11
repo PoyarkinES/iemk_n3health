@@ -20,7 +20,7 @@ namespace Emk.Views
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Log.Error(ex.Message);
+				Log.Error(ex.ToString());
 			}
             btnSend.Text = "Отправить данные";
             btnSend.Enabled = true;
@@ -42,5 +42,26 @@ namespace Emk.Views
 			}
 
 		}
-	}
+
+        private async void btnUpdate_Click(object sender, EventArgs e)
+        {
+            var form = new AccountFinderForm();
+            if(form.ShowDialog() != DialogResult.OK)
+                return;
+            
+            btnUpdate.Enabled = false;
+            btnUpdate.Text = "Идет отправка...";
+            try {
+                await Task.Factory.StartNew(() => new EmkSendingService().Update(form.AccountId));
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error(ex.ToString());
+            }
+            btnUpdate.Text = "Обновить по номеру счета";
+            btnUpdate.Enabled = true;
+        }
+
+
+    }
 }

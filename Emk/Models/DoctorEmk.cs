@@ -9,6 +9,7 @@ namespace Emk.Models
 		public DateTime BirthDay { get; set; }
 		public int AccountId { get; set; }
 		public string IdLpu { get; set; }
+        public string SexStr { get; set; }
 
         public DoctorEmk DepartmentHead { get; set; }
 
@@ -22,6 +23,7 @@ namespace Emk.Models
                 {
                     IdPersonMis = MemberId.ToString(),
                     Birthdate = BirthDay.Date,
+                    Sex = GetSex(),
                     HumanName = new HumanName
                     {
                         GivenName = Name,
@@ -41,5 +43,20 @@ namespace Emk.Models
                 IdLpu = IdLpu
             };
 		}
+
+        private byte GetSex()
+        {
+            if (string.IsNullOrEmpty(SexStr))
+                return 3;
+            switch (SexStr.ToLower())
+            {
+                case "м":
+                    return 1;
+                case "ж":
+                    return 2;
+                default:
+                    return 3;
+            }
+        }
 	}
 }

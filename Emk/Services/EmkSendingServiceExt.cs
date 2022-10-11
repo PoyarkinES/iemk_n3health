@@ -3,7 +3,7 @@ using Emk.Models;
 
 namespace Emk.Services
 {
-    public class EmkServiceExt
+    public class EmkSendingServiceExt : EmkSendingService
     {
         public bool CreateCase(PatientTreat treat)
         {

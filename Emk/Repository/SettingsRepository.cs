@@ -14,14 +14,17 @@ namespace Emk.Repository
         {
             var settings = new List<EmkSettings>();
             var props = new EmkSettings();
-            using (var reader = Connection.Query("SELECT param_id, object_id, param_value FROM APOC_Parameters_Values where param_id between 1362 and 1374 order by object_id"))
+
+            //using (var reader = Connection.Query("SELECT param_id, object_id, param_value FROM APOC_Parameters_Values where param_id between 1362 and 1374 order by object_id"))
+            using (var reader = Connection.Query("SELECT Param_Code, apv.param_id, object_id, param_value FROM APOC_Parameters_Values apv JOIN APOC_Parameters ap WHERE Param_Code IN ('ACTIVATE_N3H','N3H_KEY','N3H_PRACTICE','N3H_EMK_URL','N3H_PAT_URL','N3H_DATA_ON','N3H_REFR_TIME','N3H_TR_MODE','N3H_BY_DAYS','N3H_PER_FROM','N3H_PER_TO') ORDER BY object_id,apv.param_id;"))
                 if (reader.HasRows)
                     while (reader.Read())
                     {
                         var p = new DbSettings();
-                        p.PropId = (int)reader[0];
-                        p.PracticeId = (int)reader[1];
-                        p.PropValue = reader[2].ToString();
+                        p.ParamCode = reader[0].ToString();
+                        p.PropId = (int)reader[1];
+                        p.PracticeId = (int)reader[2];
+                        p.PropValue = reader[3].ToString();
 
                         if (props.PracticeId != p.PracticeId)
                         {
@@ -39,36 +42,38 @@ namespace Emk.Repository
 
         private EmkSettings FillSettings(EmkSettings e, DbSettings s)
         {
-            switch (s.PropId)
+            switch (s.ParamCode)
             {
-                case 1363:
-                    e.Guid = string.IsNullOrEmpty(s.PropValue) ? Guid.Empty : Guid.Parse(s.PropValue);
+                case "N3H_KEY":
+                    var res =Guid.TryParse(s.PropValue, out Guid a);
+                    e.Guid = res ? a : Guid.Empty;
                     break;
-                case 1364:
-                    e.IdLPU = string.IsNullOrEmpty(s.PropValue) ? Guid.Empty : Guid.Parse(s.PropValue);
+                case "N3H_PRACTICE":
+                    var id = Guid.TryParse(s.PropValue, out Guid lpu);
+                    e.IdLPU = id ? lpu : Guid.Empty;
                     break;
-                case 1365:
+                case "N3H_PAT_URL":
                     e.PixUrl = s.PropValue;
                     break;
-                case 1366:
+                case "N3H_EMK_URL":
                     e.EmkUrl = s.PropValue;
                     break;
-                case 1367:
+                case "N3H_DATA_ON":
                     e.Enabled = s.PropValue == "1";
                     break;
-                case 1368:
-                    e.UpdateTime = TimeSpan.Parse(s.PropValue.Substring(0, 7));
+                case "N3H_REFR_TIME":
+                    e.UpdateTime = TimeSpan.Parse(s.PropValue.Length > 7 ? s.PropValue.Substring(0, 7) : s.PropValue);
                     break;
-                case 1371:
+                case "N3H_TR_MODE":
                     e.SendingType = s.PropValue == "0" ? SendingType.DaysBeforeNow : SendingType.Interval;
                     break;
-                case 1372:
+                case "N3H_BY_DAYS":
                     e.DateInterval = int.Parse(s.PropValue);
                     break;
-                case 1373:
+                case "N3H_PER_FROM":
                     e.IntervalFrom = string.IsNullOrEmpty(s.PropValue) ? DateTime.MinValue : DateTime.Parse(s.PropValue);
                     break;
-                case 1374:
+                case "N3H_PER_TO":
                     e.IntervalTo = string.IsNullOrEmpty(s.PropValue) ? DateTime.MinValue : DateTime.Parse(s.PropValue);
                     break;
                 default:

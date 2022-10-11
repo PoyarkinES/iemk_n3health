@@ -88,11 +88,15 @@ namespace Emk.EmkSvc {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime OpenDateField;
-        
+        private System.DateTime OpenDateStrField;
+        //[System.Runtime.Serialization.OptionalFieldAttribute()]
+        //private System.DateTime OpenDateField;
+
+        //[System.Runtime.Serialization.OptionalFieldAttribute()]
+        //private System.DateTime CloseDateField;
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime CloseDateField;
-        
+        private System.DateTime CloseDateStrField;
+
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string HistoryNumberField;
         
@@ -158,26 +162,28 @@ namespace Emk.EmkSvc {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+
         public System.DateTime OpenDate {
             get {
-                return this.OpenDateField;
+                return this.OpenDateStrField;
             }
             set {
-                if ((this.OpenDateField.Equals(value) != true)) {
-                    this.OpenDateField = value;
+                if ((this.OpenDateStrField.Equals(value) != true)) {
+                    this.OpenDateStrField = value;
                     this.RaisePropertyChanged("OpenDate");
                 }
             }
         }
+
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
         public System.DateTime CloseDate {
             get {
-                return this.CloseDateField;
+                return this.CloseDateStrField;
             }
             set {
-                if ((this.CloseDateField.Equals(value) != true)) {
-                    this.CloseDateField = value;
+                if ((this.CloseDateStrField.Equals(value) != true)) {
+                    this.CloseDateStrField = value;
                     this.RaisePropertyChanged("CloseDate");
                 }
             }
@@ -448,8 +454,8 @@ namespace Emk.EmkSvc {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private ushort IdPositionField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int IdMedicalStaffField;
+        // [System.Runtime.Serialization.OptionalFieldAttribute()]
+        // private int? IdMedicalStaffField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string SpecialityNameField;
@@ -519,8 +525,8 @@ namespace Emk.EmkSvc {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-        public int IdMedicalStaff {
+        /*[System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public int? IdMedicalStaff {
             get {
                 return this.IdMedicalStaffField;
             }
@@ -530,7 +536,7 @@ namespace Emk.EmkSvc {
                     this.RaisePropertyChanged("IdMedicalStaff");
                 }
             }
-        }
+        }*/
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
         public string SpecialityName {
@@ -1770,7 +1776,7 @@ namespace Emk.EmkSvc {
         private System.DateTime DateStartField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<System.DateTime> DateEndField;
+        private System.DateTime DateEndField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CommentField;
@@ -1808,7 +1814,7 @@ namespace Emk.EmkSvc {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-        public System.Nullable<System.DateTime> DateEnd {
+        public System.DateTime DateEnd {
             get {
                 return this.DateEndField;
             }
@@ -6766,23 +6772,20 @@ namespace Emk.EmkSvc {
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CommentField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte DiagnosisChangeReasonField;
+        // [System.Runtime.Serialization.OptionalFieldAttribute()]
+        // private byte? DiagnosisChangeReasonField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private byte DiagnosisStageField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte IdDispensaryStateField;
+        // [System.Runtime.Serialization.OptionalFieldAttribute()]
+        // private byte? IdDispensaryStateField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte IdTraumaTypeField;
+        // [System.Runtime.Serialization.OptionalFieldAttribute()]
+        // private byte? IdTraumaTypeField;
         
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private byte MESImplementationFeatureField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int MedicalStandardField;
+        // [System.Runtime.Serialization.OptionalFieldAttribute()]
+        // private int? MedicalStandardField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private Emk.EmkSvc.Param[] ParamsField;
@@ -6858,8 +6861,8 @@ namespace Emk.EmkSvc {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-        public byte DiagnosisChangeReason {
+        /*[System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+        public byte? DiagnosisChangeReason {
             get {
                 return this.DiagnosisChangeReasonField;
             }
@@ -6869,7 +6872,7 @@ namespace Emk.EmkSvc {
                     this.RaisePropertyChanged("DiagnosisChangeReason");
                 }
             }
-        }
+        }*/
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=5)]
         public byte DiagnosisStage {
@@ -6884,8 +6887,8 @@ namespace Emk.EmkSvc {
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=6)]
-        public byte IdDispensaryState {
+        /*[System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+        public byte? IdDispensaryState {
             get {
                 return this.IdDispensaryStateField;
             }
@@ -6895,10 +6898,10 @@ namespace Emk.EmkSvc {
                     this.RaisePropertyChanged("IdDispensaryState");
                 }
             }
-        }
+        }*/
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=7)]
-        public byte IdTraumaType {
+        /*[System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+        public byte? IdTraumaType {
             get {
                 return this.IdTraumaTypeField;
             }
@@ -6908,23 +6911,10 @@ namespace Emk.EmkSvc {
                     this.RaisePropertyChanged("IdTraumaType");
                 }
             }
-        }
+        }*/
         
-        [System.Runtime.Serialization.DataMemberAttribute(Order=8)]
-        public byte MESImplementationFeature {
-            get {
-                return this.MESImplementationFeatureField;
-            }
-            set {
-                if ((this.MESImplementationFeatureField.Equals(value) != true)) {
-                    this.MESImplementationFeatureField = value;
-                    this.RaisePropertyChanged("MESImplementationFeature");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute(Order=9)]
-        public int MedicalStandard {
+        /*[System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+        public int? MedicalStandard {
             get {
                 return this.MedicalStandardField;
             }
@@ -6934,7 +6924,7 @@ namespace Emk.EmkSvc {
                     this.RaisePropertyChanged("MedicalStandard");
                 }
             }
-        }
+        }*/
         
         [System.Runtime.Serialization.DataMemberAttribute(Order=10)]
         public Emk.EmkSvc.Param[] Params {
