@@ -53,8 +53,8 @@ namespace Emk.Repository
         public List<PatientAccount> GetPatientAccounts(DateTime sinceDate, DateTime toDate)
         {
             var pats = new List<PatientAccount>();
-
-            using (var r = Connection.Query(toDate == DateTime.MinValue ? GetAccountStr(sinceDate) : GetAccountStr(sinceDate, toDate)))
+            var query = toDate == DateTime.MinValue ? GetAccountStr(sinceDate) : GetAccountStr(sinceDate, toDate);
+            using (var r = Connection.Query(query))
             {
                 if (!r.HasRows)
                     return pats;
@@ -112,7 +112,7 @@ namespace Emk.Repository
             "left join diagnoses ds on ds.diagnosis_id = td.diagnosis_id " +
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
-            $"WHERE treat_date >= '{since.Date:yyyy-MM-dd}' and treat_date < {to.AddDays(1).Date:yyyy-MM-dd}  " +
+            $"WHERE treat_date >= '{since.Date:yyyy-MM-dd}' and treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  " +
             "and t.ref_status is null ";
 
 

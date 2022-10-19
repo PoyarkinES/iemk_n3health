@@ -274,10 +274,12 @@ namespace Emk.Services
                 return 0;
             }
             catch (FaultException<RequestFault[]> ex) {
-                foreach (var err1 in ex.Detail) {
-                    Log.Error(err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message);
-                }
-                return -1;
+				//foreach (var err1 in ex.Detail) {
+				//    Log.Error(err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message);
+				//}
+				Log.Error(getErrorString(ex.Detail));
+
+				return -1;
             }
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
@@ -1253,5 +1255,17 @@ namespace Emk.Services
 
 		//	return 0;
 		//}
+
+		private string getErrorString(RequestFault[] errors, RequestFault error = null)
+		{
+			var result = new StringBuilder();
+			if (error != null)
+				result.Append($" {error.ErrorCode} : {error.PropertyName} {error.Message} ");
+			foreach (var item in errors)
+			{
+				result.Append(getErrorString(item.Errors, item));
+			}
+			return result.ToString();
+		}
 	}
 }
