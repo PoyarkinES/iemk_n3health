@@ -11,6 +11,7 @@ using Emk.EmkSvc;
 using Emk.Models;
 using Emk.Repository;
 using Emk.Services.Files;
+using Newtonsoft.Json;
 
 namespace Emk.Services
 {
@@ -277,7 +278,7 @@ namespace Emk.Services
 				//foreach (var err1 in ex.Detail) {
 				//    Log.Error(err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message);
 				//}
-				Log.Error(getErrorString(ex.Detail));
+				Log.Error("\r\n" + Newtonsoft.Json.JsonConvert.SerializeObject(JsonConvert.DeserializeObject($"{{ {getErrorString(ex.Detail)} }}"), Formatting.Indented) + "\r\n");
 
 				return -1;
             }
@@ -1259,13 +1260,16 @@ namespace Emk.Services
 		private string getErrorString(RequestFault[] errors, RequestFault error = null)
 		{
 			var result = new StringBuilder();
-			if (error != null)
-				result.Append($" {error.ErrorCode} : {error.PropertyName} {error.Message} ");
 			foreach (var item in errors)
-			{
-				result.Append(getErrorString(item.Errors, item));
+            {
+                result.Append(Environment.NewLine);
+                result.Append($"\"{item.PropertyName}\": {{ {getErrorString(item.Errors, item)} }},");
 			}
-			return result.ToString();
+
+            if (error != null && errors.Length == 0)
+                result.Append($"\"ErrorCode\": {error.ErrorCode}, \"PropertyName\":\"{error.PropertyName}\", \"Message\":\"{error.Message}\" ");
+            
+            return result.ToString().Remove(result.ToString().Length -1, 1);
 		}
 	}
 }
