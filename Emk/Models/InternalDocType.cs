@@ -7,6 +7,7 @@
         ExamReferral = 33,
         Prescription = 86,
         DischargeSummary = 2,
+        DocControlCardDispensaryObservation = 153,
         PdfConsultNote = -1
     }
 }

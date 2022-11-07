@@ -87,6 +87,8 @@ namespace Emk.Services
                     return new DocPrescription(fd.FilePath, fd.CartNoteId);
                 case InternalDocType.DischargeSummary:
                     return new DocDischargeSummary(fd.FilePath, fd.CartNoteId);
+                case InternalDocType.DocControlCardDispensaryObservation:
+                    return new DocControlCardDispensaryObservation(fd.FilePath, fd.CartNoteId);
                 default:
                     return null;
             }
