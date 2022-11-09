@@ -24,12 +24,14 @@ namespace Emk.Models
         }
         public int SexInt { get
             {
-                if (Sex == null)
-                    return 0;
-                if (Sex.Trim() == "F")
-                    return 2;
-                return 1;
-
+                switch (Sex.Trim())
+                {
+                    case "M":
+                        return 1;
+                    case "F":
+                        return 2;
+                    default: return 0;
+                }
             }}
         public string Sex { get; set; }
         public string Number { get; set; }
