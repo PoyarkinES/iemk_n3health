@@ -4,24 +4,24 @@ using System.Collections.Generic;
 
 namespace Emk.Repository
 {
-	public class TreatRepository : DbRepository
-	{
-		public List<PatientTreat> GetPatientsTreats(DateTime sinceDate, DateTime toDate)
-		{
-			var pats = new List<PatientTreat>();
-			using (var reader = Connection.Query(GetQueryString(sinceDate, toDate)))
-				if (reader.HasRows)
-					while (reader.Read())
-						pats.Add(new PatientTreat
-						{
-							PatientId = (int)reader[0],
-							TreatDate = (DateTime)reader[1],
-                            PracticeId = (short)reader[2],
+    public class TreatRepository : DbRepository
+    {
+        public List<PatientTreat> GetPatientsTreats(DateTime sinceDate, DateTime toDate)
+        {
+            var pats = new List<PatientTreat>();
+            using (var reader = Connection.Query(GetQueryString(sinceDate, toDate)))
+                if (reader.HasRows)
+                    while (reader.Read())
+                        pats.Add(new PatientTreat
+                        {
+                            PatientId = (int) reader[0],
+                            TreatDate = (DateTime) reader[1],
+                            PracticeId = (short) reader[2],
                             SpecialityCode = (reader[3] == DBNull.Value) ? 0 : int.Parse(reader[3].ToString()),
                             SpecialityName = reader[4].ToString()
                         });
-			return pats;
-		}
+            return pats;
+        }
 
         public PatientAccount GetPatientAccountById(int accountId)
         {
@@ -30,13 +30,14 @@ namespace Emk.Repository
                 if (!r.HasRows)
                     return null;
 
-                while (r.Read()) {
+                while (r.Read())
+                {
                     return new PatientAccount
                     {
-                        PatientId = (int)r[0],
-                        TreatDate = (DateTime)r[1],
-                        PracticeId = (short)r[2],
-                        ProviderId = (short)r[3],
+                        PatientId = (int) r[0],
+                        TreatDate = (DateTime) r[1],
+                        PracticeId = (short) r[2],
+                        ProviderId = (short) r[3],
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
                         Code = r[5] == DBNull.Value ? 0 : int.Parse(r[5].ToString()),
                         Name = r[6].ToString(),
@@ -63,10 +64,10 @@ namespace Emk.Repository
                 {
                     pats.Add(new PatientAccount
                     {
-                        PatientId = (int)r[0],
-                        TreatDate = (DateTime)r[1],
-                        PracticeId = (short)r[2],
-                        ProviderId = (short)r[3],
+                        PatientId = (int) r[0],
+                        TreatDate = (DateTime) r[1],
+                        PracticeId = (short) r[2],
+                        ProviderId = (short) r[3],
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
                         Code = r[5] == DBNull.Value ? 0 : int.Parse(r[5].ToString()),
                         Name = r[6].ToString(),
@@ -77,6 +78,21 @@ namespace Emk.Repository
             }
 
             return pats;
+        }
+
+        public List<string> GetCheckPracticId(int patientId)
+        {
+            var result = new List<string>();
+            using var r = Connection.Query(CheckPracticIdQuery(patientId));
+            {
+                while (r.Read())
+                {
+                    if((int)r[0] != (int)r[1])
+                        result.Add($"Случай лечения создан в практике {(int)r[0]} лечение пациента создано в практике {(int)r[1]}, случай не отправлен");
+                }
+            }
+
+            return result;
         }
 
 
@@ -115,7 +131,6 @@ namespace Emk.Repository
             $"WHERE treat_date >= '{since.Date:yyyy-MM-dd}' and treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  " +
             "and t.ref_status is null ";
 
-
         //private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
         //    ? $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' ORDER BY treat_date, patient_id"
         //    : $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  ORDER BY treat_date, patient_id";
@@ -124,5 +139,10 @@ namespace Emk.Repository
                 ? $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}'  and t.ref_status is null ORDER BY treat_date, patient_id"
                 : $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  and t.ref_status is null ORDER BY treat_date, patient_id";
 
+        private string CheckPracticIdQuery(int patientId)
+        {
+            return
+                $"SELECT p.practice_id, pa.practice_id FROM patients p JOIN patients_accounts pa WHERE p.patient_id = {patientId} GROUP BY p.practice_id, pa.practice_id";
+        }
     }
 }

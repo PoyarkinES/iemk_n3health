@@ -81,6 +81,16 @@ namespace Emk.Services
                     Log.Info($"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId}) пропущен.");
                     continue;
                 }
+
+                if (Factory.GetTreatRepository.GetCheckPracticId(i.PatientId).Any())
+                {
+                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.PatientId))
+                    {
+                        Log.Info(item);
+                    }
+                    continue;
+                }
+
                 var pix = new PixService(set);
                 var emk = new EmkService(set);
                 pix.AddPatient(i.PatientId);
@@ -176,5 +186,5 @@ namespace Emk.Services
 			Log.Info($"Получено {pats.Count}");
 			return pats;
 		}
-	}
+    }
 }
