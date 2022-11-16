@@ -83,12 +83,14 @@ namespace Emk.Repository
         public List<string> GetCheckPracticId(int patientId)
         {
             var result = new List<string>();
-            using var r = Connection.Query(CheckPracticIdQuery(patientId));
+
+            using (var r = Connection.Query(CheckPracticIdQuery(patientId)))
             {
                 while (r.Read())
                 {
-                    if((int)r[0] != (int)r[1])
-                        result.Add($"Случай лечения создан в практике {(int)r[0]} лечение пациента создано в практике {(int)r[1]}, случай не отправлен");
+                    if ((int) r[0] != (int) r[1])
+                        result.Add(
+                            $"Случай лечения создан в практике {(int) r[0]} лечение пациента создано в практике {(int) r[1]}, случай не отправлен");
                 }
             }
 
