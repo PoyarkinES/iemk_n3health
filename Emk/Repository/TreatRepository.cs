@@ -88,9 +88,12 @@ namespace Emk.Repository
             {
                 while (r.Read())
                 {
-                    if ((int) r[0] != (int) r[1])
+                    int.TryParse(r[0].ToString(), out var treat);
+                    int.TryParse(r[1].ToString(), out var pa);
+
+                    if (treat != pa)
                         result.Add(
-                            $"Случай лечения создан в практике {(int) r[0]} лечение пациента создано в практике {(int) r[1]}, случай не отправлен");
+                            $"Случай лечения создан в практике {treat} лечение пациента создано в практике {pa}, случай не отправлен");
                 }
             }
 
