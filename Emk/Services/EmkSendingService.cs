@@ -82,9 +82,9 @@ namespace Emk.Services
                     continue;
                 }
 
-                if (Factory.GetTreatRepository.GetCheckPracticId(i.PatientId).Any())
+                if (Factory.GetTreatRepository.GetCheckPracticId(i.PatientId,i.TreatDate).Any())
                 {
-                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.PatientId))
+                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.PatientId, i.TreatDate))
                     {
                         Log.Info(item);
                     }
