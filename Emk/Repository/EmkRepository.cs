@@ -1,6 +1,7 @@
 ﻿using Emk.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Emk.Repository
 {
@@ -22,10 +23,12 @@ namespace Emk.Repository
                 using (var reader = Connection.Query(sql)) {
                     if (reader.HasRows) {
                         while (reader.Read()) {
+                            if (!DateTime.TryParse(reader[3].ToString(), CultureInfo.CurrentCulture,
+                                DateTimeStyles.None, out var d)) continue;
                             doc.Surname = reader[0].ToString();
                             doc.Name = reader[1].ToString();
                             doc.MiddleName = reader[2].ToString();
-                            doc.BirthDay = (DateTime)reader[3];
+                            doc.BirthDay = d;
                             doc.AccountId = reader.IsDBNull(4) ? 0 : (int)reader[4];
                             //doc.IdLpu = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
                             doc.MemberId = (short)reader[5];

@@ -80,11 +80,11 @@ namespace Emk.Repository
             return pats;
         }
 
-        public List<string> GetCheckPracticId(int patientId,DateTime treat_date)
+        public List<string> GetCheckPracticId(int paccount)
         {
             var result = new List<string>();
 
-            using (var r = Connection.Query(CheckPracticIdQuery(patientId,treat_date)))
+            using (var r = Connection.Query(CheckPracticIdQuery(paccount)))
             {
                 while (r.Read())
                 {
@@ -146,13 +146,12 @@ namespace Emk.Repository
             ? $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}'  and t.ref_status is null ORDER BY treat_date, patient_id"
             : $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  and t.ref_status is null ORDER BY treat_date, patient_id";
 
-        private string CheckPracticIdQuery(int patientId, DateTime treat_date)
+        private string CheckPracticIdQuery(int paccount)
         {
             return
                 "SELECT t.practice_id as tpr, pa.practice_id as ppr, pa.id as acc " +
                 "FROM treat t JOIN patients_accounts pa " +
-                $"WHERE t.patient_id = {patientId} " +
-                $"AND t.treat_date = '{treat_date.Date:yyyy-MM-dd}' " +
+                $"WHERE t.account_id = {paccount} " +
                 "GROUP BY t.practice_id, pa.practice_id, pa.id";
         }
     }

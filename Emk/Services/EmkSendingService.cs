@@ -67,35 +67,41 @@ namespace Emk.Services
         private void Send(List<PatientAccount> list)
         {
 
-            var group = list.GroupBy(x => new { x.PatientId, x.ProviderId, x.DiagnoseCode });
+            var group = list.GroupBy(x => new { x.PatientId, x.AccountId, x.ProviderId, x.DiagnoseCode });
             foreach (var smo in group)
             {
                 Log.Info("-----------------");
-                var i = smo.First();
-                var set = _settings.SingleOrDefault(x => x.PracticeId == i.PracticeId);
-                if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty) {
-                    Log.Warning($"Не найдены настройки практики для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId})");
-                    continue;
-                }
-                if (!set.Enabled) {
-                    Log.Info($"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId}) пропущен.");
-                    continue;
-                }
-
-                if (Factory.GetTreatRepository.GetCheckPracticId(i.PatientId,i.TreatDate).Any())
-                {
-                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.PatientId, i.TreatDate))
+                    var i = smo.First();
+                    var set = _settings.SingleOrDefault(x => x.PracticeId == i.PracticeId);
+                    if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
                     {
-                        Log.Info(item);
+                        Log.Warning(
+                            $"Не найдены настройки практики для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId})");
+                        continue;
                     }
-                    continue;
-                }
 
-                var pix = new PixService(set);
-                var emk = new EmkService(set);
-                pix.AddPatient(i.PatientId);
-               // pix.UpdatePatient(i.PatientId);
-                emk.AddCase(i);
+                    if (!set.Enabled)
+                    {
+                        Log.Info(
+                            $"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId}) пропущен.");
+                        continue;
+                    }
+
+                    if (Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Any())
+                    {
+                        foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.AccountId))
+                        {
+                            Log.Info(item);
+                        }
+
+                        continue;
+                    }
+
+                    var pix = new PixService(set);
+                    var emk = new EmkService(set);
+                    pix.AddPatient(i.PatientId);
+                    // pix.UpdatePatient(i.PatientId);
+                    emk.AddCase(i);
             }
 
 
