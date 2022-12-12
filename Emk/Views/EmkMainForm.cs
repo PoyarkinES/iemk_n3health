@@ -62,6 +62,25 @@ namespace Emk.Views
             btnUpdate.Enabled = true;
         }
 
+        private async void btnSendByAccount_Click(object sender, EventArgs e)
+        {
+            var form = new AccountFinderForm();
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
 
+            btnSendByAccount.Enabled = false;
+            btnSendByAccount.Text = "Идет отправка...";
+            try
+            {
+                await Task.Factory.StartNew(() => new EmkSendingService().Run(form.AccountId));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error(ex.ToString());
+            }
+            btnSendByAccount.Text = @"Отправить данные по номеру счета";
+            btnSendByAccount.Enabled = true;
+        }
     }
 }

@@ -17,12 +17,12 @@ namespace Emk.Services
         }
 
 
-		public void Run()
+		public void Run(int? accountId = null)
 		{
             if(!IsLicenseValid()) return;
 
 			Log.Info("Начинаю отправку данных по пациентам...");
-			var p = GetPatientsAndTreatDates();
+            var p = GetPatientsAndTreatDates().Where(w => accountId == null || w.AccountId == accountId).ToList();
 			if(p.Count == 0) {
 				Log.Info("Записей лечения не найдено.");
 				return;

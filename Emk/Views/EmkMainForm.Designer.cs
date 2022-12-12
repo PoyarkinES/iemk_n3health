@@ -31,6 +31,7 @@
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnSmoSettings = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnSendByAccount = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSend
@@ -46,7 +47,7 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(13, 202);
+            this.btnSettings.Location = new System.Drawing.Point(13, 301);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(4);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(241, 65);
@@ -57,7 +58,7 @@
             // 
             // btnSmoSettings
             // 
-            this.btnSmoSettings.Location = new System.Drawing.Point(13, 294);
+            this.btnSmoSettings.Location = new System.Drawing.Point(13, 393);
             this.btnSmoSettings.Margin = new System.Windows.Forms.Padding(4);
             this.btnSmoSettings.Name = "btnSmoSettings";
             this.btnSmoSettings.Size = new System.Drawing.Size(241, 65);
@@ -68,7 +69,7 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(13, 86);
+            this.btnUpdate.Location = new System.Drawing.Point(13, 159);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(241, 65);
@@ -77,11 +78,23 @@
             this.btnUpdate.UseVisualStyleBackColor = true;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
+            // btnSendByAccount
+            // 
+            this.btnSendByAccount.Location = new System.Drawing.Point(13, 86);
+            this.btnSendByAccount.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSendByAccount.Name = "btnSendByAccount";
+            this.btnSendByAccount.Size = new System.Drawing.Size(241, 65);
+            this.btnSendByAccount.TabIndex = 4;
+            this.btnSendByAccount.Text = "Отправить данные по номеру счета";
+            this.btnSendByAccount.UseVisualStyleBackColor = true;
+            this.btnSendByAccount.Click += new System.EventHandler(this.btnSendByAccount_Click);
+            // 
             // EmkMainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(266, 165);
+            this.ClientSize = new System.Drawing.Size(267, 238);
+            this.Controls.Add(this.btnSendByAccount);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnSmoSettings);
             this.Controls.Add(this.btnSettings);
@@ -102,5 +115,6 @@
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnSmoSettings;
         private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnSendByAccount;
     }
 }
