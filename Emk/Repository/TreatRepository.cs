@@ -91,10 +91,12 @@ namespace Emk.Repository
                     int.TryParse(r["tpr"].ToString(), out var tpr);
                     int.TryParse(r["ppr"].ToString(), out var ppr);
                     int.TryParse(r["acc"].ToString(), out var acc);
+                    var tprName = r["tpr_name"].ToString();
+                    var pprName = r["ppr_name"].ToString();
 
                     if (tpr != ppr)
                         result.Add(
-                            $"Случай лечения {acc} создан в практике {tpr} лечение пациента создано в практике {ppr}, случай не отправлен");
+                            $"Случай лечения {acc} создан в практике: '{pprName}' лечение пациента создано в практике: '{tprName}', случай не отправлен");
                 }
             }
 
@@ -150,6 +152,8 @@ namespace Emk.Repository
         {
             return
                 "SELECT t.practice_id as tpr, pa.practice_id as ppr, pa.id as acc " +
+                ",(SELECT description FROM practice_locations WHERE practice_id = tpr) AS tpr_name " +
+                ",(SELECT description FROM practice_locations WHERE practice_id = ppr) AS ppr_name " +
                 "FROM treat t JOIN patients_accounts pa " +
                 $"WHERE t.account_id = {paccount} " +
                 "GROUP BY t.practice_id, pa.practice_id, pa.id";

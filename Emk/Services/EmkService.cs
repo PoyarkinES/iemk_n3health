@@ -289,6 +289,8 @@ namespace Emk.Services
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
                 Log.Error(errDescription);
+                if(ex.Detail.ErrorCode == 31)
+                    UpdateCase(treat);
                 return -1;
             }
             catch (FaultException<RequestWarning> ex) {
