@@ -17,6 +17,7 @@ namespace Emk.Models
         public string Name { get; set; }
         public string DiagnoseCode { get; set; }
         public string DiagnoseName { get; set; }
+        public string SmoPostfix { get; set; } = string.Empty;
 
 
     }

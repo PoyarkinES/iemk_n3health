@@ -110,7 +110,7 @@ namespace Emk.Services
                     DateTimeKind.Local);
                 case1.HistoryNumber = patient.CartNum;
 
-                case1.IdCaseMis = $"{patient.CartNum}-{doc.AccountId}";
+                case1.IdCaseMis = $"{patient.CartNum}-{doc.AccountId}{treat.SmoPostfix}";
 
                 case1.IdCaseAidType = 3;
                 case1.IdCaseType = 2;
@@ -170,7 +170,7 @@ namespace Emk.Services
                 };
                 var medRecords = new List<MedRecord>();
 
-                foreach (var d in _rep.GetProcedureDescriptions(treat.PatientId, treat.TreatDate)) {
+                foreach (var d in _rep.GetProcedureDescriptions(treat.PatientId, treat.TreatDate, doc.AccountId )) {
                     if (string.IsNullOrEmpty(d.Description))
                         continue;
                     medRecords.Add(new Service

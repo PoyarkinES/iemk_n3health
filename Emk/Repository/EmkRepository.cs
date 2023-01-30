@@ -200,9 +200,10 @@ namespace Emk.Repository
 			   
 		
 
-		public IEnumerable<ProcedureDescriptionEmk> GetProcedureDescriptions(int patientId, DateTime procedureDate)
-		{
-			var query = $"SELECT p.item, n.code, n.name FROM procedures p left join n3h_dict n on p.n3h_code = n.code WHERE item_id IN  (SELECT item_id FROM treat WHERE treat.patient_id = {patientId} and treat.treat_date = '{procedureDate:yyyy-MM-dd}' )";
+		public IEnumerable<ProcedureDescriptionEmk> GetProcedureDescriptions(int patientId, DateTime procedureDate, int? accountId = null)
+        {
+            var account = accountId == null ? String.Empty : $" and treat.account_id = {accountId}";
+			var query = $"SELECT p.item, n.code, n.name FROM procedures p left join n3h_dict n on p.n3h_code = n.code WHERE item_id IN  (SELECT item_id FROM treat WHERE treat.patient_id = {patientId} and treat.treat_date = '{procedureDate:yyyy-MM-dd}' {account})";
 			List<ProcedureDescriptionEmk> list = new List<ProcedureDescriptionEmk>();
 			using (var r = Connection.Query(query)) {
 				if (r.HasRows) {

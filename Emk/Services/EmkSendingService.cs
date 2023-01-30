@@ -190,7 +190,25 @@ namespace Emk.Services
             var pats = Factory.GetTreatRepository.GetPatientAccounts(startDate, endDate);
             //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
 			Log.Info($"Получено {pats.Count}");
-			return pats;
+			return AddPostfixForDiagnose(pats);
 		}
+
+        private List<PatientAccount> AddPostfixForDiagnose(List<PatientAccount> list)
+        {
+            var group = list.GroupBy(x => new { x.PatientId, x.AccountId, x.ProviderId });
+            foreach (var item in group)
+            {
+                if (item.Count() < 2)
+                    continue;
+                var ch = 'a';
+                foreach (var acc in item.GroupBy(x=>x.DiagnoseCode))
+                {
+                    acc.First().SmoPostfix = ch.ToString();
+                    ch++;
+                }
+            }
+
+            return list;
+        }
     }
 }
