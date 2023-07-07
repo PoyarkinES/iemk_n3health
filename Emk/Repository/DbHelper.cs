@@ -2,6 +2,8 @@
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace Emk.Repository
 {
@@ -36,8 +38,10 @@ namespace Emk.Repository
             }
             catch (Exception e)
             {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
                 Log.Error(e.ToString());
-                throw new Exception("Ошибка при получении данных из БД" + e.ToString());
+                throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
             }
 
         }
@@ -65,50 +69,68 @@ namespace Emk.Repository
 			}
 			catch (Exception e)
 			{
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
 				Log.Error(e.ToString());
-				throw new Exception("Ошибка при получении данных из БД" + e.ToString());
+                throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
 			}
-		}
+        }
 
 		public static DbDataReader Query(this DbConnection connection, string commandText, object @object, CommandType commandType)
 		{
-			if (connection.State != ConnectionState.Open)
-				connection.Open();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
 
-			using (var command = connection.CreateCommand(commandType))
-			{
-				command.CommandText = commandText;
+                using (var command = connection.CreateCommand(commandType)) {
+                    command.CommandText = commandText;
 
-				foreach (var prop in @object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-				{
-					var param = command.CreateParameter();
-					param.ParameterName = prop.Name;
-					param.Value = prop.GetValue(@object, null);
-					command.Parameters.Add(param);
-				}
+                    foreach (var prop in @object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
+                        var param = command.CreateParameter();
+                        param.ParameterName = prop.Name;
+                        param.Value = prop.GetValue(@object, null);
+                        command.Parameters.Add(param);
+                    }
 
-				return command.ExecuteReader();
-			}
+                    return command.ExecuteReader();
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+                Log.Error(e.ToString());
+                throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
+            }
+        }
 
-		}
-
-		public static int ExecuteNonQuery(this DbConnection connection, string commandText, params object[] args)
+		public static  int ExecuteNonQuery(this DbConnection connection, string commandText, params object[] args)
 		{
-			if (connection.State != ConnectionState.Open)
-				connection.Open();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
 
-			using (var command = connection.CreateCommand())
-			{
-				command.CommandText = commandText;
+                using (var command = connection.CreateCommand()) {
+                    command.CommandText = commandText;
 
-				foreach (var value in args)
-				{
-					var param = command.CreateParameter();
-					param.Value = value;
-					command.Parameters.Add(param);
-				}
-				return command.ExecuteNonQuery();
-			}
-		}
+                    foreach (var value in args) {
+                        var param = command.CreateParameter();
+                        param.Value = value;
+                        command.Parameters.Add(param);
+                    }
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+                Log.Error(e.ToString());
+                throw new Exception($"MethodName: 'ExecuteNonQuery'. Ошибка при получении данных из БД" + e.ToString());
+            }
+        }
 	}
 }

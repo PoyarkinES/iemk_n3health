@@ -28,6 +28,8 @@ namespace Emk.Models
                 {
                     case "M":
                         return 1;
+                    case "М":
+                        return 1;
                     case "F":
                         return 2;
                     default: return 0;

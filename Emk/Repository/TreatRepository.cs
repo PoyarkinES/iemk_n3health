@@ -1,6 +1,7 @@
 ﻿using Emk.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Emk.Repository
 {
@@ -35,14 +36,18 @@ namespace Emk.Repository
                     return new PatientAccount
                     {
                         PatientId = (int)r[0],
-                        TreatDate = (DateTime)r[1],
-                        PracticeId = (short)r[2],
-                        ProviderId = (short)r[3],
+                        TreatDate = r[1] == DBNull.Value
+                            ? DateTime.Now
+                            : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
+                        PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
+                        ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
                         Code = r[5] == DBNull.Value ? 0 : int.Parse(r[5].ToString()),
                         Name = r[6].ToString(),
                         DiagnoseName = r[7].ToString(),
-                        DiagnoseCode = r[8].ToString()
+                        DiagnoseCode = r[8].ToString(),
+                        //SmoPostfix = string.Empty,
+                        ListProcedures = r[9].ToString()
                     };
                 }
             }
@@ -62,21 +67,25 @@ namespace Emk.Repository
 
                 while (r.Read())
                 {
+
                     pats.Add(new PatientAccount
                     {
                         PatientId = (int)r[0],
-                        TreatDate = (DateTime)r[1],
-                        PracticeId = (short)r[2],
-                        ProviderId = (short)r[3],
+                        TreatDate = r[1] == DBNull.Value
+                            ? DateTime.Now
+                            : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
+                        PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
+                        ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
                         Code = r[5] == DBNull.Value ? 0 : int.Parse(r[5].ToString()),
                         Name = r[6].ToString(),
                         DiagnoseName = r[7].ToString(),
-                        DiagnoseCode = r[8].ToString()
+                        DiagnoseCode = r[8].ToString(),
+                        //SmoPostfix = string.Empty,
+                        ListProcedures = r[9].ToString()
                     });
                 }
             }
-
             return pats;
         }
 
@@ -105,8 +114,9 @@ namespace Emk.Repository
 
 
         private string GetAccountStr(DateTime since) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'') " +
-            "FROM treat t  " +
+            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''),(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "FROM treat t JOIN procedures pr " +
+            "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
             "left join treat_diagnosis td on td.treat_id = t.treat_id " +
@@ -114,11 +124,12 @@ namespace Emk.Repository
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE treat_date = '{since.Date:yyyy-MM-dd}'  " +
-            "and t.ref_status is null ";
+            "and t.ref_status is null AND lab_work_id IS NULL ";
 
         private string GetAccountStr(int accountId) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'') " +
-            "FROM treat t  " +
+            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''),(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "FROM treat t JOIN procedures pr " +
+            "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
             "left join treat_diagnosis td on td.treat_id = t.treat_id " +
@@ -126,11 +137,12 @@ namespace Emk.Repository
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE t.account_id = {accountId}  " +
-            "and t.ref_status is null ";
+            "and t.ref_status is null AND lab_work_id IS NULL ";
 
         private string GetAccountStr(DateTime since, DateTime to) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'') " +
-            "FROM treat t  " +
+            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''),(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "FROM treat t JOIN procedures pr " +
+            "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
             "left join treat_diagnosis td on td.treat_id = t.treat_id " +
@@ -138,15 +150,15 @@ namespace Emk.Repository
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE treat_date >= '{since.Date:yyyy-MM-dd}' and treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  " +
-            "and t.ref_status is null ";
+            "and t.ref_status is null AND lab_work_id IS NULL ";
 
         //private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
         //    ? $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' ORDER BY treat_date, patient_id"
         //    : $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  ORDER BY treat_date, patient_id";
 
         private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
-            ? $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}'  and t.ref_status is null ORDER BY treat_date, patient_id"
-            : $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  and t.ref_status is null ORDER BY treat_date, patient_id";
+            ? $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}'  and t.ref_status is null AND lab_work_id IS NULL ORDER BY treat_date, patient_id"
+            : $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  and t.ref_status is null AND lab_work_id IS NULL ORDER BY treat_date, patient_id";
 
         private string CheckPracticIdQuery(int paccount)
         {

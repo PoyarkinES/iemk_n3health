@@ -77,7 +77,7 @@ namespace Emk.Services.Docs
             fd.CartNoteId = int.Parse(data[1]);
             fd.DocType = (InternalDocType)Enum.Parse(typeof(InternalDocType), data[2]);
             fd.PatientCartNum = data[3];
-            fd.DoctorId = short.Parse(data[4]);
+            fd.DoctorId = int.Parse(data[4]);
             return fd;
                 
         }

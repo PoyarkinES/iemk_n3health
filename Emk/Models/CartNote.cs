@@ -9,6 +9,6 @@ namespace Emk.Models
         public DateTime DateAdded { get; set; }
         public string Description { get; set; }
         public int PatientId { get; set; }
-        public short DoctorId { get; set; }
+        public int DoctorId { get; set; }
     }
 }

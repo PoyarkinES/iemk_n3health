@@ -78,6 +78,7 @@
     <Compile Include="Models\PatientTreat.cs" />
     <Compile Include="Models\PayType.cs" />
     <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\ProceduresEmk.cs" />
     <Compile Include="Models\ProcedureDescriptionEmk.cs" />
     <Compile Include="Models\SendingType.cs" />
     <Compile Include="Models\SmoSettings.cs" />

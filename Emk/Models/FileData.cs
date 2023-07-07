@@ -14,7 +14,7 @@ namespace Emk.Models
 
         public string PatientCartNum { get; set; }
 
-        public short DoctorId { get; set; }
+        public int DoctorId { get; set; }
 
         public bool FileExists
         {
