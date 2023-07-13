@@ -43,37 +43,47 @@ namespace Emk.Repository
                 Log.Error(e.ToString());
                 throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
             }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
 
         }
 
-		public static DbDataReader Query(this DbConnection connection, string commandText, params object[] args)
+        public static DbDataReader Query(this DbConnection connection, string commandText, params object[] args)
 		{
-			try
-			{
-				if (connection.State != ConnectionState.Open)
-					connection.Open();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                    connection.Open();
 
-				using (var command = connection.CreateCommand())
-				{
-					command.CommandText = commandText;
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = commandText;
 
-					foreach (var value in args)
-					{
-						var param = command.CreateParameter();
-						param.Value = value;
-						command.Parameters.Add(param);
-					}
+                    foreach (var value in args)
+                    {
+                        var param = command.CreateParameter();
+                        param.Value = value;
+                        command.Parameters.Add(param);
+                    }
 
-					return command.ExecuteReader();
-				}
-			}
-			catch (Exception e)
-			{
+                    return command.ExecuteReader();
+                }
+            }
+            catch (Exception e)
+            {
                 if (connection.State == ConnectionState.Open)
                     connection.Close();
-				Log.Error(e.ToString());
+                Log.Error(e.ToString());
                 throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
-			}
+            }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
         }
 
 		public static DbDataReader Query(this DbConnection connection, string commandText, object @object, CommandType commandType)
@@ -103,9 +113,14 @@ namespace Emk.Repository
                 Log.Error(e.ToString());
                 throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
             }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
         }
 
-		public static  int ExecuteNonQuery(this DbConnection connection, string commandText, params object[] args)
+        public static  int ExecuteNonQuery(this DbConnection connection, string commandText, params object[] args)
 		{
             try
             {
@@ -131,6 +146,11 @@ namespace Emk.Repository
                 Log.Error(e.ToString());
                 throw new Exception($"MethodName: 'ExecuteNonQuery'. Ошибка при получении данных из БД" + e.ToString());
             }
+            finally
+            {
+                if (connection.State == ConnectionState.Open)
+                    connection.Close();
+            }
         }
-	}
+    }
 }

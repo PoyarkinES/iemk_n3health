@@ -113,17 +113,13 @@ namespace Emk.Services
                 throw new ArgumentException("Для пациента не указан ПОЛ");
             }
 
-            if (string.IsNullOrWhiteSpace(patient.Snils))
+            if (string.IsNullOrEmpty(patient.Snils?.Trim()))
             {
+                Log.Warning("Для пациента не указан СНИЛС");
                 return;
-                Log.Error("Для пациента не указан СНИЛС");
-                throw new ArgumentException("Для пациента не указан снилс");
             }
             
-            if (_patient1.Documents == null)
-            {
-                _patient1.Documents = new DocumentDto[1];
-            }
+            _patient1.Documents ??= new DocumentDto[1];
 
             _patient1.Documents[0] = new DocumentDto()
             {

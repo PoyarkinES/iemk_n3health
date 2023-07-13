@@ -90,17 +90,6 @@ namespace Emk.Services
                 procedures.ListCodes = treat.ListProcedures;
                 Log.Info($"Доктор: {doc.Surname} {doc.Name} {doc.MiddleName} Диагноз: {diag.DiagnosisCode} {diag.DiagnosisName} Процедуры: {procedures.ListCodes}");
 
-
-                //if (patient1 == null)
-                //{
-                //	int rv;
-                //	patient1 = new PersonWithIdentity();
-
-                //	rv = SetPatient(patient_id, ref ErrDescription);
-                //	if (rv != 0)
-                //		return rv;
-                //}
-
                 var doctor = doc.ToMedicalStaff();
 
                 var def = _smoSrv.LoadDefaults();
@@ -185,82 +174,6 @@ namespace Emk.Services
                         Performer = new Participant { IdRole = 3, Doctor = doctor }
                     });
                 }
-
-                //try
-                //{
-                //    _conn = _conn ?? new OdbcConnection(conString);
-                //    if (_conn.State != ConnectionState.Open)
-                //        _conn.Open();
-
-                //    var hasPDF = false;
-
-
-                //    var dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.Id}]\\Дневниковые записи";
-                //    if (!Directory.Exists(dir))
-                //        dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
-
-                //    var docs = new DocSelector(patient, treat.TreatDate, dir).GetDocs();
-                //    if (docs != null)
-                //        medDocuments.AddRange(docs);
-
-
-
-
-                //    if (Directory.Exists(dir))
-                //    {
-                //        var files = from file in Directory.EnumerateFiles(dir)
-                //                    orderby file ascending
-                //                    where file.EndsWith("pdf", StringComparison.OrdinalIgnoreCase)
-                //                    select file;
-                //        var pdf = files.LastOrDefault();
-                //        if (!string.IsNullOrEmpty(pdf))
-                //        {
-                //            hasPDF = true;
-
-                //            var data = File.ReadAllBytes(pdf);
-
-                //            // ReSharper disable UseStringInterpolation
-                //            var sgn1 = string.Format("{0}.sgn", string.Copy(pdf));
-                //            var sgn2 = string.Format("{0}2.sgn", string.Copy(pdf));
-                //            // ReSharper restore UseStringInterpolation
-
-                //            byte[] dsgn = null, osgn = null;
-                //            if (File.Exists(sgn1))
-                //                dsgn = File.ReadAllBytes(sgn1);
-                //            if (File.Exists(sgn2))
-                //                osgn = File.ReadAllBytes(sgn2);
-
-                //            medDocuments.Add(new ConsultNote
-                //            {
-                //                Attachments = new[]
-                //                {
-                //                              new MedDocumentDtoDocumentAttachment
-                //                              {
-                //                                  Data = data, //Encoding.UTF8.GetBytes(s),
-                //    MimeType = "application/pdf",
-                //                                  OrganizationSign = osgn,
-                //                                  PersonalSigns = dsgn == null ? null : new[]
-                //                                  {
-                //                                      new MedDocumentDtoPersonalSign
-                //                                      {
-                //                                          Doctor = doctor,
-                //                                          Sign = dsgn
-                //                                      }
-                //                                  }
-                //                              }
-                //                          },
-                //                Author = doctor,
-                //                CreationDate = DateTime.Now.Date,
-                //                Header = "Header",
-                //                IdDocumentMis = $"{patient.CartNum}-{doc.AccountId}"
-                //                //IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
-                //            });
-                //        }
-                //    }
-                //}
-                //catch (Exception)
-                //{
-                //}
 
                 case1.MedRecords = medDocuments.ToArray();
                 case1.Steps[0].MedRecords = medRecords.ToArray();
