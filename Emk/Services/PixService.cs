@@ -3,6 +3,7 @@ using Emk.PixSvc;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -105,8 +106,9 @@ namespace Emk.Services
 				MiddleName = patient.MiddleName,
 				IdPatientMIS = patient.CartNum,
 				BirthDate = patient.DateOfBirth,
-				Sex = (byte)patient.SexInt
-			};
+				Sex = (byte)patient.SexInt,
+				Documents = new DocumentDto[1]
+		};
             if (patient.SexInt == 0)
             {
                 Log.Error("Для пациента не указан ПОЛ");
@@ -118,10 +120,8 @@ namespace Emk.Services
                 Log.Warning("Для пациента не указан СНИЛС");
                 return;
             }
-            
-            _patient1.Documents ??= new DocumentDto[1];
 
-            _patient1.Documents[0] = new DocumentDto()
+            _patient1.Documents[1] = new DocumentDto()
             {
                 DocN = patient.Snils.Replace(" ", "").Replace("-", ""),
                 DocumentName = "СНИЛС",
