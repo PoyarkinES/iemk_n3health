@@ -121,7 +121,7 @@ namespace Emk.Services
                 return;
             }
 
-            _patient1.Documents[1] = new DocumentDto()
+            _patient1.Documents[0] = new DocumentDto()
             {
                 DocN = patient.Snils.Replace(" ", "").Replace("-", ""),
                 DocumentName = "СНИЛС",
