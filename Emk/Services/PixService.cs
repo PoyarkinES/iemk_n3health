@@ -107,7 +107,6 @@ namespace Emk.Services
 				IdPatientMIS = patient.CartNum,
 				BirthDate = patient.DateOfBirth,
 				Sex = (byte)patient.SexInt,
-				Documents = new DocumentDto[1]
 		};
             if (patient.SexInt == 0)
             {
@@ -121,6 +120,7 @@ namespace Emk.Services
                 return;
             }
 
+            _patient1.Documents = new DocumentDto[1];
             _patient1.Documents[0] = new DocumentDto()
             {
                 DocN = patient.Snils.Replace(" ", "").Replace("-", ""),
