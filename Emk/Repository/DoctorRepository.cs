@@ -8,7 +8,7 @@ namespace Emk.Repository
 		public IEnumerable<Doctor> GetDoctors()
 		{
 			var docs = new List<Doctor>();
-			using (var reader = Connection.Query("SELECT TRIM(surname), TRIM(firstname), TRIM(middlename), pers_code, tax_file_no, member_id FROM staff WHERE is_active= 'Y' and member_type = 1"))
+			using (var reader = Connection.Query("SELECT TRIM(surname), TRIM(firstname), TRIM(middlename), pers_code, tax_file_no, member_id, sex FROM staff WHERE is_active= 'Y' and member_type = 1"))
 				if (reader.HasRows)
 					while (reader.Read())
 						docs.Add(new Doctor
@@ -19,8 +19,9 @@ namespace Emk.Repository
 							PersCode = reader[3].ToString(),
 							Snils = reader[4].ToString(),
 							//MemberId = (int)reader[5]
-                            MemberId = reader.IsDBNull(5) ? 0 : int.Parse(reader[5].ToString())
-        });
+                            MemberId = reader.IsDBNull(5) ? 0 : int.Parse(reader[5].ToString()),
+							Sex = reader["Sex"].ToString()
+						});
 			return docs;
 		}
 

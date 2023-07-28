@@ -177,7 +177,7 @@ namespace Emk.Services
 
                 case1.MedRecords = medDocuments.ToArray();
                 case1.Steps[0].MedRecords = medRecords.ToArray();
-                Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено записей: {medRecords.Count}");
+                Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено количество процедур СМО: {medRecords.Count}");
 
                 if (updateOnly)
                 {

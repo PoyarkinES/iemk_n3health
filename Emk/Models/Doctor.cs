@@ -18,6 +18,6 @@ namespace Emk.Models
 		public string Name { get; set; }
 		[DisplayName("Отчество")]
 		public string MiddleName { get; set; }
-        
+        [DisplayName("Пол")] public string Sex { get; set; }
     }
 }

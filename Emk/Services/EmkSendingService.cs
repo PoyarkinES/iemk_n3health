@@ -177,8 +177,8 @@ namespace Emk.Services
             var startDate = DateTime.MinValue;
 			var endDate = DateTime.MinValue;
 			if (_settings.First().SendingType == SendingType.DaysBeforeNow) {
-				//startDate = DateTime.Now.AddDays(-1);
-				startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
+				startDate = DateTime.Now.AddDays(-2);
+				//startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
 				Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()}");
 			}
 			else {
@@ -195,16 +195,19 @@ namespace Emk.Services
 
         private List<PatientAccount> AddPostfixForDiagnose(List<PatientAccount> list)
         {
-            var group = list.GroupBy(x => new { x.PatientId, x.AccountId, x.ProviderId });
-            foreach (var item in group)
+            foreach (var accId in list.Select(s=> s.AccountId).Distinct())
             {
-                if (item.Count() < 2)
-                    continue;
-                var ch = 'a';
-                foreach (var acc in item.GroupBy(x=>x.DiagnoseCode))
+                var group = list.Where(w=>w.AccountId == accId).GroupBy(x => new { x.PatientId, x.AccountId, x.ProviderId });
+                foreach (var item in group.Distinct())
                 {
-                    acc.First().SmoPostfix = ch.ToString();
-                    ch++;
+                    if (item.Select(s=> new {s.PatientId, s.AccountId, s.ProviderId }).Distinct().Count() < 2)
+                        continue;
+                    var ch = 'a';
+                    foreach (var acc in item.GroupBy(x => x.DiagnoseCode))
+                    {
+                        acc.First().SmoPostfix = ch.ToString();
+                        ch++;
+                    }
                 }
             }
 
