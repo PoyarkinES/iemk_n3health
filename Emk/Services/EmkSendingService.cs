@@ -177,8 +177,8 @@ namespace Emk.Services
             var startDate = DateTime.MinValue;
 			var endDate = DateTime.MinValue;
 			if (_settings.First().SendingType == SendingType.DaysBeforeNow) {
-				startDate = DateTime.Now.AddDays(-2);
-				//startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
+				//startDate = DateTime.Now.AddDays(-1);
+				startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
 				Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()}");
 			}
 			else {
