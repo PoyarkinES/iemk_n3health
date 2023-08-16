@@ -174,19 +174,18 @@ namespace Emk.Services
             //    setting.DateInterval = 0;
             //}
 #endif
-            var startDate = DateTime.MinValue;
-			var endDate = DateTime.MinValue;
+            DateTime startDate;
+			DateTime endDate;
 			if (_settings.First().SendingType == SendingType.DaysBeforeNow) {
-				//startDate = DateTime.Now.AddDays(-1);
 				startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
-				Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()}");
+                endDate = DateTime.Now;
 			}
 			else {
 				startDate = _settings.First().IntervalFrom.Date;
 				endDate = _settings.First().IntervalTo.Date;
-				Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()} по {endDate.ToShortDateString()}");
 			}
 
+            Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()} по {endDate.ToShortDateString()}");
             var pats = Factory.GetTreatRepository.GetPatientAccounts(startDate, endDate);
             //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
 			Log.Info($"Получено {pats.Count}");
