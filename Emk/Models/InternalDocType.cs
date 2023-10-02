@@ -8,6 +8,7 @@
         Prescription = 86,
         DischargeSummary = 2,
         DocControlCardDispensaryObservation = 153,
+        DocConsultNote = 198,
         PdfConsultNote = -1
     }
 }

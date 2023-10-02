@@ -64,6 +64,8 @@ namespace Emk.Services.Docs
             return _doc;
         }
 
+        protected override int DocType { get; set; }
+
         protected override DoctorEmk GetDoctor()
         {
             return base.GetDoctor();

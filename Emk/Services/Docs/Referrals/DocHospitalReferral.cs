@@ -32,7 +32,9 @@ namespace Emk.Services.Docs.Referrals
             Log.Info("Направление с типом " + DocCode + " сформировано.");
             return _doc;
         }
-        
+
+        protected override int DocType { get; set; }
+
         private MedDocumentDtoDocumentAttachment[] AddAttachments()
         {
             Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");

@@ -93,6 +93,7 @@
     <Compile Include="Repository\SettingsRepository.cs" />
     <Compile Include="Repository\TreatRepository.cs" />
     <Compile Include="Services\DocSelector.cs" />
+    <Compile Include="Services\Docs\DocConsultNote.cs" />
     <Compile Include="Services\Docs\DocControlCardDispensaryObservation.cs" />
     <Compile Include="Services\Docs\DocDischargeSummary.cs" />
     <Compile Include="Services\Docs\DocAppointedMedication.cs" />

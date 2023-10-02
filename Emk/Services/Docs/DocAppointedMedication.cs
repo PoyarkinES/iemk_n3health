@@ -22,7 +22,7 @@ namespace Emk.Services.Docs
             throw new NotImplementedException();
         }
 
-
+        protected override int DocType { get; set; }
 
         public void ParseCartNote()
         {

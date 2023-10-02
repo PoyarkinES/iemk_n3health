@@ -45,7 +45,7 @@ namespace Emk.Services.Docs
 
         public abstract MedRecord CreateDocument();
 
-
+        protected abstract int DocType { get; set; }
 
         protected virtual DoctorEmk GetDoctor()
         {

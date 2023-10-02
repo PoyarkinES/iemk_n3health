@@ -31,6 +31,7 @@ namespace Emk.Services.Docs
             return _doc;
         }
 
+        protected override int DocType { get; set; }
 
         private MedDocumentDtoDocumentAttachment[] AddAttachments()
         {

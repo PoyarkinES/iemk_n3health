@@ -128,7 +128,7 @@ namespace Emk.Services
                     {
                         DateStart = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
                             DateTimeKind.Local),
-                        DateEnd = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
+                        DateEnd = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 1, 1,
                             DateTimeKind.Local),
                         IdStepMis = $"{doc.AccountId}-{patient.CartNum}" ,
                         Doctor = doctor,
@@ -167,7 +167,7 @@ namespace Emk.Services
                     {
                         DateEnd = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
                             DateTimeKind.Local),
-                        DateStart = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
+                        DateStart = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 1, 1,
                             DateTimeKind.Local),
                         IdServiceType = d.Description,
                         ServiceName = d.FullDescription,

@@ -1,42 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
 
 namespace Emk.Services.Docs
 {
-    public class DocPrescription : DocBase
+    public class DocConsultNote : DocBase
     {
-        private readonly AppointedMedication _doc;
-        private readonly DoctorEmk _doctor;
-        public DocPrescription(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        private Patient _patient;
+        private DoctorEmk _doctor;
+        private FileData _fd;
+        private MedDocument _doc;
+
+        public DocConsultNote(string filePath, int cartNoteId) : base(filePath, cartNoteId)
         {
-            _doc = new AppointedMedication();
-            _doctor = GetDoctor();
+            _doc = new MedDocument();
+            SetPatientAndDoctor();
         }
 
-        protected override int DocCode => 86;
+        protected override int DocCode { get; } = 198;
         protected override string NsType { get; }
         public override MedRecord CreateDocument()
         {
-            Log.Info("Формирую рецепт тип " + DocCode);
-            SetData();
-            AddAttachments();
-            Log.Info("Рецепт с типом " + DocCode + " сформирован.");
+            _doc.Attachments = AddAttachments();
+            _doc.Author = _doctor.ToMedicalStaff();
+            _doc.CreationDate = DateTime.Now.Date;
+            _doc.Header = "Протокол консультации";
+            _doc.IdDocumentMis = $"{_patient.CartNum}-{_doctor.AccountId}";
+            _doc.IdMedDocumentType = (byte)DocCode;
             return _doc;
         }
 
         protected override int DocType { get; set; }
 
-        private void SetData()
-        {
-            var data = CartNote.Description.Split('Ї');
-            _doc.IssuedDate = DateTime.Parse(data[1]);
-            _doc.MedicineName = data[9];
-            _doc.IdINN = int.Parse(data[19]);
-            _doc.Doctor = _doctor.ToMedicalStaff();
-            
-        }
+
         private MedDocumentDtoDocumentAttachment[] AddAttachments()
         {
             Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
@@ -71,5 +72,26 @@ namespace Emk.Services.Docs
         }
 
 
+
+        protected override Patient GetPatient()
+        {
+            if (_fd?.PatientCartNum == null)
+                return null;
+            return PatRep.GetPatient(_fd.PatientCartNum);
+        }
+
+        protected override DoctorEmk GetDoctor()
+        {
+            if (_patient == null)
+                return null;
+            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate);
+        }
+
+        private void SetPatientAndDoctor()
+        {
+            _fd = ParseFile(FilePath);
+            _patient = GetPatient();
+            _doctor = GetDoctor();
+        }
     }
 }
