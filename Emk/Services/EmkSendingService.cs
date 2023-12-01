@@ -101,7 +101,9 @@ namespace Emk.Services
                     var emk = new EmkService(set);
                     pix.AddPatient(i.PatientId);
                     // pix.UpdatePatient(i.PatientId);
-                    emk.AddCase(i);
+                    var result = emk.AddCase(i);
+                    if(result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
+
             }
 
 

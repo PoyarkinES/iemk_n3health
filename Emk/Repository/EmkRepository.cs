@@ -199,8 +199,6 @@ namespace Emk.Repository
 			}
 			return doc;
 		}
-			   
-		
 
 		public IEnumerable<ProcedureDescriptionEmk> GetProcedureDescriptions(int patientId, DateTime procedureDate, int? accountId = null)
         {
@@ -223,7 +221,6 @@ namespace Emk.Repository
 			}
 			return list;
 		}
-
 
         public PayType GetPayType(int accountId)
         {
@@ -269,5 +266,12 @@ namespace Emk.Repository
 
             return PayType.Unknown;
         }
-	}
+
+        public void UpdateEsignFiles(PatientAccount pa)
+        {
+            var sql = $"Update esign_files set date_approved = {DateTime.Now} where account_id = {pa.AccountId}";
+            Connection.ExecuteNonQuery(sql);
+        }
+
+    }
 }

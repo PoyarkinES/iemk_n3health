@@ -112,10 +112,12 @@ namespace Emk.Repository
             return result;
         }
 
-
         private string GetAccountStr(DateTime since) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''),(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
+            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
+            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
             "FROM treat t JOIN procedures pr " +
+            "inner join esign_files esf on t.account_id = esf.account_id and esf.date_approved is null " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -127,8 +129,11 @@ namespace Emk.Repository
             "and t.ref_status is null AND lab_work_id IS NULL ";
 
         private string GetAccountStr(int accountId) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''),(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
+            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
+            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
             "FROM treat t JOIN procedures pr " +
+            "inner join esign_files esf on t.account_id = esf.account_id and esf.date_approved is null " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -140,8 +145,11 @@ namespace Emk.Repository
             "and t.ref_status is null AND lab_work_id IS NULL ";
 
         private string GetAccountStr(DateTime since, DateTime to) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''),(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
+            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
+            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
             "FROM treat t JOIN procedures pr " +
+            "inner join esign_files esf on t.account_id = esf.account_id and esf.date_approved is null " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
