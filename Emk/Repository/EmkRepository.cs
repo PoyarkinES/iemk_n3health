@@ -269,7 +269,7 @@ namespace Emk.Repository
 
         public void UpdateEsignFiles(PatientAccount pa)
         {
-            var sql = $"Update esign_files set date_approved = {DateTime.Now} where account_id = {pa.AccountId}";
+            var sql = $"Update esign_files set date_sent = {DateTime.Now} where account_id = {pa.AccountId}";
             Connection.ExecuteNonQuery(sql);
         }
 
