@@ -54,8 +54,8 @@ namespace Emk.Services
 
 
             new PixService(set).UpdatePatient(smo.PatientId);
-            new EmkService(set).UpdateCase(smo);
-
+            var result = new EmkService(set).UpdateCase(smo);
+            if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(smo);
         }
 
 
