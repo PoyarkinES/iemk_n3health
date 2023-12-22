@@ -31,6 +31,7 @@ namespace Emk.Services
 		string path = "";
 		string patientsBaseDir;
 		IDoctorFileService _smoSrv;
+        private int AutoUpd = 0;
 
 		public EmkService(EmkSettings s)
 		{
@@ -42,7 +43,8 @@ namespace Emk.Services
 			_smoSrv = Factory.GetSmoService;
 			_rep = Factory.GetEmkRepository;
             _conn = Factory.GetDbConnection();
-        }
+            AutoUpd = s.AutoUpdate;
+		}
 
 
         public int UpdateCase(PatientAccount treat) => AddCase(treat, true);
@@ -276,9 +278,9 @@ namespace Emk.Services
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
                 Log.Error(errDescription);
-                //if(ex.Detail.ErrorCode == 31)
-                    //UpdateCase(treat);
-                return -1;
+				if(ex.Detail.ErrorCode == 31 && AutoUpd == 1)
+				UpdateCase(treat);
+				return -1;
             }
             catch (FaultException<RequestWarning> ex) {
                 Log.Warning(ex.Detail.WarningCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n");

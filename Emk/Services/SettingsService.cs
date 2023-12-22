@@ -41,7 +41,8 @@ namespace Emk.Services
                 sw.WriteLine("SendingType=" + settings.SendingType);
                 sw.WriteLine("IntervalFrom=" + settings.IntervalFrom);
                 sw.WriteLine("IntervalTo=" + settings.IntervalTo);
-            }
+                sw.WriteLine("AutoUpdate=" + settings.AutoUpdate);
+			}
 		}
 
 		private void CreateSettingsFile()
@@ -61,7 +62,8 @@ namespace Emk.Services
                 sw.WriteLine("SendingType=");
                 sw.WriteLine("IntervalFrom=");
                 sw.WriteLine("IntervalTo=");
-            }
+                sw.WriteLine("AutoUpdate=");
+			}
 
 		}
 
@@ -137,7 +139,11 @@ namespace Emk.Services
                     DateTime.TryParse(value, out DateTime toDate);
                     s.IntervalTo = toDate;
                     break;
-                default:
+                case "AutoUpdate":
+                    int.TryParse(value, out int AutoUpd);
+                    s.AutoUpdate = AutoUpd;
+                    break;
+				default:
 					break;
 			}
 			return s;
