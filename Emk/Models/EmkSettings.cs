@@ -18,10 +18,11 @@ namespace Emk.Models
         public DateTime IntervalTo { get; set; }
         public int PracticeId { get; set; }
         public bool Enabled { get; set; }
+        public int AutoUpdate { get; set; }
 
-        public override string ToString()
+		public override string ToString()
 		{
-			return $"PatDir: {PatientDirectory} Pix: {PixUrl} EMK: {EmkUrl} Interval: {DateInterval} Time: {UpdateTime}";
+			return $"PatDir: {PatientDirectory} Pix: {PixUrl} EMK: {EmkUrl} Interval: {DateInterval} Time: {UpdateTime} AutoUpdate: {AutoUpdate}";
 		}
 	}
 }
