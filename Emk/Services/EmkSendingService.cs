@@ -73,7 +73,9 @@ namespace Emk.Services
                 Log.Info("-----------------");
                     var i = smo.First();
                     var set = _settings.SingleOrDefault(x => x.PracticeId == i.PracticeId);
-                    if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
+                    if (set != null)
+                        set.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
+                if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
                     {
                         Log.Warning(
                             $"Не найдены настройки практики для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId})");

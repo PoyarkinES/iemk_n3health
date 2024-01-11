@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Emk.Models;
+using Emk.Services;
 
 namespace Emk.Repository
 {
@@ -36,6 +37,8 @@ namespace Emk.Repository
 
                         props = FillSettings(props, p);
                     }
+
+            props.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
             settings.Add(props);           
             return GenerateSettings(settings);
         }
@@ -100,6 +103,7 @@ namespace Emk.Repository
                 s.IntervalFrom = item.IntervalFrom;
                 s.IntervalTo = item.IntervalTo;
                 s.PatientDirectory = path;
+                s.AutoUpdate = item.AutoUpdate;
             }
 
             return list;

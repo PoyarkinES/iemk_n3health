@@ -140,8 +140,8 @@ namespace Emk.Services
                     s.IntervalTo = toDate;
                     break;
                 case "AutoUpdate":
-                    int.TryParse(value, out int AutoUpd);
-                    s.AutoUpdate = AutoUpd;
+                    int.TryParse(value, out int autoUpd);
+                    s.AutoUpdate = autoUpd;
                     break;
 				default:
 					break;
