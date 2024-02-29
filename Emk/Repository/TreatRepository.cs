@@ -127,8 +127,8 @@ namespace Emk.Repository
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE (treat_date = '{since.Date:yyyy-MM-dd}'  " +
             "and t.ref_status is null AND lab_work_id IS NULL " +
-            "AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))   ) " +
-            "OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
+            "AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))   ) ";
+            //"OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
 
         private string GetAccountStr(int accountId) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
@@ -162,8 +162,8 @@ namespace Emk.Repository
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE (treat_date >= '{since.Date:yyyy-MM-dd}' and treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  " +
             "and t.ref_status is null AND lab_work_id IS NULL " +
-            "AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))   ) " +
-            "OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
+            "AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))   ) ";
+            //"OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
 
         //private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
         //    ? $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' ORDER BY treat_date, patient_id"
