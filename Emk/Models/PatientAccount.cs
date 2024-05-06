@@ -13,6 +13,7 @@ namespace Emk.Models
         public int ProviderId { get; set; }
         public int PracticeId { get; set; }
         public DateTime TreatDate { get; set; }
+        public DateTime? EsfDate { get; set; }
         public int Code { get; set; }
         public string Name { get; set; }
         public string DiagnoseCode { get; set; }

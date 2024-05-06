@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Emk.Models;
+using Emk.Properties;
 using Emk.Services;
 
 namespace Emk.Repository
@@ -14,33 +15,27 @@ namespace Emk.Repository
         public List<EmkSettings> LoadSettings()
         {
             var settings = new List<EmkSettings>();
-            var props = new EmkSettings();
-
-            //using (var reader = Connection.Query("SELECT param_id, object_id, param_value FROM APOC_Parameters_Values where param_id between 1362 and 1374 order by object_id"))
-            using (var reader = Connection.Query("SELECT Param_Code, apv.param_id, object_id, param_value FROM APOC_Parameters_Values apv JOIN APOC_Parameters ap WHERE Param_Code IN ('ACTIVATE_N3H','N3H_KEY','N3H_PRACTICE','N3H_EMK_URL','N3H_PAT_URL','N3H_DATA_ON','N3H_REFR_TIME','N3H_TR_MODE','N3H_BY_DAYS','N3H_PER_FROM','N3H_PER_TO') ORDER BY object_id,apv.param_id;"))
+            using (var reader = Connection.Query(Resources.Sql_Parameters))
                 if (reader.HasRows)
                     while (reader.Read())
                     {
-                        var p = new DbSettings();
-                        p.ParamCode = reader[0].ToString();
-                        p.PropId = (int)reader[1];
-                        p.PracticeId = (int)reader[2];
-                        p.PropValue = reader[3].ToString();
-
-                        if (props.PracticeId != p.PracticeId)
+                        settings.Add(new EmkSettings()
                         {
-                            if(props.Guid != Guid.Empty)
-                                settings.Add(props);
-                            props = new EmkSettings();
-                            props.PracticeId = p.PracticeId;
-                        }
-
-                        props = FillSettings(props, p);
+                            PracticeId = (int)reader["object_id"],
+                            Guid = Guid.TryParse(reader["N3H_KEY"].ToString(), out var n3h_key) ? n3h_key : Guid.Empty,
+                            IdLPU = Guid.TryParse(reader["N3H_PRACTICE"].ToString(), out var n3h_practic) ? n3h_practic : Guid.Empty,
+                            EmkUrl = reader["N3H_EMK_URL"].ToString(),
+                            PixUrl = reader["N3H_PAT_URL"].ToString(),
+                            Enabled = reader["N3H_DATA_ON"].ToString() == "1",
+                            UpdateTime = TimeSpan.TryParse(reader["N3H_REFR_TIME"].ToString(), out var n3h_refr_time) ? n3h_refr_time : TimeSpan.Zero,
+                            SendingType = reader["N3H_TR_MODE"].ToString() == "0" ? SendingType.DaysBeforeNow : SendingType.Interval,
+                            DateInterval = int.TryParse(reader["N3H_BY_DAYS"].ToString(), out var n3h_by_days) ? n3h_by_days : 0,
+                            IntervalFrom = DateTime.TryParse(reader["N3H_PER_FROM"].ToString(), out var n3h_per_from) ? n3h_per_from : DateTime.Now,
+                            IntervalTo = DateTime.TryParse(reader["N3H_PER_TO"].ToString(), out var n3h_per_to) ? n3h_per_to : DateTime.Now,
+                            AutoUpdate = new SettingsService().LoadSettings().AutoUpdate
+                        });
                     }
-
-            props.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
-            settings.Add(props);           
-            return GenerateSettings(settings);
+            return GenerateSettings(settings).ToList();
         }
 
         private EmkSettings FillSettings(EmkSettings e, DbSettings s)
@@ -86,35 +81,21 @@ namespace Emk.Repository
         }
 
 
-        private List<EmkSettings> GenerateSettings(List<EmkSettings> list)
+        private IEnumerable<EmkSettings> GenerateSettings(IEnumerable<EmkSettings> list)
         {
-            var item = list.SingleOrDefault(x => x.EmkUrl != null);
-            if (item == null)
-                return null;
-            string path = GetPatientsPath();
-            foreach (var s in list)
+            var result = new List<EmkSettings>();
+            foreach (var item in list)
             {
-                s.EmkUrl = item.EmkUrl;
-                s.PixUrl = item.PixUrl;
-                s.Enabled = item.Enabled;
-                s.UpdateTime = item.UpdateTime;
-                s.SendingType = item.SendingType;
-                s.DateInterval = item.DateInterval;
-                s.IntervalFrom = item.IntervalFrom;
-                s.IntervalTo = item.IntervalTo;
-                s.PatientDirectory = path;
-                s.AutoUpdate = item.AutoUpdate;
+                item.PatientDirectory = GetPatientsPath(item.PracticeId);
+                result.Add(item);
             }
 
-            return list;
+            return result;
         }
 
-        private string GetPatientsPath()
+        private string GetPatientsPath(int practicId)
         {
-            var sql ="select TOP 1 Param_Value from APOC_Parameters_Values " +
-                "where param_id = " +
-                "(select Param_ID from APOC_Parameters where param_code = 'PATH_EXT_DOCS') " +
-                "order by ts_4_insert desc";
+            var sql = $"select dba.sf_get_param_value('PATH_EXT_DOCS',{practicId})";
             using (var reader = Connection.Query(sql))
                 if (reader.HasRows)
                     while (reader.Read())

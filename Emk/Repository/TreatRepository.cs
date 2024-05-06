@@ -39,6 +39,7 @@ namespace Emk.Repository
                         TreatDate = r[1] == DBNull.Value
                             ? DateTime.Now
                             : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
+                        EsfDate = DateTime.Parse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
                         PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
                         ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
@@ -74,6 +75,7 @@ namespace Emk.Repository
                         TreatDate = r[1] == DBNull.Value
                             ? DateTime.Now
                             : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
+                        EsfDate = DateTime.Parse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
                         PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
                         ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
@@ -105,17 +107,48 @@ namespace Emk.Repository
 
                     if (tpr != ppr)
                         result.Add(
-                            $"Случай лечения {acc} создан в практике: '{pprName}' лечение пациента создано в практике: '{tprName}', случай не отправлен");
+                            $"Случай лечения {acc} создан в практике: '{pprName}' лечение пациента создано в практике: '{tprName}', случай не отправлен.");
                 }
             }
 
             return result;
         }
 
+        public List<string> GetCheckDocumentEsign(int paccount)
+        {
+            var result = new List<string>();
+
+            using (var r = Connection.Query(CheckDocumentEsignByFlag(paccount)))
+            {
+                while (r.Read())
+                {
+                    int.TryParse(r["acc_cnt"].ToString(), out var acc_cnt);
+
+                    if (acc_cnt == 1)
+                        result.Add(
+                            $"Электронный документ, прикрепленный к случаю '{paccount}', не подписан, случай не отправлен.");
+                }
+            }
+
+            using (var r = Connection.Query(CheckDocumentEsignByDate(paccount)))
+            {
+                while (r.Read())
+                {
+                    int.TryParse(r["acc_cnt"].ToString(), out var acc_cnt);
+
+                    if (acc_cnt == 1)
+                        result.Add(
+                            $"Электронный документ, прикрепленный к случаю '{paccount}', был передан ранее, случай не отправлен.");
+                }
+            }
+            return result;
+        }
+
         private string GetAccountStr(DateTime since) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
-            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
-            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
+            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
+            "DATE(esf.date_created) EsfDate " +
             "FROM treat t JOIN procedures pr " +
             "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
@@ -125,15 +158,14 @@ namespace Emk.Repository
             "left join diagnoses ds on ds.diagnosis_id = td.diagnosis_id " +
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
-            $"WHERE (treat_date = '{since.Date:yyyy-MM-dd}'  " +
-            "and t.ref_status is null AND lab_work_id IS NULL " +
-            "AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))   ) ";
-            //"OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
+            $"WHERE (t.treat_date = '{since.Date:yyyy-MM-dd}' OR DATE(esf.date_created) = '{since.Date:yyyy-MM-dd}') " +
+            "and t.ref_status is null AND lab_work_id IS NULL";
 
         private string GetAccountStr(int accountId) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
-            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
-            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
+            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
+            "DATE(esf.date_created) EsfDate " +
             "FROM treat t JOIN procedures pr " +
             "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
@@ -144,13 +176,13 @@ namespace Emk.Repository
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE t.account_id = {accountId}  " +
-            "and t.ref_status is null AND lab_work_id IS NULL " +
-            "AND (esf.account_id IS NOT NULL AND (esf.date_approved is null and esf.is_sign_cmn = 1 and esf.is_sign_pr = 1) OR esf.account_id IS NULL)";
+            "and t.ref_status is null AND lab_work_id IS NULL";
 
         private string GetAccountStr(DateTime since, DateTime to) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
             "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
-            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) " +
+            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
+            "DATE(esf.date_created) EsfDate " +
             "FROM treat t JOIN procedures pr " +
             "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
@@ -160,9 +192,9 @@ namespace Emk.Repository
             "left join diagnoses ds on ds.diagnosis_id = td.diagnosis_id " +
             "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
-            $"WHERE (treat_date >= '{since.Date:yyyy-MM-dd}' and treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  " +
-            "and t.ref_status is null AND lab_work_id IS NULL " +
-            "AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))   ) ";
+            $"WHERE (t.treat_date BETWEEN '{since.Date:yyyy-MM-dd}' AND '{to.Date:yyyy-MM-dd}' OR DATE(esf.date_created) BETWEEN '{since.Date:yyyy-MM-dd}' AND '{to.Date:yyyy-MM-dd}') " +
+            "and t.ref_status is null AND lab_work_id IS NULL";
+            //"AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))    ";
             //"OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
 
         //private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
@@ -182,6 +214,20 @@ namespace Emk.Repository
                 "FROM treat t JOIN patients_accounts pa " +
                 $"WHERE t.account_id = {paccount} " +
                 "GROUP BY t.practice_id, pa.practice_id, pa.id";
+        }
+
+        private string CheckDocumentEsignByDate(int paccount)
+        {
+            return
+                "SELECT COUNT(esf.account_id) AS acc_cnt FROM esign_files esf " +
+                $"WHERE esf.account_id = {paccount} AND esf.date_sent IS NOT NULL";
+        }
+
+        private string CheckDocumentEsignByFlag(int paccount)
+        {
+            return
+                "SELECT COUNT(esf.account_id) AS acc_cnt FROM esign_files esf " +
+                $"WHERE esf.account_id = {paccount} AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)";
         }
     }
 }

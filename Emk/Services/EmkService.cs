@@ -88,7 +88,13 @@ namespace Emk.Services
                     Log.Warning($"Для СМО для пациента с ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} не задан диагноз. СМО пропущен.");
                     return -1;
                 }
-                var procedures = new ProceduresEmk();
+
+                if (treat.EsfDate != null && treat.TreatDate != treat.EsfDate)
+                {
+                    Log.Warning($"AccountId: {treat.AccountId} дата случая: {treat.TreatDate} отличается от даты подписания документа: {treat.EsfDate}.");
+                }
+
+				var procedures = new ProceduresEmk();
                 procedures.ListCodes = treat.ListProcedures;
                 Log.Info($"Доктор: {doc.Surname} {doc.Name} {doc.MiddleName} Диагноз: {diag.DiagnosisCode} {diag.DiagnosisName} Процедуры: {procedures.ListCodes}");
 
@@ -179,7 +185,7 @@ namespace Emk.Services
 
 				try
 				{
-					_conn = _conn ?? new OdbcConnection(conString);
+					_conn ??= new OdbcConnection(conString);
 					if (_conn.State != ConnectionState.Open)
 						_conn.Open();
 
@@ -198,8 +204,10 @@ namespace Emk.Services
 					{
 						var files = from file in Directory.EnumerateFiles(dir)
 									orderby file ascending
-									where file.EndsWith("pdf", StringComparison.OrdinalIgnoreCase)
-									select file;
+									where !file.EndsWith("pdf", StringComparison.OrdinalIgnoreCase) &&
+                                          !file.EndsWith("db", StringComparison.OrdinalIgnoreCase) && 
+                                          !file.EndsWith("sgn", StringComparison.OrdinalIgnoreCase)
+                                    select file;
 						var pdf = files.LastOrDefault();
 						if (!string.IsNullOrEmpty(pdf))
 						{
@@ -246,10 +254,11 @@ namespace Emk.Services
 						}
 					}
 				}
-				catch
-				{
-				}
-				
+                catch
+                {
+                    // ignored
+                }
+
                 case1.MedRecords = medDocuments.ToArray();
                 case1.Steps[0].MedRecords = medRecords.ToArray();
                 Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено количество процедур СМО: {medRecords.Count}");
@@ -268,18 +277,14 @@ namespace Emk.Services
                 return 0;
             }
             catch (FaultException<RequestFault[]> ex) {
-				//foreach (var err1 in ex.Detail) {
-				//    Log.Error(err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message);
-				//}
-				Log.Error("\r\n" + Newtonsoft.Json.JsonConvert.SerializeObject(JsonConvert.DeserializeObject($"{{ {getErrorString(ex.Detail)} }}"), Formatting.Indented) + "\r\n");
-
+				getError(ex.Detail);
 				return -1;
             }
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
                 Log.Error(errDescription);
 				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
-				UpdateCase(treat);
+                    UpdateCase(treat);
 				return -1;
             }
             catch (FaultException<RequestWarning> ex) {
@@ -288,12 +293,8 @@ namespace Emk.Services
             }
             catch (FaultException<RequestWarning[]> ex) {
 
-                foreach (var err1 in ex.Detail) {
-                    Log.Warning(err1.WarningCode + ": " + err1.PropertyName + " " + err1.Message);
-                    foreach (var e in err1.Warnings)
-                        Log.Warning(e.WarningCode + ": " + e.PropertyName + " " + e.Message);
-                }
-                return -1;
+                getWarning(ex.Detail);
+				return -1;
             }
             catch (Exception ex) {
                 Log.Error(ex.ToString());
@@ -302,256 +303,6 @@ namespace Emk.Services
         }
 
 
-        //public int AddCase(PatientTreat treat)
-        //{
-        //    Log.Info($"EMK Добавляю случай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy}");
-        //    try
-        //    {
-        //        if (!IsValid(treat))
-        //        {
-        //            Log.Error($"ЕМК СМО для пациента ИД {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy} не прошел валидацию и будет пропущен.");
-        //            return -1;
-        //        }
-
-
-        //        var binding = new BasicHttpBinding();
-        //        var endpointAddress = new EndpointAddress(new Uri(Url));
-        //        var client = new EmkServiceClient(binding, endpointAddress);
-
-        //        case1 = new CaseAmb();
-
-        //        if (_conn.State != ConnectionState.Open)
-        //            _conn.Open();
-
-
-        //        var doc = _rep.GetDoctorOfPatientTreat(treat.PatientId, treat.TreatDate);
-        //        doc.Speciality = treat.SpecialityCode;
-        //        if (doc.AccountId == 0)
-        //        {
-        //            Log.Warning($"Для СМО для пациента с ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} не найден счет. СМО пропущен.");
-        //            return -1;
-        //        }
-        //        var patient = Factory.GetPatientRepository.GetPatient(treat.PatientId);
-        //        var diag = GetDiagnose(treat.PatientId, treat.TreatDate);
-        //        if (string.IsNullOrWhiteSpace(diag.DiagnosisCode) || string.IsNullOrWhiteSpace(diag.DiagnosisName))
-        //        {
-        //            Log.Warning($"Для СМО для пациента с ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} не задан диагноз. СМО пропущен.");
-        //            return -1;
-        //        }
-
-        //        Log.Info($"Доктор: {doc.Surname} {doc.Name} {doc.MiddleName} Диагноз: {diag.DiagnosisCode} {diag.DiagnosisName}");
-
-
-        //        //if (patient1 == null)
-        //        //{
-        //        //	int rv;
-        //        //	patient1 = new PersonWithIdentity();
-
-        //        //	rv = SetPatient(patient_id, ref ErrDescription);
-        //        //	if (rv != 0)
-        //        //		return rv;
-        //        //}
-
-        //        var doctor = doc.ToMedicalStaff();
-
-        //        var def = _smoSrv.LoadDefaults();
-
-        //        case1.OpenDate = treat.TreatDate.ToString("O");
-        //        case1.CloseDate = treat.TreatDate.ToString("O");
-        //        case1.HistoryNumber = patient.CartNum;
-
-        //        case1.IdCaseMis = $"{patient.CartNum}-{doc.AccountId}";
-
-        //        case1.IdCaseAidType = 3; // Changed by Alex
-        //        case1.IdCaseType = 2;
-        //        case1.IdPaymentType = (byte)_rep.GetPayType(doc.AccountId);
-        //        case1.IdCasePurpose = Convert.ToByte(def.VisitPurpose);
-
-        //        case1.Confidentiality = Convert.ToByte(def.ConfidentialityLevel);
-        //        case1.DoctorConfidentiality = Convert.ToByte(def.ConfidentialityDoctorLevel);
-        //        case1.CuratorConfidentiality = Convert.ToByte(def.ConfidentialityRepresentativeLevel);
-        //        case1.IdLpu = IdLPU;
-        //        case1.IdCaseResult = 1;
-        //        case1.Comment = diag.DiagnosisName;
-
-        //        case1.IdPatientMis = patient.CartNum;
-        //        case1.DoctorInCharge = doctor;
-        //        case1.Authenticator = new Participant { Doctor = doctor };
-        //        case1.Author = new Participant { Doctor = doctor };
-        //        case1.LegalAuthenticator = new Participant { Doctor = doctor };
-        //        case1.CaseVisitType = 1;    // 1 - Первичный
-        //                                    // 2 - Повторный
-        //        Log.Info($"Создан СМО для пациентa с картой {patient.CartNum}, ИД случая: {case1.IdCaseMis}");
-        //        case1.Steps = new[]
-        //        {
-        //             new StepAmb
-        //            {
-        //                DateStart = treat.TreatDate.ToString("O"),
-        //                DateEnd = treat.TreatDate.ToString("O"),
-        //                IdStepMis = $"{doc.AccountId}-{patient.CartNum}" ,
-        //                Doctor = doctor,
-        //                IdVisitPlace = Convert.ToByte(def.VisitPlace),
-        //                IdVisitPurpose = Convert.ToByte(def.VisitPurpose)
-        //                  }
-        //        };
-        //        var medDocuments = new List<MedRecord>
-        //        {
-        //            new ClinicMainDiagnosis
-        //            {
-        //                DiagnosisInfo = new DiagnosisInfo
-        //                {
-        //                    IdDiseaseType = 1,
-        //                    DiagnosedDate = treat.TreatDate.ToString("O"),
-        //                    IdDiagnosisType = 1,
-        //                    Comment = diag.DiagnosisName,
-        //					//DiagnosisChangeReason = 2,
-        //					//DiagnosisStage = 3,
-        //					//IdDispensaryState = 8,
-        //					//IdTraumaType = 1,
-        //					//MESImplementationFeature = 10,
-        //					//MedicalStandard = 211010,
-        //					MkbCode = diag.DiagnosisCode,
-        //                          DiagnosisStage = 3 // Added by Alex
-        //                      },
-        //                Doctor = doctor
-        //            }
-        //        };
-        //        var medRecords = new List<MedRecord>();
-
-        //        foreach (var d in _rep.GetProcedureDescriptions(treat.PatientId, treat.TreatDate))
-        //        {
-        //            if (string.IsNullOrEmpty(d.Description))
-        //                continue;
-        //            medRecords.Add(new Service
-        //            {
-        //                DateEnd = d.ProcedureDate.ToString("O"),
-        //                DateStart = d.ProcedureDate.ToString("O"),
-        //                IdServiceType = d.Description,
-        //                ServiceName = d.FullDescription,
-        //                Performer = new Participant { IdRole = 3, Doctor = doctor }
-        //            });
-        //        }
-
-        //        try
-        //        {
-        //            _conn = _conn ?? new OdbcConnection(conString);
-        //            if (_conn.State != ConnectionState.Open)
-        //                _conn.Open();
-
-        //            var hasPDF = false;
-
-
-        //            var dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.Id}]\\Дневниковые записи";
-        //            if (!Directory.Exists(dir))
-        //                dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
-
-        //            var docs = new DocSelector(patient, treat.TreatDate, dir).GetDocs();
-        //            if (docs != null)
-        //                medDocuments.AddRange(docs);
-
-
-
-
-        //            if (Directory.Exists(dir))
-        //            {
-        //                var files = from file in Directory.EnumerateFiles(dir)
-        //                            orderby file ascending
-        //                            where file.EndsWith("pdf", StringComparison.OrdinalIgnoreCase)
-        //                            select file;
-        //                var pdf = files.LastOrDefault();
-        //                if (!string.IsNullOrEmpty(pdf))
-        //                {
-        //                    hasPDF = true;
-
-        //                    var data = File.ReadAllBytes(pdf);
-
-        //                    // ReSharper disable UseStringInterpolation
-        //                    var sgn1 = string.Format("{0}.sgn", string.Copy(pdf));
-        //                    var sgn2 = string.Format("{0}2.sgn", string.Copy(pdf));
-        //                    // ReSharper restore UseStringInterpolation
-
-        //                    byte[] dsgn = null, osgn = null;
-        //                    if (File.Exists(sgn1))
-        //                        dsgn = File.ReadAllBytes(sgn1);
-        //                    if (File.Exists(sgn2))
-        //                        osgn = File.ReadAllBytes(sgn2);
-
-        //                    medDocuments.Add(new ConsultNote
-        //                    {
-        //                        Attachments = new[]
-        //                        {
-        //                                  new MedDocumentDtoDocumentAttachment
-        //                                  {
-        //                                      Data = data, //Encoding.UTF8.GetBytes(s),
-        //								MimeType = "application/pdf",
-        //                                      OrganizationSign = osgn,
-        //                                      PersonalSigns = dsgn == null ? null : new[]
-        //                                      {
-        //                                          new MedDocumentDtoPersonalSign
-        //                                          {
-        //                                              Doctor = doctor,
-        //                                              Sign = dsgn
-        //                                          }
-        //                                      }
-        //                                  }
-        //                              },
-        //                        Author = doctor,
-        //                        CreationDate = DateTime.Now.Date,
-        //                        Header = "Header",
-        //                        IdDocumentMis = $"{patient.CartNum}-{doc.AccountId}"
-        //                        //IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
-        //                    });
-        //                }
-        //            }
-        //        }
-        //        catch
-        //        {
-        //        }
-
-        //        case1.MedRecords = medDocuments.ToArray();
-        //        case1.Steps[0].MedRecords = medRecords.ToArray();
-        //        Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено записей: {medRecords.Count}");
-        //        client.AddCase(guid, case1);
-        //        client.Close();
-        //        Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
-        //        return 0;
-        //    }
-        //    catch (FaultException<RequestFault[]> ex)
-        //    {
-        //        foreach (var err1 in ex.Detail)
-        //        {
-        //            Log.Error(err1.ErrorCode + ": " + err1.PropertyName + " " + err1.Message);
-        //        }
-        //        return -1;
-        //    }
-        //    catch (FaultException<RequestFault> ex)
-        //    {
-        //        var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
-        //        Log.Error(errDescription);
-        //        return -1;
-        //    }
-        //    catch (FaultException<RequestWarning> ex)
-        //    {
-        //        Log.Warning(ex.Detail.WarningCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n");
-        //        return -1;
-        //    }
-        //    catch (FaultException<RequestWarning[]> ex)
-        //    {
-
-        //        foreach (var err1 in ex.Detail)
-        //        {
-        //            Log.Warning(err1.WarningCode + ": " + err1.PropertyName + " " + err1.Message);
-        //            foreach (var e in err1.Warnings)
-        //                Log.Warning(e.WarningCode + ": " + e.PropertyName + " " + e.Message);
-        //        }
-        //        return -1;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log.Error(ex.ToString());
-        //        return -1;
-        //    }
-        //}
 
         private bool IsValid(object obj)
         {
@@ -1009,249 +760,6 @@ namespace Emk.Services
 			return Count1;
 		}
 
-		//public int SetParameters(string Url1, string guid1, string idLPU1, ref string ErrDescription)
-		//{
-		//	int pos1;
-		//	string conString2 = "";
-
-		//	Url = Url1;
-		//	guid = guid1;
-		//	IdLPU = idLPU1;
-
-
-		//	path = @"C:\Program Files\dw4import\";
-		//	if (!Directory.Exists(path))
-		//	{
-		//		path = @"C:\Program Files (x86)\dw4import\";
-		//		if (!Directory.Exists(path))
-		//		{
-		//			ErrDescription = "Каталог программы не найден: " + @"C:\Program Files (x86)\dw4import\";
-		//			return -1;
-		//		}
-		//	}
-
-		//	try
-		//	{
-		//		using (var sr = File.OpenText(path + "imp.ini"))
-		//		{
-		//			string input = null;
-		//			while ((input = sr.ReadLine()) != null)
-		//			{
-		//				if (input.Contains("DBParm") && !input.StartsWith(";"))
-		//				{
-		//					pos1 = input.IndexOf("DSN=");
-		//					conString = input.Substring(pos1 + 4);
-		//					pos1 = conString.IndexOf(";");
-		//					conString = conString.Substring(0, pos1);
-		//					conString = "Data Source=" + conString;
-		//				}
-		//				/*
-		//				if (input.Contains("ConnectionString") && !input.StartsWith(";"))
-		//				{
-		//					pos1 = input.IndexOf("\"");
-		//					conString2 = input.Substring(pos1 + 1);
-		//					pos1 = conString2.IndexOf("\"");
-		//					conString2 = conString2.Substring(0, pos1);
-		//				}
-		//				 */
-		//				if (input.Contains("OdbcConnectionString") && !input.StartsWith(";"))
-		//				{
-		//					pos1 = input.IndexOf("\"");
-		//					conString2 = input.Substring(pos1 + 1);
-		//					pos1 = conString2.IndexOf("\"");
-		//					conString2 = conString2.Substring(0, pos1);
-		//				}
-
-		//				if (input.StartsWith("PatientsBaseDir", StringComparison.InvariantCultureIgnoreCase))
-		//					patientsBaseDir = input.Substring(input.IndexOf('=')).TrimStart(' ', '=');
-		//			}
-		//		}
-
-		//		try
-		//		{
-		//			_conn = new OdbcConnection(conString);
-		//			_conn.Open();
-		//		}
-		//		catch (Exception)
-		//		{
-		//			if (_conn.State != ConnectionState.Open)
-		//			{
-		//				conString = conString2;
-		//				_conn = new OdbcConnection(conString);
-		//				_conn.Open();
-		//			}
-		//		}
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		ErrDescription = ex.Message;
-		//		return -1;
-		//	}
-
-		//	return 0;
-		//}
-
-		//public int WriteLog(int patient_id, ref int ErrNum, ref string ErrDescription)
-		//{
-		//	var tmp1 = "";
-
-		//	try
-		//	{
-		//		int ind1;
-		//		var log1 = "";
-		//		var message = "";
-		//		string LastName, FirstName, dob, CardNum, Passport = "", Polis = "";
-
-		//		if (patient1 == null)
-		//		{
-		//			// patient1 = new EMKService.Data.Dto.PatientDto();
-		//			patient1 = new PersonWithIdentity();
-		//			SetPatient(patient_id, ref ErrDescription);
-		//		}
-
-		//		// LastName = patient1.FamilyName;
-		//		LastName = patient1.HumanName.FamilyName;
-
-		//		// FirstName = patient1.GivenName;
-		//		FirstName = patient1.HumanName.GivenName;
-
-		//		// CardNum = patient1.IdPatientMIS;
-		//		CardNum = patient1.IdPersonMis;
-
-		//		// dob = String.Format("{0:dd-MM-yyyy}", patient1.BirthDate);
-		//		dob = string.Format("{0:dd-MM-yyyy}", DateTime.Today);
-
-		//		tmp1 = "   line 1";
-
-		//		if (patient1.Documents != null)
-		//		{
-		//			if (patient1.Documents.Length >= 1 && patient1.Documents[0].IdDocumentType == 14)
-		//			{
-		//				Passport = " паспорт: " + patient1.Documents[0].DocS + " " + patient1.Documents[0].DocN + " выдан: " + patient1.Documents[0].ProviderName;
-		//				Passport += " " + string.Format("{0:dd-MM-yyyy}", patient1.Documents[0].IssuedDate);
-		//			}
-
-		//			ind1 = -1;
-		//			if (patient1.Documents.Length == 1 && patient1.Documents[0].IdDocumentType == 228)
-		//			{
-		//				ind1 = 0;
-		//			}
-
-		//			if (patient1.Documents.Length == 2 && patient1.Documents[1].IdDocumentType == 228)
-		//			{
-		//				ind1 = 1;
-		//			}
-
-		//			if (ind1 >= 0)
-		//			{
-		//				Polis = " полис: " + patient1.Documents[ind1].DocN + " действует с " + string.Format("{0:dd-MM-yyyy}", patient1.Documents[ind1].IssuedDate) + " по " + string.Format("{0:dd-MM-yyyy}", patient1.Documents[ind1].ExpiredDate);
-		//				Polis += " " + patient1.Documents[ind1].IdProvider + " " + patient1.Documents[ind1].ProviderName;
-		//			}
-		//		}
-
-		//		/*
-		//		if (patient1.Addresses != null)
-		//		{
-		//			if (patient1.Addresses.Length > 0)
-		//			{
-		//				Passport += " адрес: " + patient1.Addresses[0].StringAddress;
-		//			}
-		//		}
-		//		 */
-
-		//		tmp1 = "   line 2";
-
-		//		log1 = LastName + " " + FirstName + " ";
-		//		if (MName.Length > 0)
-		//		{
-		//			log1 += MName + " ";
-		//		}
-
-		//		log1 += dob + " " + "г.р." + " " + "№ карты:" + " " + CardNum.Trim() + " ";
-		//		if (ErrNum != 0)
-		//		{
-		//			message = "oшибка:";
-		//		}
-		//		else
-		//		{
-		//			message = "сообщение:";
-		//		}
-
-		//		log1 = DateTime.Today.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " пациент: " + log1;
-		//		if (Passport.Length > 0)
-		//		{
-		//			log1 += Passport;
-		//		}
-
-		//		if (Polis.Length > 0)
-		//		{
-		//			log1 += Polis;
-		//		}
-
-		//		tmp1 = "   line 3";
-
-		//		if (case1 != null)
-		//		{
-		//			log1 += "\n";
-		//			log1 += "СМО врач:" + " " + case1.Author.Doctor.Person.HumanName.FamilyName + " " + case1.Author.Doctor.Person.HumanName.GivenName + " " + case1.Author.Doctor.Person.HumanName.MiddleName + " ";
-		//			log1 += "СНИЛС:" + " " + case1.Author.Doctor.Person.IdPersonMis + " специальность: " + case1.Author.Doctor.IdSpeciality + " должность: " + case1.Author.Doctor.IdPosition + " комментарий: " + case1.Comment;
-		//			log1 += " конфиденциальность: уровень: " + case1.Confidentiality + " уровень представителя: " + case1.CuratorConfidentiality + " уровень врача: " + case1.DoctorConfidentiality;
-		//			log1 += " тип случая: " + case1.IdCaseType;
-		//			//    + " диагноз: статус: " + case1.MainDiagnosis.IdDiagnosisType + " код заболевания: " + case1.MainDiagnosis.MkbCode + " комментарий: " + case1.MainDiagnosis.Comment;
-		//			// log1 += " этап: " + case1.MainDiagnosis.IdDiagnoseStep + " характер: " + case1.MainDiagnosis.IdDiseaseType;
-		//			log1 += " визит: место: " + case1.Steps[0].IdVisitPlace + " цель: " + case1.Steps[0].IdVisitPurpose;
-		//		}
-
-		//		tmp1 = "   line 4";
-
-		//		log1 += "\nСервер: " + Url + " " + message + " " + ErrDescription + " " + "код:" + " " + ErrNum.ToString() + "\n";
-
-		//		/*
-		//		string path2 = @"C:\Program Files\dw4import\";
-		//		if (!Directory.Exists(path2))
-		//		{
-		//			path2 = @"C:\Program Files (x86)\dw4import\";
-		//			if (!Directory.Exists(path2))
-		//			{
-		//				ErrDescription = "1";
-		//				return -1;
-		//			}
-		//		}
-		//		 */
-
-		//		var path2 = path + @"Log\";
-		//		if (!Directory.Exists(path2))
-		//		{
-		//			Directory.CreateDirectory(path2);
-		//		}
-
-		//		var fileName = path2 + "log_" + string.Format("{0:dd-MM-yyyy}", DateTime.Now) + ".txt";
-
-		//		if (File.Exists(fileName))
-		//			using (var sw1 = File.AppendText(fileName))
-		//				sw1.WriteLine(log1);
-		//		else
-		//			using (var sw2 = File.CreateText(fileName))
-		//				sw2.WriteLine(log1);
-
-		//		var CheckDate = DateTime.Today;
-		//		CheckDate = CheckDate.AddDays(-10);
-
-		//		var DelFile = path2 + "log_" + string.Format("{0:dd-MM-yyyy}", CheckDate) + ".txt";
-
-		//		if (File.Exists(DelFile))
-		//			File.Delete(DelFile);
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		ErrNum = -1;
-		//		ErrDescription = ex.Message + tmp1;
-		//		return 0;
-		//	}
-
-		//	return 0;
-		//}
-
 		private string getErrorString(RequestFault[] errors, RequestFault error = null)
 		{
 			var result = new StringBuilder();
@@ -1266,5 +774,30 @@ namespace Emk.Services
             
             return result.ToString().Remove(result.ToString().Length -1, 1);
 		}
-	}
+
+        private void getError(RequestFault[] rWarning)
+        {
+
+            foreach (var e in rWarning)
+            {
+                Log.Error($"{e.ErrorCode} : {e.PropertyName} {e.Message} ");
+                if (e.Errors.Length > 0)
+                {
+                    getError(e.Errors);
+                }
+            }
+        }
+
+        private void getWarning(RequestWarning[] rWarning)
+        {
+            foreach (var e in rWarning)
+            {
+                Log.Warning($"{e.WarningCode} : {e.PropertyName} {e.Message} ");
+                if (e.Warnings.Length > 0)
+                {
+					getWarning(e.Warnings);
+                }
+            }
+        }
+    }
 }

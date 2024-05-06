@@ -40,26 +40,26 @@ namespace Emk.Services
             {
                 try
                 {
-                    if (file.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase))
-                        continue;
-                    if (file.EndsWith("db", StringComparison.InvariantCultureIgnoreCase))
-                        continue;
-                    if (file.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
-                        continue;
-                    var fd = ParseFile(file);
-                    if (fd.FileDate.Date != _fileDate.Date)
-                        continue;
-                    Log.Info($"Обрабатываю файл: {file}");
-                    var srv = SelectDocType(fd);
-                    if (srv == null)
+                    if (!file.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
+                        !file.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
+                        !file.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        Log.Warning("Неизвестный тип файла: " + fd.FilePath);
-                        continue;
-                    }
 
-                    if(docs == null)
-                        docs = new List<MedRecord>();
-                    docs.Add(srv.CreateDocument());
+                        var fd = ParseFile(file);
+                        if (fd.FileDate.Date != _fileDate.Date)
+                            continue;
+                        Log.Info($"Обрабатываю файл: {file}");
+                        var srv = SelectDocType(fd);
+                        if (srv == null)
+                        {
+                            Log.Warning("Неизвестный тип файла: " + fd.FilePath);
+                            continue;
+                        }
+
+                        if (docs == null)
+                            docs = new List<MedRecord>();
+                        docs.Add(srv.CreateDocument());
+                    }
                 }
                 catch (Exception e)
                 {

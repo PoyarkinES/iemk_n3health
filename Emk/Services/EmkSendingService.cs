@@ -22,13 +22,17 @@ namespace Emk.Services
             if(!IsLicenseValid()) return;
 
 			Log.Info("Начинаю отправку данных по пациентам...");
-            var p = GetPatientsAndTreatDates().Where(w => accountId == null || w.AccountId == accountId).ToList();
-			if(p.Count == 0) {
-				Log.Info("Записей лечения не найдено.");
-				return;
-			}
-			Send(p);
-		}
+            var p = accountId == null
+                ? GetPatientsAndTreatDates()?.ToList()
+                : GetPatientsAndTreatDates(accountId.Value)?.ToList();
+            if (p == null || p.Count == 0)
+            {
+                Log.Info("Записей лечения не найдено.");
+                return;
+            }
+
+            Send(p);
+        }
 
 
         public void Update(int accountId)
@@ -42,7 +46,7 @@ namespace Emk.Services
                 Log.Error("СМО не найден.");
                 return;
             }
-            var set = _settings.SingleOrDefault(x => x.PracticeId == smo.PracticeId);
+            var set = _settings.FirstOrDefault(x => x.PracticeId == smo.PracticeId);
             if (set == default) {
                 Log.Warning($"Не найдены настройки практики для пациента с ИД {smo.PatientId} (TreatDate:{smo.TreatDate}, Practice: {smo.PracticeId})");
                 return;
@@ -72,7 +76,7 @@ namespace Emk.Services
             {
                 Log.Info("-----------------");
                     var i = smo.First();
-                    var set = _settings.SingleOrDefault(x => x.PracticeId == i.PracticeId);
+                    var set = _settings.FirstOrDefault(x => x.PracticeId == i.PracticeId);
                     if (set != null)
                         set.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
                 if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
@@ -99,7 +103,17 @@ namespace Emk.Services
                         continue;
                     }
 
-                    var pix = new PixService(set);
+                    if (Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId).Any())
+                    {
+                        foreach (var item in Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId))
+                        {
+                            Log.Info(item);
+                        }
+
+                        continue;
+                    }
+
+                var pix = new PixService(set);
                     var emk = new EmkService(set);
                     pix.AddPatient(i.PatientId);
                     // pix.UpdatePatient(i.PatientId);
@@ -107,8 +121,6 @@ namespace Emk.Services
                     if(result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
 
             }
-
-
 
             Factory.CloseDbConnection();
         }
@@ -171,7 +183,7 @@ namespace Emk.Services
         //}
 
 
-        private List<PatientAccount> GetPatientsAndTreatDates()
+        private IEnumerable<PatientAccount> GetPatientsAndTreatDates()
 		{
 #if DEBUG
             //foreach (var setting in _settings) {
@@ -182,7 +194,7 @@ namespace Emk.Services
 			DateTime endDate;
 			if (_settings.First().SendingType == SendingType.DaysBeforeNow) {
 				startDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
-                endDate = DateTime.Now;
+                endDate = DateTime.Now.AddDays(-_settings.First().DateInterval);
 			}
 			else {
 				startDate = _settings.First().IntervalFrom.Date;
@@ -194,27 +206,52 @@ namespace Emk.Services
             //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
 			Log.Info($"Получено {pats.Count}");
 			return AddPostfixForDiagnose(pats);
-		}
+        }
 
-        private List<PatientAccount> AddPostfixForDiagnose(List<PatientAccount> list)
+        private IEnumerable<PatientAccount> GetPatientsAndTreatDates(int accountId)
         {
-            foreach (var accId in list.Select(s=> s.AccountId).Distinct())
+#if DEBUG
+            //foreach (var setting in _settings) {
+            //    setting.DateInterval = 0;
+            //}
+#endif
+            Log.Info($"Получаю пациентов и лечение по счету № {accountId}");
+            var pats = Factory.GetTreatRepository.GetPatientAccountById(accountId);
+            var result = new List<PatientAccount>();
+            result.Add(pats);
+            //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
+            Log.Info($"Получено {pats}");
+            return AddPostfixForDiagnose(result);
+        }
+
+        private IEnumerable<PatientAccount> AddPostfixForDiagnose(List<PatientAccount> list)
+        {
+            if (list.Any(a => a != null))
             {
-                var group = list.Where(w=>w.AccountId == accId).GroupBy(x => new { x.PatientId, x.AccountId, x.ProviderId });
-                foreach (var item in group.Distinct())
+                foreach (var accId in list.Select(s => s.AccountId).Distinct())
                 {
-                    if (item.Select(s=> new {s.PatientId, s.AccountId, s.ProviderId }).Distinct().Count() < 2)
-                        continue;
-                    var ch = 'a';
-                    foreach (var acc in item.GroupBy(x => x.DiagnoseCode))
+                    var group = list.Where(w => w.AccountId == accId)
+                        .GroupBy(x => new {x.PatientId, x.AccountId, x.ProviderId});
+                    foreach (var item in group.Distinct())
                     {
-                        acc.First().SmoPostfix = ch.ToString();
-                        ch++;
+                        if (item.Select(s => new {s.PatientId, s.AccountId, s.ProviderId}).Distinct().Count() < 2)
+                            continue;
+                        var ch = 'a';
+                        foreach (var acc in item.GroupBy(x => x.DiagnoseCode))
+                        {
+                            acc.First().SmoPostfix = ch.ToString();
+                            ch++;
+                        }
                     }
                 }
-            }
 
-            return list;
+                return list;
+            }
+            else
+            {
+                //Log.Info($"Вы ввели не существующий счет.");
+                return null;
+            }
         }
     }
 }
