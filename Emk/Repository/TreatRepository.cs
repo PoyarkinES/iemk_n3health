@@ -39,7 +39,7 @@ namespace Emk.Repository
                         TreatDate = r[1] == DBNull.Value
                             ? DateTime.Now
                             : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
-                        EsfDate = DateTime.Parse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
+                        EsfDate = DateTime.TryParse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None, out var esfDate) ? esfDate : DateTime.MinValue,
                         PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
                         ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
@@ -75,7 +75,7 @@ namespace Emk.Repository
                         TreatDate = r[1] == DBNull.Value
                             ? DateTime.Now
                             : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
-                        EsfDate = DateTime.Parse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
+                        EsfDate = DateTime.TryParse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None, out var esfDate) ? esfDate: DateTime.MinValue,
                         PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
                         ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
                         AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),

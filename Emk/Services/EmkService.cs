@@ -200,59 +200,59 @@ namespace Emk.Services
 					if (docs != null)
 						medDocuments.AddRange(docs);
 
-					if (Directory.Exists(dir))
-					{
-						var files = from file in Directory.EnumerateFiles(dir)
-									orderby file ascending
-									where !file.EndsWith("pdf", StringComparison.OrdinalIgnoreCase) &&
-                                          !file.EndsWith("db", StringComparison.OrdinalIgnoreCase) && 
-                                          !file.EndsWith("sgn", StringComparison.OrdinalIgnoreCase)
-                                    select file;
-						var pdf = files.LastOrDefault();
-						if (!string.IsNullOrEmpty(pdf))
-						{
-							hasPDF = true;
+					//if (Directory.Exists(dir))
+					//{
+					//	var files = from file in Directory.EnumerateFiles(dir)
+					//				orderby file ascending
+					//				where !file.EndsWith("pdf", StringComparison.OrdinalIgnoreCase) &&
+     //                                     !file.EndsWith("db", StringComparison.OrdinalIgnoreCase) && 
+     //                                     !file.EndsWith("sgn", StringComparison.OrdinalIgnoreCase)
+     //                               select file;
+					//	var pdf = files.LastOrDefault();
+					//	if (!string.IsNullOrEmpty(pdf))
+					//	{
+					//		hasPDF = true;
 
-							var data = File.ReadAllBytes(pdf);
+					//		var data = File.ReadAllBytes(pdf);
 
-							// ReSharper disable UseStringInterpolation
-							var sgn1 = string.Format("{0}.sgn", string.Copy(pdf));
-							var sgn2 = string.Format("{0}2.sgn", string.Copy(pdf));
-							// ReSharper restore UseStringInterpolation
+					//		// ReSharper disable UseStringInterpolation
+					//		var sgn1 = string.Format("{0}.sgn", string.Copy(pdf));
+					//		var sgn2 = string.Format("{0}2.sgn", string.Copy(pdf));
+					//		// ReSharper restore UseStringInterpolation
 
-							byte[] dsgn = null, osgn = null;
-							if (File.Exists(sgn1))
-								dsgn = File.ReadAllBytes(sgn1);
-							if (File.Exists(sgn2))
-								osgn = File.ReadAllBytes(sgn2);
+					//		byte[] dsgn = null, osgn = null;
+					//		if (File.Exists(sgn1))
+					//			dsgn = File.ReadAllBytes(sgn1);
+					//		if (File.Exists(sgn2))
+					//			osgn = File.ReadAllBytes(sgn2);
 
-							medDocuments.Add(new ConsultNote
-							{
-								Attachments = new[]
-								{
-										  new MedDocumentDtoDocumentAttachment
-										  {
-											  Data = data, //Encoding.UTF8.GetBytes(s),
-        								MimeType = "application/pdf",
-											  OrganizationSign = osgn,
-											  PersonalSigns = dsgn == null ? null : new[]
-											  {
-												  new MedDocumentDtoPersonalSign
-												  {
-													  Doctor = doctor,
-													  Sign = dsgn
-												  }
-											  }
-										  }
-									  },
-								Author = doctor,
-								CreationDate = DateTime.Now.Date,
-								Header = "Header",
-								IdDocumentMis = $"{patient.CartNum}-{doc.AccountId}"
-								//IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
-							});
-						}
-					}
+					//		medDocuments.Add(new ConsultNote
+					//		{
+					//			Attachments = new[]
+					//			{
+					//					  new MedDocumentDtoDocumentAttachment
+					//					  {
+					//						  Data = data, //Encoding.UTF8.GetBytes(s),
+     //   								MimeType = "application/pdf",
+					//						  OrganizationSign = osgn,
+					//						  PersonalSigns = dsgn == null ? null : new[]
+					//						  {
+					//							  new MedDocumentDtoPersonalSign
+					//							  {
+					//								  Doctor = doctor,
+					//								  Sign = dsgn
+					//							  }
+					//						  }
+					//					  }
+					//				  },
+					//			Author = doctor,
+					//			CreationDate = DateTime.Now.Date,
+					//			Header = "Header",
+					//			IdDocumentMis = $"{patient.CartNum}-{doc.AccountId}"
+					//			//IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
+					//		});
+					//	}
+					//}
 				}
                 catch
                 {
