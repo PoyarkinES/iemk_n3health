@@ -89,7 +89,7 @@ namespace Emk.Services
                     return -1;
                 }
 
-                if (treat.EsfDate != null && treat.TreatDate != treat.EsfDate)
+                if (treat.EsfDate != null && treat.EsfDate != DateTime.MinValue &&  treat.TreatDate != treat.EsfDate)
                 {
                     Log.Warning($"AccountId: {treat.AccountId} дата случая: {treat.TreatDate} отличается от даты подписания документа: {treat.EsfDate}.");
                 }
@@ -297,6 +297,7 @@ namespace Emk.Services
 				return -1;
             }
             catch (Exception ex) {
+                Log.Warning($"Случай медицинского обслуживания для пациента {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy} не отправлен.");
                 Log.Error(ex.ToString());
                 return -1;
             }

@@ -30,44 +30,57 @@ namespace Emk.Services.Docs
 
         private void SetData()
         {
-            var data = CartNote.Description.Split('Ї');
-            _doc.IssuedDate = DateTime.Parse(data[1]);
-            _doc.MedicineName = data[9];
-            _doc.IdINN = int.Parse(data[19]);
-            _doc.Doctor = _doctor.ToMedicalStaff();
-            
+            try
+            {
+                var data = CartNote.Description.Split('Ї');
+                _doc.IssuedDate = DateTime.Parse(data[1]);
+                _doc.MedicineName = data[9];
+                _doc.IdINN = int.Parse(data[19]);
+                _doc.Doctor = _doctor.ToMedicalStaff();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
         private MedDocumentDtoDocumentAttachment[] AddAttachments()
         {
-            Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
-            var data = File.ReadAllBytes(FilePath);
-            var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
-            var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
-
-            byte[] dsgn = null, osgn = null;
-            if (File.Exists(sgn1))
-                dsgn = File.ReadAllBytes(sgn1);
-            if (File.Exists(sgn2))
-                osgn = File.ReadAllBytes(sgn2);
-            return new[]
+            try
             {
-                new MedDocumentDtoDocumentAttachment
+                Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
+                var data = File.ReadAllBytes(FilePath);
+                var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
+                var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
+
+                byte[] dsgn = null, osgn = null;
+                if (File.Exists(sgn1))
+                    dsgn = File.ReadAllBytes(sgn1);
+                if (File.Exists(sgn2))
+                    osgn = File.ReadAllBytes(sgn2);
+                return new[]
                 {
-                    Data = data, //Encoding.UTF8.GetBytes(s),
-                    MimeType = "text/xml",
-                    OrganizationSign = osgn,
-                    PersonalSigns = dsgn == null
-                        ? null
-                        : new[]
-                        {
-                            new MedDocumentDtoPersonalSign
+                    new MedDocumentDtoDocumentAttachment
+                    {
+                        Data = data, //Encoding.UTF8.GetBytes(s),
+                        MimeType = "text/xml",
+                        OrganizationSign = osgn,
+                        PersonalSigns = dsgn == null
+                            ? null
+                            : new[]
                             {
-                                Doctor = _doctor.ToMedicalStaff(),
-                                Sign = dsgn
+                                new MedDocumentDtoPersonalSign
+                                {
+                                    Doctor = _doctor.ToMedicalStaff(),
+                                    Sign = dsgn
+                                }
                             }
-                        }
-                }
-            };
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
 

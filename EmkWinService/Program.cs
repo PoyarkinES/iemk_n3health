@@ -4,6 +4,8 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using Emk;
+using Newtonsoft.Json;
 
 namespace EmkWinService
 {
@@ -14,12 +16,19 @@ namespace EmkWinService
         /// </summary>
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            try
             {
-                new EmkWinSvc()
-            };
-            ServiceBase.Run(ServicesToRun);
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
+                    new EmkWinSvc()
+                };
+                ServiceBase.Run(ServicesToRun);
+            }
+            catch (Exception e)
+            {
+                Log.Error(JsonConvert.SerializeObject(e));
+            }
         }
     }
 }

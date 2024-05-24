@@ -75,50 +75,53 @@ namespace Emk.Services
             foreach (var smo in group)
             {
                 Log.Info("-----------------");
-                    var i = smo.First();
-                    var set = _settings.FirstOrDefault(x => x.PracticeId == i.PracticeId);
-                    if (set != null)
-                        set.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
+                var i = smo.First();
+                var set = _settings.FirstOrDefault(x => x.PracticeId == i.PracticeId);
+                if (set != null)
+                    set.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
                 if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
+                {
+                    Log.Warning(
+                        $"Не найдены настройки практики для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId})");
+                    continue;
+                }
+
+                if (!set.Enabled)
+                {
+                    Log.Info(
+                        $"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId}) пропущен.");
+                    continue;
+                }
+
+                if (Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Any())
+                {
+                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.AccountId))
                     {
-                        Log.Warning(
-                            $"Не найдены настройки практики для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId})");
-                        continue;
+                        Log.Info(item);
                     }
 
-                    if (!set.Enabled)
+                    continue;
+                }
+
+                if (Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId).Any())
+                {
+                    foreach (var item in Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId))
                     {
-                        Log.Info(
-                            $"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {i.PatientId} (TreatDate:{i.TreatDate}, Practice: {i.PracticeId}) пропущен.");
-                        continue;
+                        Log.Info(item);
                     }
 
-                    if (Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Any())
-                    {
-                        foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.AccountId))
-                        {
-                            Log.Info(item);
-                        }
-
-                        continue;
-                    }
-
-                    if (Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId).Any())
-                    {
-                        foreach (var item in Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId))
-                        {
-                            Log.Info(item);
-                        }
-
-                        continue;
-                    }
+                    continue;
+                }
 
                 var pix = new PixService(set);
-                    var emk = new EmkService(set);
-                    pix.AddPatient(i.PatientId);
-                    // pix.UpdatePatient(i.PatientId);
-                    var result = emk.AddCase(i);
-                    if(result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
+                var emk = new EmkService(set);
+
+                var result = pix.AddPatient(i.PatientId) ? 0 : -1;
+                if (result == 0)
+                    result = emk.AddCase(i);
+                else
+                    Log.Warning($"Случай:{i.AccountId} будет пропущен.");
+                if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
 
             }
 

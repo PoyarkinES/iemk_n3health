@@ -42,16 +42,22 @@ namespace Emk.Services
 				var binding = new BasicHttpBinding();
 				var endpointAddress = new EndpointAddress(new Uri(Url), Array.Empty<AddressHeader>());
                 var client = new PixServiceClient(binding, endpointAddress);
-                
-                SetPatient(patientId);
-					
-				Log.Info($"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
-                
-				client.AddPatient(guid, idLPU, _patient1);
-				client.Close();
-				Log.Info($"PIX Пациент добавлен.");
-				return true;
-			}
+
+                var setResult = SetPatient(patientId);
+                if (string.IsNullOrEmpty(setResult))
+                {
+                    Log.Info(
+                        $"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
+
+                    client.AddPatient(guid, idLPU, _patient1);
+                    client.Close();
+                    Log.Info($"PIX Пациент добавлен.");
+                    return true;
+                }
+
+                Log.Info($"PIX Пациент не добавлен. {setResult}");
+                return false;
+            }
 			catch (FaultException<RequestFault[]> ex) {
 				foreach (var er in ex.Detail) {
 					Log.Error(er.ErrorCode + ": " + er.PropertyName + " " + er.Message);
@@ -61,7 +67,7 @@ namespace Emk.Services
 				Log.Error(ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message);
 			}
 			catch (Exception ex) {
-				Log.Error("PIX Ошибка при добавлении пациента:" + ex.Message);
+				Log.Error($"PIX Ошибка при добавлении пациента:{patientId} " + ex.Message);
             }
 
             return false;
@@ -73,13 +79,18 @@ namespace Emk.Services
 				BasicHttpBinding binding = new BasicHttpBinding();
 				EndpointAddress endpointAddress = new EndpointAddress(new Uri(Url));
 				PixServiceClient client = new PixServiceClient(binding, endpointAddress);
-                
-				SetPatient(patientId);
-                
-				client.UpdatePatient(guid, idLPU, _patient1);
-				client.Close();
-				Log.Info($"PIX Пациент обновлен.");
-                return true;
+
+                var setResult = SetPatient(patientId);
+                if (string.IsNullOrEmpty(setResult))
+                {
+                    client.UpdatePatient(guid, idLPU, _patient1);
+                    client.Close();
+                    Log.Info($"PIX Пациент обновлен.");
+                    return true;
+                }
+
+                Log.Info($"PIX Информация о пациенте не обновлена. {setResult}");
+                return false;
             }
 			catch (FaultException<RequestFault[]> ex) {
 				foreach (var err1 in ex.Detail) {
@@ -96,28 +107,27 @@ namespace Emk.Services
             return false;
         }
 
-		private void SetPatient(int patientId)
+		private string SetPatient(int patientId)
 		{
 			var patient = Factory.GetPatientRepository.GetPatient(patientId);
-			_patient1 = new PatientDto
-			{
-				FamilyName = patient.LastName,
-				GivenName = patient.FirstName,
-				MiddleName = patient.MiddleName,
-				IdPatientMIS = patient.CartNum,
-				BirthDate = patient.DateOfBirth,
-				Sex = (byte)patient.SexInt,
-		};
+            _patient1 = new PatientDto
+            {
+                FamilyName = patient.LastName,
+                GivenName = patient.FirstName,
+                MiddleName = patient.MiddleName,
+                IdPatientMIS = patient.CartNum,
+                BirthDate = patient.DateOfBirth,
+                Sex = (byte) patient.SexInt,
+            };
+
             if (patient.SexInt == 0)
             {
-                Log.Error("Для пациента не указан ПОЛ");
-                throw new ArgumentException("Для пациента не указан ПОЛ");
+                throw new Exception("Для пациента не указан ПОЛ");
             }
 
             if (string.IsNullOrEmpty(patient.Snils?.Trim()))
             {
-                Log.Warning("Для пациента не указан СНИЛС");
-                return;
+                throw new Exception("Для пациента не указан СНИЛС");
             }
 
             _patient1.Documents = new DocumentDto[1];
@@ -128,6 +138,8 @@ namespace Emk.Services
                 IdDocumentType = 223,
                 ProviderName = "ПФР"
             };
+
+            return null;
         }
 
 		//public int UpdatePatient(string LastName, string FirstName, string BDate, string CardNum, int Sex, ref int ErrNum, ref string ErrDescription)

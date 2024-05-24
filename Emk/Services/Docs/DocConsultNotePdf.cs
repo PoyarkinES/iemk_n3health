@@ -22,46 +22,53 @@ namespace Emk.Services.Docs
         protected override string NsType { get; }
         public override MedRecord CreateDocument()
         {
-            var data = File.ReadAllBytes(FilePath);
-
-            // ReSharper disable UseStringInterpolation
-            var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
-            var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
-            // ReSharper restore UseStringInterpolation
-
-            byte[] dsgn = null, osgn = null;
-            if (File.Exists(sgn1))
-                dsgn = File.ReadAllBytes(sgn1);
-            if (File.Exists(sgn2))
-                osgn = File.ReadAllBytes(sgn2);
-            Log.Info("Формирую консультативное заключение с PDF");
-            _doc = new ConsultNote
+            try
             {
-                Attachments = new[]
+                var data = File.ReadAllBytes(FilePath);
+
+                // ReSharper disable UseStringInterpolation
+                var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
+                var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
+                // ReSharper restore UseStringInterpolation
+
+                byte[] dsgn = null, osgn = null;
+                if (File.Exists(sgn1))
+                    dsgn = File.ReadAllBytes(sgn1);
+                if (File.Exists(sgn2))
+                    osgn = File.ReadAllBytes(sgn2);
+                Log.Info("Формирую консультативное заключение с PDF");
+                _doc = new ConsultNote
                 {
-                    new MedDocumentDtoDocumentAttachment
+                    Attachments = new[]
                     {
-                        Data = data, //Encoding.UTF8.GetBytes(s),
-						MimeType = "application/pdf",
-                        OrganizationSign = osgn,
-                        PersonalSigns = dsgn == null ? null : new[]
+                        new MedDocumentDtoDocumentAttachment
                         {
-                            new MedDocumentDtoPersonalSign
+                            Data = data, //Encoding.UTF8.GetBytes(s),
+                            MimeType = "application/pdf",
+                            OrganizationSign = osgn,
+                            PersonalSigns = dsgn == null ? null : new[]
                             {
-                                Doctor = DocDoctor.ToMedicalStaff(),
-                                Sign = dsgn
+                                new MedDocumentDtoPersonalSign
+                                {
+                                    Doctor = DocDoctor.ToMedicalStaff(),
+                                    Sign = dsgn
+                                }
                             }
                         }
-                    }
-                },
-                Author = DocDoctor.ToMedicalStaff(),
-                CreationDate = DateTime.Now.Date,
-                Header = "Header",
-                IdDocumentMis = $"{DocPatient.CartNum}-{DocDoctor.AccountId}"
-                //IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
-            };
-            Log.Info("Консультативное заключение с PDF сформировано.");
-            return _doc;
+                    },
+                    Author = DocDoctor.ToMedicalStaff(),
+                    CreationDate = DateTime.Now.Date,
+                    Header = "Header",
+                    IdDocumentMis = $"{DocPatient.CartNum}-{DocDoctor.AccountId}"
+                    //IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
+                };
+                Log.Info("Консультативное заключение с PDF сформировано.");
+                return _doc;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         protected override int DocType { get; set; }

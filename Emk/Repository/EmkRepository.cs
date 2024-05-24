@@ -23,12 +23,10 @@ namespace Emk.Repository
                 using (var reader = Connection.Query(sql)) {
                     if (reader.HasRows) {
                         while (reader.Read()) {
-                            if (!DateTime.TryParse(reader[3].ToString(), CultureInfo.CurrentCulture,
-                                DateTimeStyles.None, out var d)) continue;
                             doc.Surname = reader[0].ToString();
                             doc.Name = reader[1].ToString();
                             doc.MiddleName = reader[2].ToString();
-                            doc.BirthDay = d;
+                            doc.BirthDay = reader.IsDBNull(3) ? DateTime.MinValue : DateTime.Parse(reader[3].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None);
                             doc.AccountId = reader.IsDBNull(4) ? 0 : (int)reader[4];
                             //doc.IdLpu = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
                             doc.MemberId = reader.IsDBNull(5) ? 0 : int.Parse(reader[5].ToString());
