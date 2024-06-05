@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace Emk.Repository
@@ -154,6 +155,24 @@ namespace Emk.Repository
             return result;
         }
 
+        public List<string> GetCheckDocumentAccess(int accId)
+        {
+            var result = new List<string>();
+
+            using (var r = Connection.Query(CheckDocumentAccess(accId)))
+            {
+                while (r.Read())
+                {
+                    int.TryParse(r["acc_cnt"].ToString(), out var acc_cnt);
+                    if(!File.Exists(r["efiles_path"].ToString()))
+                        result.Add(
+                            $"Электронный документ, для случая '{accId}', не найден или отсутствуют права доступа.");
+                }
+            }
+
+            return result;
+        }
+
         private string GetAccountStr(DateTime since) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
             "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
@@ -239,5 +258,13 @@ namespace Emk.Repository
                 "SELECT COUNT(esf.account_id) AS acc_cnt FROM esign_files esf " +
                 $"WHERE esf.account_id = {paccount} AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)";
         }
+
+        private string CheckDocumentAccess(int accId)
+        {
+            return "SELECT ef.account_id, ef.date_approved, ef.date_created, ef.date_sent, ef.efiles_name, ef.efiles_path, " +
+                   "ef.esign_files_id, ef.is_sign_cmn, ef.is_sign_pr, ef.patient_id, ef.practice_id, ef.provider_id " +
+                   $"FROM esign_files ef WHERE account_id =  { accId}";
+        }
+
     }
 }

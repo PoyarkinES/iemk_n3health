@@ -79,6 +79,8 @@ namespace Emk.Services
                 var set = _settings.FirstOrDefault(x => x.PracticeId == i.PracticeId);
                 if (set != null)
                     set.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
+
+                // Проверка насроек практики для пациента
                 if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
                 {
                     Log.Warning(
@@ -86,6 +88,7 @@ namespace Emk.Services
                     continue;
                 }
 
+                //Проверка возможности отправки данных для пациента
                 if (!set.Enabled)
                 {
                     Log.Info(
@@ -93,6 +96,8 @@ namespace Emk.Services
                     continue;
                 }
 
+                //Проверка соответствия случая лечения и лечения пациента
+                // если практика для случая лечения и лечения пациента не соответствуют, случай пропускаем и не добавляем в выгрузку "continue"
                 if (Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Any())
                 {
                     foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.AccountId))
@@ -103,9 +108,26 @@ namespace Emk.Services
                     continue;
                 }
 
-                if (Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId).Any())
+                //Проверка подписи электронного документа для случая лечения
+                // если подписи нет, случай пропускаем и не добавляем в выгрузку "continue"
+                var checkdocsign = Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId);
+                if (checkdocsign.Any())
                 {
-                    foreach (var item in Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId))
+                    foreach (var item in checkdocsign)
+                    {
+                        Log.Info(item);
+                    }
+
+                    continue;
+                }
+
+                //Проверка наличия или отсутствия документов для случаев лечения
+                // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
+                // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
+                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId);
+                if (checkdocaccess.Any())
+                {
+                    foreach (var item in checkdocaccess)
                     {
                         Log.Info(item);
                     }
