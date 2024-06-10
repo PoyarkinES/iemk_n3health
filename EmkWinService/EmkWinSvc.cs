@@ -34,16 +34,24 @@ namespace EmkWinService
 			_isRunning = false;
 		}
 
-		protected override void OnStart(string[] args)
-		{
-			Log.Info("Запуск службы...");
-			_settings = Factory.LoadSettings().First();
-			Log.Info(_settings.ToString());
-			_timer.AutoReset = true;
-			_timer.Start();
-		}
+        protected override void OnStart(string[] args)
+        {
+            try
+            {
+                Log.Info("Запуск службы...");
+                _settings = Factory.LoadSettings().First();
+                Log.Info(_settings.ToString());
+                _timer.AutoReset = true;
+                _timer.Start();
+                _isRunning = true;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
+        }
 
-		protected override void OnStop()
+        protected override void OnStop()
 		{
 			Log.Info("Останавливаю службу...");
 			_timer.Stop();
@@ -52,19 +60,29 @@ namespace EmkWinService
 
 		private bool ShouldStart()
 		{
-			if (_isRunning)
-				return false;
-			if(_settings.UpdateTime == TimeSpan.Zero) {
-				Log.Error($"Не удалось распознать значение времени {_settings.UpdateTime}");
-				throw new ArgumentNullException("UpdateTime", $"Не удалось распознать значение времени {_settings.UpdateTime}");
-			}
-			if (DateTime.Now.TimeOfDay >= _settings.UpdateTime) {
-                if(_lastStart.Date < DateTime.Now.Date)
-                    return true;
-			}
-            
-			return false;
-		}
+            try
+            {
+                if (_isRunning)
+                    return false;
+                if (_settings.UpdateTime == TimeSpan.Zero)
+                {
+                    Log.Error($"Не удалось распознать значение времени {_settings.UpdateTime}");
+                    throw new ArgumentNullException("UpdateTime", $"Не удалось распознать значение времени {_settings.UpdateTime}");
+                }
+                if (DateTime.Now.TimeOfDay >= _settings.UpdateTime)
+                {
+                    if (_lastStart.Date < DateTime.Now.Date)
+                        return true;
+                }
+
+                return false;
+            }
+			catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return false;
+            }
+        }
 
 	}
 }

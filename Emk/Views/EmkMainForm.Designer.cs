@@ -32,6 +32,7 @@
             this.btnSmoSettings = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnSendByAccount = new System.Windows.Forms.Button();
+            this.btnUpdatePeriod = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSend
@@ -89,11 +90,23 @@
             this.btnSendByAccount.UseVisualStyleBackColor = true;
             this.btnSendByAccount.Click += new System.EventHandler(this.btnSendByAccount_Click);
             // 
+            // btnUpdatePeriod
+            // 
+            this.btnUpdatePeriod.Location = new System.Drawing.Point(13, 228);
+            this.btnUpdatePeriod.Margin = new System.Windows.Forms.Padding(4);
+            this.btnUpdatePeriod.Name = "btnUpdatePeriod";
+            this.btnUpdatePeriod.Size = new System.Drawing.Size(241, 65);
+            this.btnUpdatePeriod.TabIndex = 5;
+            this.btnUpdatePeriod.Text = "Обновить за период";
+            this.btnUpdatePeriod.UseVisualStyleBackColor = true;
+            this.btnUpdatePeriod.Click += new System.EventHandler(this.btnUpdatePeriod_Click);
+            // 
             // EmkMainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 238);
+            this.ClientSize = new System.Drawing.Size(267, 299);
+            this.Controls.Add(this.btnUpdatePeriod);
             this.Controls.Add(this.btnSendByAccount);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnSmoSettings);
@@ -116,5 +129,6 @@
         private System.Windows.Forms.Button btnSmoSettings;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnSendByAccount;
+        private System.Windows.Forms.Button btnUpdatePeriod;
     }
 }

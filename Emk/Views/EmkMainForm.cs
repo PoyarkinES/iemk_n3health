@@ -82,5 +82,30 @@ namespace Emk.Views
             btnSendByAccount.Text = @"Отправить данные по номеру счета";
             btnSendByAccount.Enabled = true;
         }
+
+        private async void btnUpdatePeriod_Click(object sender, EventArgs e)
+        {
+            var form = new PeriodForm();
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            btnUpdatePeriod.Enabled = false;
+            btnUpdatePeriod.Text = "Идет отправка...";
+            try
+            {
+                var pats = Factory.GetTreatRepository.GetPatientAccounts(form.PeriodBegin, form.PeriodEnd);
+                foreach (var item in pats)
+                {
+                    await Task.Factory.StartNew(() => new EmkSendingService().Update(item.AccountId));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error(ex.ToString());
+            }
+            btnUpdatePeriod.Text = "Обновить за период";
+            btnUpdatePeriod.Enabled = true;
+        }
     }
 }
