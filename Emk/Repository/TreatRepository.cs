@@ -163,10 +163,18 @@ namespace Emk.Repository
             {
                 while (r.Read())
                 {
-                    int.TryParse(r["acc_cnt"].ToString(), out var acc_cnt);
-                    if(!File.Exists(r["efiles_path"].ToString()))
-                        result.Add(
-                            $"Электронный документ, для случая '{accId}', не найден или отсутствуют права доступа.");
+                    try
+                    {
+                        int.TryParse(r["practice_id"].ToString(), out int practicId);
+                        var filePath = $"{GetFileDirectory(practicId)}\\{r["efiles_path"]}\\{r["efiles_name"]}";
+                        if (!File.Exists(filePath))
+                            result.Add(
+                                $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа.");
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e.Message);
+                    }
                 }
             }
 
@@ -264,6 +272,19 @@ namespace Emk.Repository
             return "SELECT ef.account_id, ef.date_approved, ef.date_created, ef.date_sent, ef.efiles_name, ef.efiles_path, " +
                    "ef.esign_files_id, ef.is_sign_cmn, ef.is_sign_pr, ef.patient_id, ef.practice_id, ef.provider_id " +
                    $"FROM esign_files ef WHERE account_id =  { accId}";
+        }
+
+        private string GetFileDirectory(int practicId)
+        {
+            var sql = $"select dba.sf_get_param_value('PATH_EXT_DOCS',{practicId})";
+            using (var reader = Connection.Query(sql))
+                if (reader.HasRows)
+                    while (reader.Read())
+                    {
+                        return reader[0].ToString();
+                    }
+
+            return null;
         }
 
     }

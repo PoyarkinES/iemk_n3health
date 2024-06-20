@@ -16,7 +16,6 @@ namespace Emk.Services
             _settings = Factory.LoadSettings(reloadSettings);
         }
 
-
 		public void Run(int? accountId = null)
 		{
             if(!IsLicenseValid()) return;
@@ -34,7 +33,6 @@ namespace Emk.Services
             Send(p);
         }
 
-
         public void Update(int accountId)
         {
             if (!IsLicenseValid()) return;
@@ -46,31 +44,55 @@ namespace Emk.Services
                 Log.Error("СМО не найден.");
                 return;
             }
+
             var set = _settings.FirstOrDefault(x => x.PracticeId == smo.PracticeId);
             if (set == default) {
                 Log.Warning($"Не найдены настройки практики для пациента с ИД {smo.PatientId} (TreatDate:{smo.TreatDate}, Practice: {smo.PracticeId})");
                 return;
             }
+
             if (!set.Enabled) {
                 Log.Info($"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {smo.PatientId} (TreatDate:{smo.TreatDate}, Practice: {smo.PracticeId}) пропущен.");
                 return;
             }
 
+            //Проверка подписи электронного документа для случая лечения
+            // если подписи нет, случай пропускаем и не добавляем в выгрузку "continue"
+            var checkdocsign = Factory.GetTreatRepository.GetCheckDocumentEsign(accountId);
+            if (checkdocsign.Any())
+            {
+                foreach (var item in checkdocsign)
+                {
+                    Log.Info(item);
+                }
+
+                return;
+            }
+
+            //Проверка наличия или отсутствия документов для случаев лечения
+            // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
+            // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
+            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId);
+            if (checkdocaccess.Any())
+            {
+                foreach (var item in checkdocaccess)
+                {
+                    Log.Info(item);
+                }
+
+                return;
+            }
 
             new PixService(set).UpdatePatient(smo.PatientId);
             var result = new EmkService(set).UpdateCase(smo);
             if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(smo);
         }
 
-
-
         private PatientAccount FindPatientAccount(int accountId) =>
             Factory.GetTreatRepository.GetPatientAccountById(accountId);
 
-
         private void Send(List<PatientAccount> list)
         {
-
             var group = list.GroupBy(x => new { x.PatientId, x.AccountId, x.ProviderId, x.DiagnoseCode });
             foreach (var smo in group)
             {
@@ -160,7 +182,6 @@ namespace Emk.Services
             return true;
         }
 
-
         //private void Send(List<PatientTreat> p)
         //{
 
@@ -206,7 +227,6 @@ namespace Emk.Services
         //	var errDesc = string.Empty;
         //	foreach (var i in p) emk.AddCase(i.PatientId, i.TreatDate, ref errId, ref errDesc);
         //}
-
 
         private IEnumerable<PatientAccount> GetPatientsAndTreatDates()
 		{
