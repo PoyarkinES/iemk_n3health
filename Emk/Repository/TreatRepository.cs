@@ -166,7 +166,8 @@ namespace Emk.Repository
                     try
                     {
                         int.TryParse(r["practice_id"].ToString(), out int practicId);
-                        var filePath = $"{GetFileDirectory(practicId)}\\{r["efiles_path"]}\\{r["efiles_name"]}";
+                        var filePath =
+                            $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(r["efiles_path"].ToString())}\\{r["efiles_name"]}";
                         if (!File.Exists(filePath))
                             result.Add(
                                 $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа.");
@@ -287,5 +288,9 @@ namespace Emk.Repository
             return null;
         }
 
+        private string checkCorrectFileName(string filename)
+        {
+            return filename[filename.Length - 1] == '/' ? filename.Substring(0, filename.Length - 1) : filename;
+        }
     }
 }
