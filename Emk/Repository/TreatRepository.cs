@@ -290,7 +290,7 @@ namespace Emk.Repository
 
         private string checkCorrectFileName(string filename)
         {
-            return filename[filename.Length - 1] == '/' ? filename.Substring(0, filename.Length - 1) : filename;
+            return filename[filename.Length - 1] == '\\' ? filename.Substring(0, filename.Length - 1) : filename;
         }
     }
 }
