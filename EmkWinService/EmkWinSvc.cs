@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.ServiceProcess;
 using System.Timers;
+using Newtonsoft.Json;
 
 namespace EmkWinService
 {
@@ -17,22 +18,30 @@ namespace EmkWinService
 		public EmkWinSvc()
 		{
 			InitializeComponent();
-			_timer = new Timer(60000);
+			_timer = new Timer(60);
 			_timer.Elapsed += _timer_Elapsed;
 			_lastStart = DateTime.MinValue;
 		}
 
 		private void _timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			if(!ShouldStart())
-				return;
-			_lastStart = DateTime.Now;
-            Log.Info("Отправка данных запущена");
-			var s = new EmkSendingService(true);
-            _isRunning = true;
-            s.Run();
-			_isRunning = false;
-		}
+            try
+            {
+                if (!ShouldStart())
+                    return;
+                _lastStart = DateTime.Now;
+                Log.Info("Отправка данных запущена");
+                var s = new EmkSendingService(true);
+                _isRunning = true;
+                s.Run();
+                _isRunning = false;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+        }
 
         protected override void OnStart(string[] args)
         {
@@ -43,11 +52,11 @@ namespace EmkWinService
                 Log.Info(_settings.ToString());
                 _timer.AutoReset = true;
                 _timer.Start();
-                _isRunning = true;
             }
             catch (Exception e)
             {
-                Log.Error(e.Message);
+                Log.Error(JsonConvert.SerializeObject(e));
+                Stop();
             }
         }
 
