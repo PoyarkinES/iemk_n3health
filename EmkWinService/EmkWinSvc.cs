@@ -48,7 +48,7 @@ namespace EmkWinService
             try
             {
                 Log.Info("Запуск службы...");
-                _settings = Factory.LoadSettings().First();
+                _settings = Factory.LoadSettings().FirstOrDefault();
                 Log.Info(_settings.ToString());
                 _timer.AutoReset = true;
                 _timer.Start();
