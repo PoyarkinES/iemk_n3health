@@ -27,7 +27,7 @@ namespace Emk.Repository
                             EmkUrl = reader["N3H_EMK_URL"].ToString(),
                             PixUrl = reader["N3H_PAT_URL"].ToString(),
                             Enabled = reader["N3H_DATA_ON"].ToString() == "1",
-                            UpdateTime = TimeSpan.TryParse(reader["N3H_REFR_TIME"].ToString(), out var n3h_refr_time) ? n3h_refr_time : TimeSpan.Zero,
+                            UpdateTime = GetTimeSpan(reader["N3H_REFR_TIME"].ToString()),
                             SendingType = reader["N3H_TR_MODE"].ToString() == "0" ? SendingType.DaysBeforeNow : SendingType.Interval,
                             DateInterval = int.TryParse(reader["N3H_BY_DAYS"].ToString(), out var n3h_by_days) ? n3h_by_days : 0,
                             IntervalFrom = DateTime.TryParse(reader["N3H_PER_FROM"].ToString(), out var n3h_per_from) ? n3h_per_from : DateTime.Now,
@@ -60,7 +60,7 @@ namespace Emk.Repository
                     e.Enabled = s.PropValue == "1";
                     break;
                 case "N3H_REFR_TIME":
-                    e.UpdateTime = TimeSpan.Parse(s.PropValue.Length > 7 ? s.PropValue.Substring(0, 7) : s.PropValue);
+                    e.UpdateTime = GetTimeSpan(s.PropValue);
                     break;
                 case "N3H_TR_MODE":
                     e.SendingType = s.PropValue == "0" ? SendingType.DaysBeforeNow : SendingType.Interval;
@@ -105,9 +105,13 @@ namespace Emk.Repository
 
             return null;
         }
+
+        private TimeSpan GetTimeSpan(string value)
+        {
+            return TimeSpan.TryParse(value.Length > 7 ? value.Substring(0, 7) : value, out var n3HRefrTime)
+                ? n3HRefrTime
+                : TimeSpan.Zero;
+        }
     }
-
-
-
-    
+  
 }
