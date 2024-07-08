@@ -11,7 +11,7 @@ namespace EmkWinService
 	public partial class EmkWinSvc : ServiceBase
 	{
 		private Timer _timer;
-		private bool _isRunning;
+		private bool _isRunning = false;
 		private EmkSettings _settings;
 		private DateTime _lastStart;
 		public EmkWinSvc()
@@ -43,7 +43,6 @@ namespace EmkWinService
                 Log.Info(_settings.ToString());
                 _timer.AutoReset = true;
                 _timer.Start();
-                _isRunning = true;
             }
             catch (Exception e)
             {
