@@ -72,7 +72,8 @@ namespace Emk.Services
             //Проверка наличия или отсутствия документов для случаев лечения
             // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
             // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
-            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId);
+            string dir;
+            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId, out dir);
             if (checkdocaccess.Any())
             {
                 foreach (var item in checkdocaccess)
@@ -84,7 +85,7 @@ namespace Emk.Services
             }
 
             new PixService(set).UpdatePatient(smo.PatientId);
-            var result = new EmkService(set).UpdateCase(smo);
+            var result = new EmkService(set).UpdateCase(smo, dir);
             if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(smo);
         }
 
@@ -146,7 +147,8 @@ namespace Emk.Services
                 //Проверка наличия или отсутствия документов для случаев лечения
                 // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
                 // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
-                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId);
+                string dir;
+                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId, out dir);
                 if (checkdocaccess.Any())
                 {
                     foreach (var item in checkdocaccess)
@@ -162,7 +164,7 @@ namespace Emk.Services
 
                 var result = pix.AddPatient(i.PatientId) ? 0 : -1;
                 if (result == 0)
-                    result = emk.AddCase(i);
+                    result = emk.AddCase(i, false, dir);
                 else
                     Log.Warning($"Случай:{i.AccountId} будет пропущен.");
                 if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);

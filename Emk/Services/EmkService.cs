@@ -47,12 +47,12 @@ namespace Emk.Services
 		}
 
 
-        public int UpdateCase(PatientAccount treat) => AddCase(treat, true);
+        public int UpdateCase(PatientAccount treat, string dir = null) => AddCase(treat, true, dir);
         
 
 
 
-        public int AddCase(PatientAccount treat, bool updateOnly = false)
+        public int AddCase(PatientAccount treat, bool updateOnly = false, string path = null)
         {
             Log.Info($"EMK Добавляю случай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy}");
             try {
@@ -192,7 +192,7 @@ namespace Emk.Services
 					var hasPDF = false;
 
 
-					var dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.Id}]\\Дневниковые записи";
+					var dir = path;
 					if (!Directory.Exists(dir))
 						dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
 

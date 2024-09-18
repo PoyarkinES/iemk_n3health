@@ -155,9 +155,10 @@ namespace Emk.Repository
             return result;
         }
 
-        public List<string> GetCheckDocumentAccess(int accId)
+        public List<string> GetCheckDocumentAccess(int accId, out string dir)
         {
             var result = new List<string>();
+            dir = String.Empty;
 
             using (var r = Connection.Query(CheckDocumentAccess(accId)))
             {
@@ -168,9 +169,13 @@ namespace Emk.Repository
                         int.TryParse(r["practice_id"].ToString(), out int practicId);
                         var filePath =
                             $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(r["efiles_path"].ToString())}\\{r["efiles_name"]}";
+                        dir =
+                            $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(r["efiles_path"].ToString())}";
                         if (!File.Exists(filePath))
+                        {
                             result.Add(
                                 $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа.");
+                        }
                     }
                     catch (Exception e)
                     {
