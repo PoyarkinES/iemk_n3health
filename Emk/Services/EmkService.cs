@@ -284,7 +284,7 @@ namespace Emk.Services
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
                 Log.Error(errDescription);
 				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
-                    UpdateCase(treat);
+                    UpdateCase(treat,path);
 				return -1;
             }
             catch (FaultException<RequestWarning> ex) {
