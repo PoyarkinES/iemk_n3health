@@ -65,21 +65,37 @@ namespace Emk.Services.Docs
 
         protected virtual FileData ParseFile(string filePath)
         {
-            FileData fd = new FileData();
-            fd.FilePath = filePath;
-            if (!fd.FileExists)
-                throw new FileNotFoundException("Файл не найден", filePath);
+            try
+            {
 
-            string[] data = Path.GetFileName(filePath).Split('_');
-            if (data.Length != 8)
-                throw new ArgumentOutOfRangeException(nameof(filePath), $"Неверное наименование файла ({Path.GetFileName(filePath)}), ожидается формат (<yyyyddmm>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml)");
-            fd.FileDate = DateTime.ParseExact(data[0], "yyyyMMdd", CultureInfo.InvariantCulture);
-            fd.CartNoteId = int.Parse(data[1]);
-            fd.DocType = (InternalDocType)Enum.Parse(typeof(InternalDocType), data[2]);
-            fd.PatientCartNum = data[3];
-            fd.DoctorId = int.Parse(data[4]);
-            return fd;
-                
+                FileData fd = new FileData();
+                fd.FilePath = filePath;
+                if (!fd.FileExists)
+                    throw new FileNotFoundException("Файл не найден", filePath);
+
+                string[] data = Path.GetFileName(filePath).Split('_');
+
+                if (!data.Any())
+                    throw new NotImplementedException();
+
+                fd.FileDate = checkDate(data[0]);
+                fd.CartNoteId = checkCartNoteId(data[1]);
+                fd.DocType = checkDocType(data[2]);
+                fd.PatientCartNum = checkCardNum(data[3]);
+                fd.DoctorId = checkDoctorCode(data[4]);
+                checkFIO(data.Skip(5).ToArray(), out string error, out bool check);
+
+                if (!check) throw new Exception(error);
+
+                return fd;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(
+                    $"Неверное наименование файла ({Path.GetFileName(filePath)}). " +
+                    $"Ожидается формат (<yyyyddmm>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml)." +
+                    e.Message);
+            }
         }
 
 
@@ -87,5 +103,64 @@ namespace Emk.Services.Docs
         {
             CartNote = EmkRep.GetCartNote(CartNoteId);
         }
+
+        private DateTime checkDate(string s)
+        {
+            return (DateTime.TryParseExact(s, "yyyyddmm", CultureInfo.CurrentCulture, DateTimeStyles.None,
+                out var result))
+                ? result
+                : throw new Exception($"Неверный формат даты. {s} не соответствует формату <yyyyddmm>.");
+        }
+
+        private int checkCartNoteId(string s)
+        {
+            return int.TryParse(s, out var result)
+                ? result
+                : throw new Exception(
+                    $"Неверный формат CartNoteId. {s} не соответсвует числовому формату.");
+        }
+
+        private InternalDocType checkDocType(string s)
+        {
+            return Enum.TryParse<InternalDocType>(s, out var result)
+                ? result
+                : throw new Exception(
+                    $"Неверный формат DocType. {s} не соответсвует формату InternalDocType.");
+        }
+
+        private string checkCardNum(string s)
+        {
+            return int.TryParse(s, out var result)
+                ? s
+                : throw new Exception(
+                    $"Неверный формат CardNum. {s} не соответсвует числовому формату.");
+        }
+
+        private int checkDoctorCode(string s)
+        {
+            return int.TryParse(s, out var result)
+                ? result
+                : throw new Exception(
+                    $"Неверный формат DoctorCode. {s} не соответсвует числовому формату.");
+        }
+
+        private void checkFIO(string[] s, out string error, out bool check)
+        {
+            error = String.Empty;
+            check = true;
+
+            if (string.IsNullOrEmpty(s[0].Trim()))
+            {
+                check = false;
+                error = "Фамилия врача не определена.";
+            }
+
+            if (string.IsNullOrEmpty(s[1].Trim()))
+            {
+                check = false;
+                error = "Имяили инициалы врача не определены.";
+            }
+        }
+
     }
 }

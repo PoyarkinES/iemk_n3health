@@ -187,6 +187,21 @@ namespace Emk.Repository
             return result;
         }
 
+        public string GetDocumentByAccountId(int accountId)
+        {
+            string result = String.Empty;
+
+            using (var r = Connection.Query($"SELECT efiles_name FROM esign_files WHERE account_id = {accountId}"))
+            {
+                while (r.Read())
+                {
+                    result = r["efiles_name"].ToString();
+                }
+            }
+
+            return result;
+        }
+
         private string GetAccountStr(DateTime since) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
             "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
