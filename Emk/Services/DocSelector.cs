@@ -123,17 +123,17 @@ namespace Emk.Services
             {
                 throw new Exception(
                     $"Неверное наименование файла ({Path.GetFileName(filePath)}). " +
-                    $"Ожидается формат (<yyyyddmm>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml)." +
+                    $"Ожидается формат (<yyyyMMdd>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml)." +
                     e.Message);
             }
         }
 
         private DateTime checkDate(string s)
         {
-            return (DateTime.TryParseExact(s, "yyyyddmm", CultureInfo.CurrentCulture, DateTimeStyles.None,
+            return (DateTime.TryParseExact(s, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None,
                 out var result))
                 ? result
-                : throw new Exception($"Неверный формат даты. {s} не соответствует формату <yyyyddmm>.");
+                : throw new Exception($"Неверный формат даты. {s} не соответствует формату <yyyyMMdd>.");
         }
 
         private int checkCartNoteId(string s)
