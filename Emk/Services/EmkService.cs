@@ -199,6 +199,10 @@ namespace Emk.Services
 					var docs = new DocSelector(patient, treat.TreatDate, dir).GetDocs(treat.AccountId);
 					if (docs != null)
 						medDocuments.AddRange(docs);
+                    else
+                    {
+                        Log.Info($"Документы не найдены для {treat.AccountId}.");
+                    }
 
 				}
                 catch

@@ -50,22 +50,22 @@ namespace Emk.Services
                     Log.Error(e.ToString());
                 }
             }
-            else
-            {
-                foreach (var item in Directory.GetFiles(_patientDir))
-                {
-                    try
-                    {
-                        docs.Add(getMedRecord(item));
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error(e.ToString());
-                    }
-                }
-            }
+            //else
+            //{
+            //    foreach (var item in Directory.GetFiles(_patientDir))
+            //    {
+            //        try
+            //        {
+            //            docs.Add(getMedRecord(item));
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            Log.Error(e.ToString());
+            //        }
+            //    }
+            //}
 
-            return docs;
+            return docs.Any() ? docs: null;
 
         }
 
