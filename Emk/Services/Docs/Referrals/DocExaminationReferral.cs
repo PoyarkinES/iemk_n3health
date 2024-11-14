@@ -11,7 +11,7 @@ namespace Emk.Services.Docs.Referrals
         protected override string NsType => "2";
         protected override int DocCode => 33;
 
-        public DocExaminationReferral(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocExaminationReferral(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
         }
     }

@@ -26,6 +26,7 @@ namespace Emk.Services.Docs
 
         protected string FilePath { get; }
         protected  int CartNoteId { get; }
+        protected int AccountId { get; }
 
         protected CartNote CartNote { get; set; }
 
@@ -34,10 +35,11 @@ namespace Emk.Services.Docs
         protected abstract string NsType { get; }
 
 
-        protected DocBase(string filePath, int cartNoteId)
+        protected DocBase(string filePath, int cartNoteId, int accountId)
         {
             FilePath = filePath;
             CartNoteId = cartNoteId;
+            AccountId = accountId;
             LoadCartNote();
             DocDoctor = GetDoctor();
             DocPatient = GetPatient();
@@ -52,7 +54,7 @@ namespace Emk.Services.Docs
             if (CartNote == null)
                 throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
 
-            return EmkRep.GetDoctorOfPatientTreat(CartNote.PatientId, CartNote.DateAdded);
+            return EmkRep.GetDoctorOfPatientTreat(CartNote.PatientId, CartNote.DateAdded, AccountId);
         }
 
         protected virtual Patient GetPatient()

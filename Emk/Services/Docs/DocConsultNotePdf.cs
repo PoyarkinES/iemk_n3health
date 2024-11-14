@@ -13,7 +13,7 @@ namespace Emk.Services.Docs
     {
         private ConsultNote _doc;
 
-        public DocConsultNotePdf(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocConsultNotePdf(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             
         }
@@ -72,10 +72,5 @@ namespace Emk.Services.Docs
         }
 
         protected override int DocType { get; set; }
-
-        protected override DoctorEmk GetDoctor()
-        {
-            return base.GetDoctor();
-        }
     }
 }

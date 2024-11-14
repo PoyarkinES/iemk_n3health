@@ -9,7 +9,7 @@ namespace Emk.Services.Docs
 {
     public class DocControlCardDispensaryObservation : DocBase
     {
-        public DocControlCardDispensaryObservation(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocControlCardDispensaryObservation(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
         }
 

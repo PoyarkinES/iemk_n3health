@@ -29,9 +29,6 @@ namespace Emk.Services
 
         public IEnumerable<MedRecord> GetDocs(int accountId)
         {
-            //var dir = Path.Combine(_settings.PatientDirectory,
-            //    $"{_patient.LastName} {_patient.FirstName} {_patient.MiddleName} [{_patient.Id}]",
-            //    "Дневниковые записи");
             if (!Directory.Exists(_patientDir))
                 return null;
 
@@ -43,51 +40,37 @@ namespace Emk.Services
             {
                 try
                 {
-                    docs.Add(getMedRecord(file));
+                    docs.Add(getMedRecord(file, accountId));
                 }
                 catch (Exception e)
                 {
                     Log.Error(e.ToString());
                 }
             }
-            //else
-            //{
-            //    foreach (var item in Directory.GetFiles(_patientDir))
-            //    {
-            //        try
-            //        {
-            //            docs.Add(getMedRecord(item));
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            Log.Error(e.ToString());
-            //        }
-            //    }
-            //}
 
             return docs.Any() ? docs: null;
 
         }
 
 
-        private IDocBase SelectDocType(FileData fd)
+        private IDocBase SelectDocType(FileData fd, int accountId)
         {
             switch (fd.DocType)
             {
                 case InternalDocType.HospitalReferral:
-                    return new DocHospitalReferral(fd.FilePath, fd.CartNoteId);
+                    return new DocHospitalReferral(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.ConsultReferral:
-                    return new DocConsultReferral(fd.FilePath, fd.CartNoteId);
+                    return new DocConsultReferral(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.ExamReferral:
-                    return new DocExaminationReferral(fd.FilePath, fd.CartNoteId);
+                    return new DocExaminationReferral(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.Prescription:
-                    return new DocPrescription(fd.FilePath, fd.CartNoteId);
+                    return new DocPrescription(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.DischargeSummary:
-                    return new DocDischargeSummary(fd.FilePath, fd.CartNoteId);
+                    return new DocDischargeSummary(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.DocControlCardDispensaryObservation:
-                    return new DocControlCardDispensaryObservation(fd.FilePath, fd.CartNoteId);
+                    return new DocControlCardDispensaryObservation(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.DocConsultNote:
-                    return new DocConsultNote(fd.FilePath, fd.CartNoteId);
+                    return new DocConsultNote(fd.FilePath, fd.CartNoteId, accountId);
                 default:
                     return null;
             }
@@ -191,7 +174,7 @@ namespace Emk.Services
             return _treatRepository.GetDocumentByAccountId(accountId);
         }
 
-        private MedRecord getMedRecord(string file)
+        private MedRecord getMedRecord(string file, int accountId)
         {
             if (!file.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
                 !file.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
@@ -207,7 +190,7 @@ namespace Emk.Services
                 }
 
                 Log.Info($"Обрабатываю файл: {file}");
-                var srv = SelectDocType(fd);
+                var srv = SelectDocType(fd, accountId);
                 if (srv == null)
                 {
                     Log.Warning("Неизвестный тип файла: " + fd.FilePath);

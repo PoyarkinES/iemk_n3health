@@ -12,7 +12,7 @@ namespace Emk.Services.Docs
         private FileData _fd;
         private DischargeSummary _doc;
 
-        public DocDischargeSummary(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocDischargeSummary(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             _doc = new DischargeSummary();
             SetPatientAndDoctor();
@@ -89,7 +89,7 @@ namespace Emk.Services.Docs
 
         protected override DoctorEmk GetDoctor()
         {
-            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate);
+            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate, AccountId);
         }
 
         private void SetPatientAndDoctor()

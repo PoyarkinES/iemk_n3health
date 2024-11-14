@@ -16,7 +16,7 @@ namespace Emk.Services.Docs
         private FileData _fd;
         private MedDocument _doc;
 
-        public DocConsultNote(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocConsultNote(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             _doc = new MedDocument();
             SetPatientAndDoctor();
@@ -99,7 +99,7 @@ namespace Emk.Services.Docs
         {
             if (_patient == null)
                 return null;
-            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate);
+            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate, AccountId);
         }
 
         private void SetPatientAndDoctor()

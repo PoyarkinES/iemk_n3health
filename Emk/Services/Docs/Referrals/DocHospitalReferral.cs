@@ -11,7 +11,7 @@ namespace Emk.Services.Docs.Referrals
     {
         private readonly Referral _doc;
         private DoctorEmk _doctor;
-        public DocHospitalReferral(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocHospitalReferral(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             _doc = new Referral();
         }

@@ -5,7 +5,7 @@
         protected override string NsType => "3";
         protected override int DocCode => 34;
 
-        public DocConsultReferral(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocConsultReferral(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
         }
     }

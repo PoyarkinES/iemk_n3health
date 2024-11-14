@@ -11,7 +11,7 @@ namespace Emk.Services.Docs
     {
         private AppointedMedication _doc;
 
-        public DocAppointedMedication(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocAppointedMedication(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
         }
 

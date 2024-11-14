@@ -9,7 +9,7 @@ namespace Emk.Services.Docs
     {
         private readonly AppointedMedication _doc;
         private readonly DoctorEmk _doctor;
-        public DocPrescription(string filePath, int cartNoteId) : base(filePath, cartNoteId)
+        public DocPrescription(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             _doc = new AppointedMedication();
             _doctor = GetDoctor();

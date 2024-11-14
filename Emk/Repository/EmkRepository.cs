@@ -48,7 +48,7 @@ namespace Emk.Repository
         }
 
 
-        public virtual DoctorEmk GetDoctorOfPatientTreat(int patientId, DateTime treatDate)
+        public virtual DoctorEmk GetDoctorOfPatientTreat(int patientId, DateTime treatDate, int accountId)
 		{
 			//string sql = "select first surname, firstname, middlename, birthdate, account_id, dict_value_11, member_id from treat, staff left join aoms_dicts_provs on aoms_dicts_provs.dict_key = staff.pers_code ";
    //         sql += $"where treat.patient_id = {patientId} and treat.treat_date = '" + treatDate.ToString("yyyy-MM-dd") +
@@ -63,13 +63,15 @@ namespace Emk.Repository
             //    " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code " +
             //    $" where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}' order by t.treat_id ";
 
-            string sql =
-                "select top 1 TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, account_id, provider_id, n.Code, s.snils, s.provider_no_1_id " +
-                "                from treat t  " +
-                "               join staff s on  t.provider_id = s.member_id  " +
-                "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
-                "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
-                $"           where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}'  and t.ref_status is null order by t.treat_id ";
+            //string sql =
+            //    "select top 1 TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, account_id, provider_id, n.Code, s.snils, s.provider_no_1_id " +
+            //    "                from treat t  " +
+            //    "               join staff s on  t.provider_id = s.member_id  " +
+            //    "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
+            //    "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
+            //    $"           where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}'  and t.ref_status is null order by t.treat_id ";
+
+            string sql = $"SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils FROM sp_semd_get_data_new({accountId})";
 
 
             DoctorEmk doc = new DoctorEmk();
@@ -89,10 +91,10 @@ namespace Emk.Repository
                             //doc.IdLpu = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
                             //doc.MemberId = (int)reader[5];
                             doc.MemberId = reader.IsDBNull(5) ? 0 : int.Parse(reader[5].ToString());
-                            // doc.Speciality = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
-                            doc.Position = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
-                            doc.Snils = reader.IsDBNull(7) ? string.Empty : reader[7].ToString();
-                            doc.SexStr = reader.IsDBNull(8) ? string.Empty : reader[8].ToString();
+                            doc.Speciality = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
+                            doc.Position = reader.IsDBNull(7) ? 0 : int.Parse(reader[7].ToString());
+                            doc.Snils = reader.IsDBNull(8) ? string.Empty : reader[8].ToString();
+                            doc.SexStr = reader.IsDBNull(9) ? string.Empty : reader[9].ToString();
                         }
                     }
                 }
