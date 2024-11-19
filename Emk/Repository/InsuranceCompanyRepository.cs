@@ -5,6 +5,10 @@ namespace Emk.Repository
 {
     public class InsuranceCompanyRepository : DbRepository
     {
+        public InsuranceCompanyRepository(string connectionString) : base(connectionString)
+        {
+        }
+
         public List<InsuranceCompany> GetInsuranseCompanies()
         {
             List<InsuranceCompany> comps = new List<InsuranceCompany>();
@@ -18,5 +22,6 @@ namespace Emk.Repository
             }
             return comps;
         }
+
     }
 }

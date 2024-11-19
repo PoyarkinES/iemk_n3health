@@ -1,0 +1,1 @@
+select @errorStatus, @errorMessage, @licenseNumber from dba.cd_GetLicenseData('EGISZ',1)

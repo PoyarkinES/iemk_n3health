@@ -1,0 +1,1 @@
+SELECT TRIM(surname), TRIM(firstname), TRIM(middlename), pers_code, tax_file_no, member_id, sex FROM staff WHERE is_active= 'Y' and member_type = 1

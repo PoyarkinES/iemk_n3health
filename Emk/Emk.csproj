@@ -61,6 +61,8 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Factory.cs" />
+    <Compile Include="Interface\IDoctorRepository.cs" />
+    <Compile Include="Interface\ILicenseRepository.cs" />
     <Compile Include="Models\BaseDoctor.cs" />
     <Compile Include="Models\CartNote.cs" />
     <Compile Include="Models\Comparers\DoctorComparer.cs" />
@@ -69,10 +71,12 @@
     <Compile Include="Models\Doctor.cs" />
     <Compile Include="Models\DiagnosisEmk.cs" />
     <Compile Include="Models\DoctorEmk.cs" />
+    <Compile Include="Models\Dto\DoctorDto.cs" />
     <Compile Include="Models\EmkSettings.cs" />
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\InsuranceCompany.cs" />
     <Compile Include="Models\InternalDocType.cs" />
+    <Compile Include="Models\License.cs" />
     <Compile Include="Models\Patient.cs" />
     <Compile Include="Models\PatientAccount.cs" />
     <Compile Include="Models\PatientTreat.cs" />
@@ -88,11 +92,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Repository\DbHelper.cs" />
+    <Compile Include="Repository\DbReaderConvertExtensions.cs" />
     <Compile Include="Repository\DbRepository.cs" />
     <Compile Include="Repository\DoctorRepository.cs" />
     <Compile Include="Repository\EmkRepository.cs" />
     <Compile Include="Repository\InsuranceCompanyRepository.cs" />
+    <Compile Include="Interface\IRepository.cs" />
     <Compile Include="Repository\LicenseRepository.cs" />
     <Compile Include="Repository\PatientRepository.cs" />
     <Compile Include="Repository\SettingsRepository.cs" />
@@ -159,6 +170,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AccountFinderForm.resx">
       <DependentUpon>AccountFinderForm.cs</DependentUpon>
@@ -272,9 +284,18 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\GetDoctors_Scropt.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\Sql_Parameters.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IsLicenseValid.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
