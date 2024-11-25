@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Emk.Properties;
 
 namespace Emk.Repository
 {
@@ -224,7 +225,7 @@ namespace Emk.Repository
 
         public PayType GetPayType(int accountId)
         {
-            var query = "SELECT distinct " +
+            /*var query = "SELECT distinct " +
                         "send_acc_to_third_party_id " +
                         ",IF send_acc_to_pat_id IS NOT NULL  " +
                         "THEN  " +
@@ -235,30 +236,37 @@ namespace Emk.Repository
                         "          (SELECT MAX(hf_plan_id) FROM hf_plans WHERE hf_id = send_acc_to_third_party_id)   " +
                         "            AND hf_id = send_acc_to_third_party_id)),'Бюджет') " +
                         "END IF AS pay_metod " +
-                        $"FROM treat JOIN patients_accounts WHERE treat.ref_status IS NULL AND account_id = {accountId}";
+                        $"FROM treat JOIN patients_accounts WHERE treat.ref_status IS NULL AND account_id = {accountId}";*/
+            //1 - ОМС
+            //2 - бюджет
+            //3 - платные услуги
+            //4 - ДМС
+            //5 - Собственные средства
+            //6 - другое
+            /*var query = "SELECT " +
+                                "COALESCE(IF vt.send_acc_to_pat_id IS NOT NULL THEN 5 ELSE " +
+                                "IF vt.send_acc_to_pat_id IS NULL AND vt.thp_type = 1 AND vt.scheme_id = 1 THEN 1 ELSE " +
+                                "IF vt.send_acc_to_pat_id IS NULL AND vt.thp_type = 1 AND vt.scheme_id = 2 THEN 4 " +
+                                "END IF END IF END IF, 6) AS IdPaymentType " +
+                                "FROM " +
+                                "(SELECT TOP(1) " +
+                                "pa.send_acc_to_pat_id " +
+                                ",tp.thp_type " +
+                                ",(SELECT scheme_id FROM hf_plans WHERE hf_plan_id IN " +
+                                "(SELECT hf_plan_id FROM account_payment_plan WHERE patient_account_id = pa.id)) AS scheme_id " +
+                                "FROM patients_accounts pa " +
+                                "LEFT JOIN third_parties tp " +
+                                $"WHERE pa.ref_status IS NULL AND pa.id = {accountId} " +
+                                "ORDER BY id DESC)vt";*/
+            var query = Resources.GetPayType;
 
-
-            using (var r = Connection.Query(query)) {
+            using (var r = Connection.Query(query, accountId)) {
                 if (r.HasRows) {
                     while (r.Read())
                     {
                         if (r[1] == DBNull.Value)
                             return PayType.Unknown;
-
-                        switch (r[1].ToString().ToLower().Trim())
-                        {
-                            case "бюджет":
-                                return PayType.Budget;
-                            case "омс":
-                                return PayType.OMS;
-                            case "дмс":
-                                return PayType.DMS;
-                            case "собственные средства":
-                                return PayType.Own;
-                            default:
-                                return PayType.Unknown;
-
-                        }
+                        return (PayType) (int.Parse(r["thp_type"].ToString()));
                     }
                 }
 

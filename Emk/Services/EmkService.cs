@@ -27,8 +27,8 @@ namespace Emk.Services
 		PersonWithIdentity patient1;
 		string MName = "";
 		OdbcConnection _conn;
-		string conString;
 		string path = "";
+		string conString;
 		string patientsBaseDir;
 		IDoctorFileService _smoSrv;
         private int autoUpd = 0;
