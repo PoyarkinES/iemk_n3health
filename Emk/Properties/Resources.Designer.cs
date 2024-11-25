@@ -332,6 +332,24 @@ namespace Emk.Properties {
         ///    ( MIN([param_value]) 
         ///     for Param_Code in (&apos;ACTIVATE_N3H&apos;,&apos;N3H_EMK_URL&apos;,&apos;N3H_PAT_URL&apos;,&apos;N3H_DATA_ON&apos;,&apos;N3H_REFR_TIME&apos;,&apos;N3H_TR_MODE&apos;,&apos;N3H_BY_DAYS&apos;,&apos;N3H_PER_FROM&apos;,&apos;N3H_PER_TO&apos; [rest of string was truncated]&quot;;.
         /// </summary>
+        internal static string GetPayType {
+            get {
+                return ResourceManager.GetString("GetPayType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WITH p_value AS (
+        ///    SELECT *
+        ///    FROM (
+        ///        SELECT Param_Code, param_value
+        ///        FROM APOC_Parameters_Values apv JOIN APOC_Parameters ap 
+        ///        WHERE Param_Code IN (&apos;ACTIVATE_N3H&apos;,&apos;N3H_EMK_URL&apos;,&apos;N3H_PAT_URL&apos;,&apos;N3H_DATA_ON&apos;,&apos;N3H_REFR_TIME&apos;,&apos;N3H_TR_MODE&apos;,&apos;N3H_BY_DAYS&apos;,&apos;N3H_PER_FROM&apos;,&apos;N3H_PER_TO&apos;)
+        ///    ) up
+        ///    PIVOT 
+        ///    ( MIN([param_value]) 
+        ///     for Param_Code in (&apos;ACTIVATE_N3H&apos;,&apos;N3H_EMK_URL&apos;,&apos;N3H_PAT_URL&apos;,&apos;N3H_DATA_ON&apos;,&apos;N3H_REFR_TIME&apos;,&apos;N3H_TR_MODE&apos;,&apos;N3H_BY_DAYS&apos;,&apos;N3H_PER_FROM&apos;,&apos;N3H_PER_TO&apos; [rest of string was truncated]&quot;;.
+        /// </summary>
         internal static string Sql_Parameters {
             get {
                 return ResourceManager.GetString("Sql_Parameters", resourceCulture);

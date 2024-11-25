@@ -37,5 +37,14 @@ namespace EmkTests
             form.ShowDialog();
             Assert.IsTrue(true);
         }
+
+        [TestMethod]
+        public void GetPayType()
+        {
+            var rep = Factory.GetEmkRepository;
+            rep.GetPayType(9947);
+            Assert.IsTrue(true);
+        }
+
     }
 }
