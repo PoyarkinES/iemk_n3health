@@ -264,9 +264,10 @@ namespace Emk.Repository
                 if (r.HasRows) {
                     while (r.Read())
                     {
-                        if (r[1] == DBNull.Value)
+                        if (r["thp_type"] == DBNull.Value)
                             return PayType.Unknown;
-                        return (PayType) (int.Parse(r["thp_type"].ToString()));
+                        var thp_type = (int.Parse(r["thp_type"].ToString()));
+                        return (PayType)thp_type;
                     }
                 }
 
