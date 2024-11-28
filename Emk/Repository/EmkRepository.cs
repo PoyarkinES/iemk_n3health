@@ -84,13 +84,11 @@ namespace Emk.Repository
                     {
                         while (reader.Read())
                         {
-                            doc.Surname = reader[0].ToString();
-                            doc.Name = reader[1].ToString();
-                            doc.MiddleName = reader[2].ToString();
-                            doc.BirthDay = (DateTime)reader[3];
-                            doc.AccountId = reader.IsDBNull(4) ? 0 : (int)reader[4];
-                            //doc.IdLpu = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
-                            //doc.MemberId = (int)reader[5];
+                            doc.Surname = reader["prov_fam"].ToString();
+                            doc.Name = reader["prov_name"].ToString();
+                            doc.MiddleName = reader["prov_otch"].ToString();
+                            doc.BirthDay = (DateTime)reader["prov_dr"];
+                            doc.AccountId = (int?)reader["acc_id"] ?? 0;
                             doc.MemberId = reader.IsDBNull(5) ? 0 : int.Parse(reader[5].ToString());
                             doc.Speciality = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
                             doc.Position = reader.IsDBNull(7) ? 0 : int.Parse(reader[7].ToString());
