@@ -9,35 +9,26 @@ namespace Emk.Repository
 {
 	public abstract class DbRepository: IDbRepository
     {
-        private readonly string m_ConnectionString;
-		//protected OdbcConnection Connection => Factory.GetDbConnection();
-
-        protected DbRepository(string connectionString)
-        {
-            m_ConnectionString = connectionString;
-        }
+        private readonly string m_ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ODBC"].ConnectionString;
 
         public T Scalar<T>(string commandText, params object[] args)
         {
             try
             {
-                T result; 
+                using var connection = new SqlConnection(m_ConnectionString);
+                using var command = connection.CreateCommand();
+                command.CommandText = commandText;
 
-                using (var connection = new SqlConnection(m_ConnectionString))
+                foreach (var value in args)
                 {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = commandText;
-
-                        foreach (var value in args)
-                        {
-                            var param = command.CreateParameter();
-                            param.Value = value;
-                            command.Parameters.Add(param);
-                        }
-                        result = (T)Convert.ChangeType(command.ExecuteScalar(), typeof(T));
-                    }
+                    var param = command.CreateParameter();
+                    param.Value = value;
+                    command.Parameters.Add(param);
                 }
+
+                connection.Open();
+                var result = (T)Convert.ChangeType(command.ExecuteScalar(), typeof(T));
+                connection.Close();
 
                 return result;
             }
@@ -48,34 +39,30 @@ namespace Emk.Repository
             }
         }
 
-        public IEnumerable<T> Query<T>(string commandText, Func<IDataReader, T> map, params object[] args)
+        public IEnumerable<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args)
         {
             try
             {
                 var result = new List<T>();
 
-                using (var connection = new SqlConnection(m_ConnectionString))
+                using var connection = new SqlConnection(m_ConnectionString);
+                using var command = connection.CreateCommand();
+                command.CommandText = commandText;
+
+                foreach (var value in args)
                 {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = commandText;
-
-                        foreach (var value in args)
-                        {
-                            var param = command.CreateParameter();
-                            param.Value = value;
-                            command.Parameters.Add(param);
-                        }
-
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                result.Add(map(reader));
-                            }
-                        }
-                    }
+                    var param = command.CreateParameter();
+                    param.Value = value;
+                    command.Parameters.Add(param);
                 }
+
+                connection.Open();
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(map(reader));
+                }
+                connection.Close();
 
                 return result;
             }
@@ -92,30 +79,26 @@ namespace Emk.Repository
             {
                 var result = new List<T>();
 
-                using (var connection = new SqlConnection(m_ConnectionString))
+                using var connection = new SqlConnection(m_ConnectionString);
+                using var command = connection.CreateCommand(commandType);
+                command.CommandText = commandText;
+
+                foreach (var prop in @object.GetType()
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    using (var command = connection.CreateCommand(commandType))
-                    {
-                        command.CommandText = commandText;
-
-                        foreach (var prop in @object.GetType()
-                            .GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                        {
-                            var param = command.CreateParameter();
-                            param.ParameterName = prop.Name;
-                            param.Value = prop.GetValue(@object, null);
-                            command.Parameters.Add(param);
-                        }
-
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                result.Add(map(reader));
-                            }
-                        }
-                    }
+                    var param = command.CreateParameter();
+                    param.ParameterName = prop.Name;
+                    param.Value = prop.GetValue(@object, null);
+                    command.Parameters.Add(param);
                 }
+
+                connection.Open();
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result.Add(map(reader));
+                }
+                connection.Close();
 
                 return result;
             }
@@ -130,22 +113,24 @@ namespace Emk.Repository
         {
             try
             {
-                using (var connection = new SqlConnection(m_ConnectionString))
+                var result = -1;
+
+                using var connection = new SqlConnection(m_ConnectionString);
+                using var command = connection.CreateCommand();
+                command.CommandText = commandText;
+
+                foreach (var value in args)
                 {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = commandText;
-
-                        foreach (var value in args)
-                        {
-                            var param = command.CreateParameter();
-                            param.Value = value;
-                            command.Parameters.Add(param);
-                        }
-
-                        return command.ExecuteNonQuery();
-                    }
+                    var param = command.CreateParameter();
+                    param.Value = value;
+                    command.Parameters.Add(param);
                 }
+
+                connection.Open();
+                result = command.ExecuteNonQuery();
+                connection.Close();
+
+                return result;
             }
             catch (Exception e)
             {

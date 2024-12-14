@@ -37,6 +37,7 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -72,6 +73,7 @@
     <Compile Include="Models\DiagnosisEmk.cs" />
     <Compile Include="Models\DoctorEmk.cs" />
     <Compile Include="Models\Dto\DoctorDto.cs" />
+    <Compile Include="Models\Dto\InsuranceCompanyDto.cs" />
     <Compile Include="Models\EmkSettings.cs" />
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\InsuranceCompany.cs" />
@@ -296,6 +298,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\IsLicenseValid.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GetFileDirectory.txt" />
+    <None Include="Resources\GetDocumentByAccountId.txt" />
+    <None Include="Resources\CheckDocumentEsignByDate.txt" />
+    <None Include="Resources\GetCheckDocumentEsign.txt" />
+    <None Include="Resources\GetCheckPracticId.txt" />
+    <Content Include="Resources\GetInsuranseCompanies.txt" />
+    <None Include="Resources\GetPatientAccountsByDate.txt" />
+    <None Include="Resources\GetPatientAccountsByPeriod.txt" />
+    <None Include="Resources\GetPatientAccountById.txt" />
+    <None Include="Resources\GetPatientsTreatsByPeriod.txt" />
+    <None Include="Resources\GetPatientByCartNum.txt" />
+    <None Include="Resources\GetPatientById.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

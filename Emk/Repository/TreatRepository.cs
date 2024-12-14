@@ -1,205 +1,136 @@
 ﻿using Emk.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using Emk.Properties;
 using Newtonsoft.Json;
 
 namespace Emk.Repository
 {
     public class TreatRepository : DbRepository
     {
-        public List<PatientTreat> GetPatientsTreats(DateTime sinceDate, DateTime toDate)
+        public IEnumerable<PatientTreat> GetPatientsTreats(DateTime sinceDate, DateTime toDate)
         {
-            var pats = new List<PatientTreat>();
-            using (var reader = Connection.Query(GetQueryString(sinceDate, toDate)))
-                if (reader.HasRows)
-                    while (reader.Read())
-                        pats.Add(new PatientTreat
-                        {
-                            PatientId = (int)reader[0],
-                            TreatDate = (DateTime)reader[1],
-                            PracticeId = (short)reader[2],
-                            SpecialityCode = (reader[3] == DBNull.Value) ? 0 : int.Parse(reader[3].ToString()),
-                            SpecialityName = reader[4].ToString()
-                        });
-            return pats;
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter(parameterName: "since", value: sinceDate),
+                new SqlParameter(parameterName: "to", value: toDate)
+            };
+            var data = Query(Resources.GetPatientsTreatsByPeriod, PatientTreatMap, param.ToArray());
+            return data;
         }
 
         public PatientAccount GetPatientAccountById(int accountId)
         {
-            using (var r = Connection.Query(GetAccountStr(accountId)))
+            var param = new List<SqlParameter>
             {
-                if (!r.HasRows)
-                    return null;
-
-                while (r.Read())
-                {
-                    return new PatientAccount
-                    {
-                        PatientId = (int)r[0],
-                        TreatDate = r[1] == DBNull.Value
-                            ? DateTime.Now
-                            : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
-                        EsfDate = DateTime.TryParse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None, out var esfDate) ? esfDate : DateTime.MinValue,
-                        PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
-                        ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
-                        AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
-                        Code = r[5] == DBNull.Value ? 0 : int.Parse(r[5].ToString()),
-                        Name = r[6].ToString(),
-                        DiagnoseName = r[7].ToString(),
-                        DiagnoseCode = r[8].ToString(),
-                        //SmoPostfix = string.Empty,
-                        ListProcedures = r[9].ToString()
-                    };
-                }
-            }
-
-            return null;
+                new SqlParameter(parameterName: "account_id", value: accountId),
+            };
+            var data = Query(Resources.GetPatientAccountById, PatientAccountMap, param.ToArray()).FirstOrDefault();
+            return data;
         }
 
 
-        public List<PatientAccount> GetPatientAccounts(DateTime sinceDate, DateTime toDate)
+        public IEnumerable<PatientAccount> GetPatientAccounts(DateTime sinceDate, DateTime toDate)
         {
-            var pats = new List<PatientAccount>();
-            var query = toDate == DateTime.MinValue ? GetAccountStr(sinceDate) : GetAccountStr(sinceDate, toDate);
-            using (var r = Connection.Query(query))
+            var param = new List<SqlParameter>
             {
-                if (!r.HasRows)
-                    return pats;
+                new SqlParameter(parameterName: "since", value: sinceDate),
+            };
 
-                while (r.Read())
-                {
-                    try
-                    {
-                        pats.Add(new PatientAccount
-                        {
-                            PatientId = (int)r[0],
-                            TreatDate = r[1] == DBNull.Value
-                                ? DateTime.Now
-                                : DateTime.Parse(r[1].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
-                            EsfDate = r["EsfDate"] == DBNull.Value
-                                ? (DateTime?)null
-                                : DateTime.Parse(r["EsfDate"].ToString(), CultureInfo.CurrentCulture, DateTimeStyles.None),
-                            PracticeId = r[2] == DBNull.Value ? 0 : short.Parse(r[2].ToString()),
-                            ProviderId = r[3] == DBNull.Value ? 0 : int.Parse(r[3].ToString()),
-                            AccountId = r[4] == DBNull.Value ? 0 : int.Parse(r[4].ToString()),
-                            Code = r[5] == DBNull.Value ? 0 : int.Parse(r[5].ToString()),
-                            Name = r[6].ToString(),
-                            DiagnoseName = r[7].ToString(),
-                            DiagnoseCode = r[8].ToString(),
-                            //SmoPostfix = string.Empty,
-                            ListProcedures = r[9].ToString()
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error($"{e.Message}");
-                        throw;
-                    }
-                }
-            }
-            return pats;
+            if (toDate == DateTime.MinValue)
+                param.Add(new SqlParameter(parameterName: "to", value: toDate));
+
+            var data = Query(
+                toDate == DateTime.MinValue ? Resources.GetPatientAccountsByDate : Resources.GetPatientAccountsByPeriod,
+                PatientAccountMap, param.ToArray());
+            return data;
         }
 
-        public List<string> GetCheckPracticId(int paccount)
+        public IEnumerable<string> GetCheckPracticId(int paccount)
         {
-            var result = new List<string>();
-
-            using (var r = Connection.Query(CheckPracticIdQuery(paccount)))
+            var param = new List<SqlParameter>
             {
-                while (r.Read())
-                {
-                    int.TryParse(r["tpr"].ToString(), out var tpr);
-                    int.TryParse(r["ppr"].ToString(), out var ppr);
-                    int.TryParse(r["acc"].ToString(), out var acc);
-                    var tprName = r["tpr_name"].ToString();
-                    var pprName = r["ppr_name"].ToString();
+                new SqlParameter(parameterName: "account_id", value: paccount),
+            };
 
-                    if (tpr != ppr)
-                        result.Add(
-                            $"Случай лечения {acc} создан в практике: '{pprName}' лечение пациента создано в практике: '{tprName}', случай не отправлен.");
-                }
-            }
-
-            return result;
+            var data = Query(Resources.GetCheckPracticId, GetCheckPracticIdMap, param.ToArray());
+            return data;
         }
 
-        public List<string> GetCheckDocumentEsign(int paccount)
+        public IEnumerable<string> GetCheckDocumentEsign(int paccount)
         {
-            var result = new List<string>();
-
-            using (var r = Connection.Query(CheckDocumentEsignByFlag(paccount)))
+            string CheckDocumentEsignMap(IDataReader reader)
             {
-                while (r.Read())
-                {
-                    int.TryParse(r["acc_cnt"].ToString(), out var acc_cnt);
+                var acc_cnt = reader.Get<int>("acc_cnt");
 
-                    if (acc_cnt == 1)
-                        result.Add(
-                            $"Электронный документ, прикрепленный к случаю '{paccount}', не подписан, случай не отправлен.");
-                }
+                if (acc_cnt == 1)
+                    return $"Электронный документ, прикрепленный к случаю '{paccount}', был передан ранее, случай не отправлен.";
+
+                return String.Empty;
             }
 
-            using (var r = Connection.Query(CheckDocumentEsignByDate(paccount)))
+            var param = new List<SqlParameter>
             {
-                while (r.Read())
-                {
-                    int.TryParse(r["acc_cnt"].ToString(), out var acc_cnt);
+                new SqlParameter(parameterName: "account_id", value: paccount),
+            };
 
-                    if (acc_cnt == 1)
-                        result.Add(
-                            $"Электронный документ, прикрепленный к случаю '{paccount}', был передан ранее, случай не отправлен.");
-                }
-            }
-            return result;
+            var data = Query(Resources.CheckDocumentEsignByFlag, CheckDocumentEsignMap, param.ToArray()).ToList();
+            data.AddRange(Query(Resources.CheckDocumentEsignByDate, CheckDocumentEsignMap, param.ToArray()));
+            return data;
+
         }
 
-        public List<string> GetCheckDocumentAccess(int accId, out string dir)
+        public IEnumerable<string> GetCheckDocumentAccess(int accId, out string dir)
         {
-            var result = new List<string>();
-            dir = String.Empty;
+            var tmpdir = String.Empty;
 
-            using (var r = Connection.Query(CheckDocumentAccess(accId)))
+            string checkDocumentAccess(IDataReader reader)
             {
-                while (r.Read())
+                try
                 {
-                    try
-                    {
-                        int.TryParse(r["practice_id"].ToString(), out int practicId);
-                        var filePath =
-                            $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(r["efiles_path"].ToString())}\\{r["efiles_name"]}";
-                        dir =
-                            $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(r["efiles_path"].ToString())}";
-                        if (!File.Exists(filePath))
-                        {
-                            result.Add(
-                                $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа.");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error(e.Message);
-                    }
+                    var practicId = reader.Get<int>("practice_id");
+                    var filePath =
+                        $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(reader.Get<string>("efiles_path"))}\\{reader.Get<string>("efiles_name")}";
+                    tmpdir =
+                        $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(reader.Get<string>("efiles_path"))}";
+                    return !File.Exists(filePath) ? $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа." : String.Empty;
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e.Message);
+                    return e.Message;
                 }
             }
 
-            return result;
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter(parameterName: "account_id", value: accId),
+            };
+
+            var data = Query(Resources.CheckDocumentEsignByFlag, checkDocumentAccess, param.ToArray());
+            dir = tmpdir;
+            return data;
         }
 
         public string GetDocumentByAccountId(int accountId)
         {
-            string result = String.Empty;
-
-            using (var r = Connection.Query($"SELECT efiles_name FROM esign_files WHERE account_id = {accountId}"))
+            string CheckDocumentEsignMap(IDataReader reader)
             {
-                while (r.Read())
-                {
-                    result = r["efiles_name"].ToString();
-                }
+                return reader.Get<string>("efiles_name");
             }
 
-            return result;
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter(parameterName: "account_id", value: accountId),
+            };
+
+            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).FirstOrDefault();
+            return data;
         }
 
         private string GetAccountStr(DateTime since) =>
@@ -252,12 +183,6 @@ namespace Emk.Repository
             "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
             $"WHERE (t.treat_date BETWEEN '{since.Date:yyyy-MM-dd}' AND '{to.Date:yyyy-MM-dd}' OR DATE(esf.date_created) BETWEEN '{since.Date:yyyy-MM-dd}' AND '{to.Date:yyyy-MM-dd}') " +
             "and t.ref_status is null AND lab_work_id IS NULL";
-            //"AND ((esf.account_id IS NULL) OR (esf.account_id IS NOT NULL AND ((esf.is_sign_pr = 1 AND esf.is_sign_cmn = 1 AND esf.date_sent IS NULL))))    ";
-            //"OR (t.account_id IN (SELECT account_id FROM esign_files WHERE (is_sign_pr = 1 AND is_sign_cmn = 1 AND date_sent IS NULL) AND date_created BETWEEN TODAY()-7 AND TODAY()))";
-
-        //private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
-        //    ? $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' ORDER BY treat_date, patient_id"
-        //    : $"SELECT distinct patient_id, treat_date, practice_id FROM treat WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  ORDER BY treat_date, patient_id";
 
         private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
             ? $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}'  and t.ref_status is null AND lab_work_id IS NULL ORDER BY treat_date, patient_id"
@@ -297,20 +222,65 @@ namespace Emk.Repository
 
         private string GetFileDirectory(int practicId)
         {
-            var sql = $"select dba.sf_get_param_value('PATH_EXT_DOCS',{practicId})";
-            using (var reader = Connection.Query(sql))
-                if (reader.HasRows)
-                    while (reader.Read())
-                    {
-                        return reader[0].ToString();
-                    }
+            string CheckDocumentEsignMap(IDataReader reader)
+            {
+                return reader.Get<string>("path_ext_docs");
+            }
 
-            return null;
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter(parameterName: "practicId", value: practicId),
+            };
+
+            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).First();
+            return string.IsNullOrEmpty(data) ? null : data;
         }
 
         private string checkCorrectFileName(string filename)
         {
             return filename[filename.Length - 1] == '\\' ? filename.Substring(0, filename.Length - 1) : filename;
+        }
+
+        private PatientTreat PatientTreatMap(IDataReader reader)
+        {
+            return new PatientTreat()
+            {
+                PatientId = reader.Get<int>("patient_id"),
+                TreatDate = reader.Get<DateTime?>("treat_date")?? DateTime.Now,
+                PracticeId = reader.Get<int>("practice_id"),
+                SpecialityCode = reader.Get<int>("Code"),
+                SpecialityName = reader.Get<string>("name")
+            };
+        }
+
+        private PatientAccount PatientAccountMap(IDataReader reader)
+        {
+            return new PatientAccount
+            {
+                PatientId = reader.Get<int>("patient_id"),
+                TreatDate = reader.Get<DateTime?>("treat_date")?? DateTime.Now,
+                EsfDate = reader.Get<DateTime?>("EsfDate") ?? DateTime.MinValue,
+                PracticeId = reader.Get<int>("practice_id"),
+                ProviderId = reader.Get<int>("provider_id"),
+                AccountId = reader.Get<int>("account_id"),
+                Code = reader.Get<int>("Code"),
+                Name = reader.Get<string>("name"),
+                DiagnoseName = reader.Get<string>("diagnosis_name"),
+                DiagnoseCode = reader.Get<string>("diagnosis_code"),
+                ListProcedures = reader.Get<string>("list_procedures")
+            };
+        }
+
+        private string GetCheckPracticIdMap(IDataReader reader)
+        {
+
+            var tpr = reader.Get<int>("tpr");
+            var ppr = reader.Get<int>("ppr");
+            var acc = reader.Get<int>("acc");
+            var tprName = reader.Get<string>("tpr_name");
+            var pprName = reader.Get<string>("ppr_name");
+
+            return tpr != ppr ? $"Случай лечения {acc} создан в практике: '{pprName}' лечение пациента создано в практике: '{tprName}', случай не отправлен." : String.Empty;
         }
     }
 }

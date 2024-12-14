@@ -1,26 +1,26 @@
 ﻿using Emk.Models;
 using System.Collections.Generic;
+using System.Data;
+using Emk.Models.Dto;
+using Emk.Properties;
 
 namespace Emk.Repository
 {
     public class InsuranceCompanyRepository : DbRepository
     {
-        public InsuranceCompanyRepository(string connectionString) : base(connectionString)
+        public IEnumerable<InsuranceCompanyDto> GetInsuranseCompanies()
         {
+            var data = Query(Resources.GetInsuranseCompanies, InsuranceCompanyMap);
+            return data;
         }
 
-        public List<InsuranceCompany> GetInsuranseCompanies()
+        private InsuranceCompanyDto InsuranceCompanyMap(IDataReader reader)
         {
-            List<InsuranceCompany> comps = new List<InsuranceCompany>();
-            using (var reader = Connection.Query("select third_parties.code, third_parties.name from third_parties where third_parties.thp_type = 1")) {
-                InsuranceCompany doc = new InsuranceCompany();
-                while(reader.Read()) {
-                    doc.Code = reader[0].ToString();
-                    doc.Name = reader[1].ToString();
-                    comps.Add(doc);
-                }
-            }
-            return comps;
+            return new InsuranceCompanyDto()
+            {
+                code = reader.Get<string>(nameof(InsuranceCompanyDto.code)),
+                name = reader.Get<string>(nameof(InsuranceCompanyDto.name))
+            };
         }
 
     }

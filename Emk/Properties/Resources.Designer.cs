@@ -61,6 +61,41 @@ namespace Emk.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
+        ///FROM esign_files esf 
+        ///WHERE esf.account_id = @account_id AND esf.date_sent IS NOT NULL.
+        /// </summary>
+        internal static string CheckDocumentEsignByDate {
+            get {
+                return ResourceManager.GetString("CheckDocumentEsignByDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
+        ///FROM esign_files esf 
+        ///WHERE esf.account_id = @account_id AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)  .
+        /// </summary>
+        internal static string CheckDocumentEsignByFlag {
+            get {
+                return ResourceManager.GetString("CheckDocumentEsignByFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT distinct t.practice_id as tpr, pa.practice_id as ppr, pa.id as acc, tpr.description , ppr.description
+        ///FROM treat t JOIN patients_accounts pa 
+        ///    JOIN practice_locations tpr ON tpr.practice_id = t.practice_id
+        ///    JOIN practice_locations ppr ON ppr.practice_id = pa.practice_id
+        ///WHERE t.account_id = @account_id.
+        /// </summary>
+        internal static string GetCheckPracticId {
+            get {
+                return ResourceManager.GetString("GetCheckPracticId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT TRIM(surname), TRIM(firstname), TRIM(middlename), pers_code, tax_file_no, member_id, sex FROM staff WHERE is_active= &apos;Y&apos; and member_type = 1.
         /// </summary>
         internal static string GetDoctors_Scropt {
@@ -70,7 +105,117 @@ namespace Emk.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT efiles_name FROM esign_files WHERE account_id = @account_id.
+        /// </summary>
+        internal static string GetDocumentByAccountId {
+            get {
+                return ResourceManager.GetString("GetDocumentByAccountId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string GetFileDirectory {
+            get {
+                return ResourceManager.GetString("GetFileDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select third_parties.code, third_parties.name 
+        ///from third_parties 
+        ///where third_parties.thp_type = @thp_type.
+        /// </summary>
+        internal static string GetInsuranseCompanies {
+            get {
+                return ResourceManager.GetString("GetInsuranseCompanies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, 
+        ///COALESCE(ds.diagnosis_name,mkb.item,&apos;&apos;) diagnosis_name, COALESCE(ds.diagnosis_code,mkb.code,&apos;&apos;) diagnosis_code,
+        ///(SELECT LIST(pr1.item ||&apos;/&apos;|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id) list_procedures,
+        ///DATE(esf.date_created) EsfDate 
+        ///FROM treat t JOIN procedures pr 
+        ///    LEFT JOIN esign_files [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetPatientAccountById {
+            get {
+                return ResourceManager.GetString("GetPatientAccountById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, 
+        ///    COALESCE(ds.diagnosis_name,mkb.item,&apos;&apos;), COALESCE(ds.diagnosis_code,mkb.code,&apos;&apos;),
+        ///    (SELECT LIST(pr1.item ||&apos;/&apos;|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), 
+        ///    DATE(esf.date_created) EsfDate 
+        ///FROM treat t JOIN procedures pr 
+        ///    LEFT JOIN esign_files esf on t.account_id = esf.accoun [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetPatientAccountsByDate {
+            get {
+                return ResourceManager.GetString("GetPatientAccountsByDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, 
+        ///    COALESCE(ds.diagnosis_name,mkb.item,&apos;&apos;), COALESCE(ds.diagnosis_code,mkb.code,&apos;&apos;),
+        ///    (SELECT LIST(pr1.item ||&apos;/&apos;|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), 
+        ///    DATE(esf.date_created) EsfDate 
+        ///FROM treat t JOIN procedures pr 
+        ///    LEFT JOIN esign_files esf on t.account_id = esf.accoun [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetPatientAccountsByPeriod {
+            get {
+                return ResourceManager.GetString("GetPatientAccountsByPeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select patient_id, TRIM(surname), TRIM(firstname), TRIM(middlename), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, param_value
+        ///from patients 
+        ///    left join APOC_Parameters_Values on object_id = patient_id and param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = &apos;СНИЛС&apos; and Param_Code like &apos;%EXT%&apos;)
+        ///where patients_cart_num = @patientCartNum.
+        /// </summary>
+        internal static string GetPatientByCartNum {
+            get {
+                return ResourceManager.GetString("GetPatientByCartNum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select patient_id, TRIM(surname), TRIM(firstname), TRIM(middlename), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, COALESCE(patients.snils,param_value)
+        ///from patients 
+        ///    left join APOC_Parameters_Values on object_id = patient_id and param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = &apos;СНИЛС&apos; and Param_Code like &apos;%EXT%&apos;)
+        ///where patient_id = @patientId.
+        /// </summary>
+        internal static string GetPatientById {
+            get {
+                return ResourceManager.GetString("GetPatientById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name 
+        ///FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id 
+        ///    LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id 
+        ///WHERE (@since is null OR treat_date &gt;= @since) AND (@to is null OR treat_date &lt; @to) 
+        ///    AND t.ref_status is null AND lab_work_id IS NULL 
+        ///ORDER BY treat_date, patient_id
+        ///.
+        /// </summary>
+        internal static string GetPatientsTreatsByPeriod {
+            get {
+                return ResourceManager.GetString("GetPatientsTreatsByPeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select @errorStatus, @errorMessage, @licenseNumber from dba.cd_GetLicenseData(&apos;EGISZ&apos;,1).
         /// </summary>
         internal static string IsLicenseValid {
             get {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Odbc;
+using System.Linq;
 using System.Windows.Forms;
 using Emk.Models;
 using Emk.Repository;
@@ -51,11 +52,9 @@ namespace Emk
 		public static List<EmkSettings> LoadSettings(bool force = false)
 		{
 			if (force || _settings == null)
-			{
-                _conStr = new SettingsService().LoadSettings().DbConnectionString;
-                if(!string.IsNullOrEmpty(_conStr))
-                    _settings = new SettingsRepository().LoadSettings();
-			}
+            {
+                _settings = new SettingsRepository().LoadSettings().ToList();
+            }
             return _settings;
 		}
 	}

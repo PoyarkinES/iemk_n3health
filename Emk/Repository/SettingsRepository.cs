@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Emk.Models;
+using Emk.Models.Dto;
 using Emk.Properties;
 using Emk.Services;
 
@@ -12,30 +16,64 @@ namespace Emk.Repository
     public class SettingsRepository : DbRepository
     {
         
-        public List<EmkSettings> LoadSettings()
+        public IEnumerable<EmkSettings> LoadSettings()
         {
-            var settings = new List<EmkSettings>();
-            using (var reader = Connection.Query(Resources.Sql_Parameters))
-                if (reader.HasRows)
-                    while (reader.Read())
-                    {
-                        settings.Add(new EmkSettings()
-                        {
-                            PracticeId = (int)reader["object_id"],
-                            Guid = Guid.TryParse(reader["N3H_KEY"].ToString(), out var n3h_key) ? n3h_key : Guid.Empty,
-                            IdLPU = Guid.TryParse(reader["N3H_PRACTICE"].ToString(), out var n3h_practic) ? n3h_practic : Guid.Empty,
-                            EmkUrl = reader["N3H_EMK_URL"].ToString(),
-                            PixUrl = reader["N3H_PAT_URL"].ToString(),
-                            Enabled = reader["N3H_DATA_ON"].ToString() == "1",
-                            UpdateTime = GetTimeSpan(reader["N3H_REFR_TIME"].ToString()),
-                            SendingType = reader["N3H_TR_MODE"].ToString() == "0" ? SendingType.DaysBeforeNow : SendingType.Interval,
-                            DateInterval = int.TryParse(reader["N3H_BY_DAYS"].ToString(), out var n3h_by_days) ? n3h_by_days : 0,
-                            IntervalFrom = DateTime.TryParse(reader["N3H_PER_FROM"].ToString(), out var n3h_per_from) ? n3h_per_from : DateTime.Now,
-                            IntervalTo = DateTime.TryParse(reader["N3H_PER_TO"].ToString(), out var n3h_per_to) ? n3h_per_to : DateTime.Now,
-                            AutoUpdate = new SettingsService().LoadSettings().AutoUpdate
-                        });
-                    }
-            return GenerateSettings(settings).ToList();
+            var data = Query(Resources.Sql_Parameters, EmkSettingsMap);
+            return data;
+        }
+
+        private IEnumerable<EmkSettings> GenerateSettings(IEnumerable<EmkSettings> list)
+        {
+            var result = new List<EmkSettings>();
+            foreach (var item in list)
+            {
+                item.PatientDirectory = GetPatientsPath(item.PracticeId);
+                result.Add(item);
+            }
+
+            return result;
+        }
+
+        private EmkSettings EmkSettingsMap(IDataReader reader)
+        {
+            return new EmkSettings()
+            {
+                PracticeId = reader.Get<int>("object_id"),
+                Guid = reader.Get<Guid>("N3H_KEY"),
+                IdLPU = reader.Get<Guid>("N3H_PRACTICE"),
+                EmkUrl = reader.Get<string>("N3H_EMK_URL"),
+                PixUrl = reader.Get<string>("N3H_PAT_URL"),
+                Enabled = reader.Get<string>("N3H_DATA_ON") == "1",
+                UpdateTime = reader.Get<TimeSpan>("N3H_REFR_TIME"),
+                SendingType = reader.Get<string>("N3H_TR_MODE") == "0" ? SendingType.DaysBeforeNow : SendingType.Interval,
+                DateInterval = reader.Get<int>("N3H_BY_DAYS"),
+                IntervalFrom = reader.Get<DateTime>("N3H_PER_FROM"),
+                IntervalTo = reader.Get<DateTime>("N3H_PER_TO"),
+                AutoUpdate = int.Parse(ConfigurationManager.AppSettings["AutoUpdate"])
+            };
+        }
+
+        private string GetPatientsPath(int practicId)
+        {
+            string CheckDocumentEsignMap(IDataReader reader)
+            {
+                return reader.Get<string>("path_ext_docs");
+            }
+
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter(parameterName: "practicId", value: practicId),
+            };
+
+            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).First();
+            return string.IsNullOrEmpty(data) ? null : data;
+        }
+
+        private TimeSpan GetTimeSpan(string value)
+        {
+            return TimeSpan.TryParse(value.Length > 7 ? value.Substring(0, 7) : value, out var n3HRefrTime)
+                ? n3HRefrTime
+                : TimeSpan.Zero;
         }
 
         private EmkSettings FillSettings(EmkSettings e, DbSettings s)
@@ -43,7 +81,7 @@ namespace Emk.Repository
             switch (s.ParamCode)
             {
                 case "N3H_KEY":
-                    var res =Guid.TryParse(s.PropValue, out Guid a);
+                    var res = Guid.TryParse(s.PropValue, out Guid a);
                     e.Guid = res ? a : Guid.Empty;
                     break;
                 case "N3H_PRACTICE":
@@ -79,39 +117,5 @@ namespace Emk.Repository
             }
             return e;
         }
-
-
-        private IEnumerable<EmkSettings> GenerateSettings(IEnumerable<EmkSettings> list)
-        {
-            var result = new List<EmkSettings>();
-            foreach (var item in list)
-            {
-                item.PatientDirectory = GetPatientsPath(item.PracticeId);
-                result.Add(item);
-            }
-
-            return result;
-        }
-
-        private string GetPatientsPath(int practicId)
-        {
-            var sql = $"select dba.sf_get_param_value('PATH_EXT_DOCS',{practicId})";
-            using (var reader = Connection.Query(sql))
-                if (reader.HasRows)
-                    while (reader.Read())
-                    {
-                        return reader[0].ToString();
-                    }
-
-            return null;
-        }
-
-        private TimeSpan GetTimeSpan(string value)
-        {
-            return TimeSpan.TryParse(value.Length > 7 ? value.Substring(0, 7) : value, out var n3HRefrTime)
-                ? n3HRefrTime
-                : TimeSpan.Zero;
-        }
     }
-  
 }

@@ -58,10 +58,9 @@ namespace Emk.Services
 
             //Проверка подписи электронного документа для случая лечения
             // если подписи нет, случай пропускаем и не добавляем в выгрузку "continue"
-            var checkdocsign = Factory.GetTreatRepository.GetCheckDocumentEsign(accountId);
-            if (checkdocsign.Any())
+            if (Factory.GetTreatRepository.GetCheckDocumentEsign(accountId).Any(a => a != String.Empty))
             {
-                foreach (var item in checkdocsign)
+                foreach (var item in Factory.GetTreatRepository.GetCheckDocumentEsign(accountId).Where(w => w != String.Empty))
                 {
                     Log.Info(item);
                 }
@@ -73,10 +72,10 @@ namespace Emk.Services
             // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
             // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
             string dir;
-            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId, out dir);
-            if (checkdocaccess.Any())
+            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId, out dir).ToList();
+            if (checkdocaccess.Any(a=> a != String.Empty))
             {
-                foreach (var item in checkdocaccess)
+                foreach (var item in checkdocaccess.Where(w => w != String.Empty))
                 {
                     Log.Info(item);
                 }
@@ -121,9 +120,9 @@ namespace Emk.Services
 
                 //Проверка соответствия случая лечения и лечения пациента
                 // если практика для случая лечения и лечения пациента не соответствуют, случай пропускаем и не добавляем в выгрузку "continue"
-                if (Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Any())
+                if (Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Any(a=>a != String.Empty))
                 {
-                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.AccountId))
+                    foreach (var item in Factory.GetTreatRepository.GetCheckPracticId(i.AccountId).Where(w=> w != String.Empty))
                     {
                         Log.Info(item);
                     }
@@ -133,10 +132,9 @@ namespace Emk.Services
 
                 //Проверка подписи электронного документа для случая лечения
                 // если подписи нет, случай пропускаем и не добавляем в выгрузку "continue"
-                var checkdocsign = Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId);
-                if (checkdocsign.Any())
+                if (Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId).Any(a=>a != String.Empty))
                 {
-                    foreach (var item in checkdocsign)
+                    foreach (var item in Factory.GetTreatRepository.GetCheckDocumentEsign(i.AccountId).Where(w => w != String.Empty))
                     {
                         Log.Info(item);
                     }
@@ -148,10 +146,10 @@ namespace Emk.Services
                 // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
                 // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
                 string dir;
-                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId, out dir);
-                if (checkdocaccess.Any())
+                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId, out dir).ToList();
+                if (checkdocaccess.Any(a => a != String.Empty))
                 {
-                    foreach (var item in checkdocaccess)
+                    foreach (var item in checkdocaccess.Where(w => w != String.Empty))
                     {
                         Log.Info(item);
                     }
@@ -249,7 +247,7 @@ namespace Emk.Services
 			}
 
             Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()} по {endDate.ToShortDateString()}");
-            var pats = Factory.GetTreatRepository.GetPatientAccounts(startDate, endDate);
+            var pats = Factory.GetTreatRepository.GetPatientAccounts(startDate, endDate).ToList();
             //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
 			Log.Info($"Получено {pats.Count}");
 			return AddPostfixForDiagnose(pats);
