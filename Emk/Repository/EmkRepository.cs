@@ -51,29 +51,8 @@ namespace Emk.Repository
 
         public virtual DoctorEmk GetDoctorOfPatientTreat(int patientId, DateTime treatDate, int accountId)
 		{
-			//string sql = "select first surname, firstname, middlename, birthdate, account_id, dict_value_11, member_id from treat, staff left join aoms_dicts_provs on aoms_dicts_provs.dict_key = staff.pers_code ";
-   //         sql += $"where treat.patient_id = {patientId} and treat.treat_date = '" + treatDate.ToString("yyyy-MM-dd") +
-   //                "' and treat.provider_id = staff.member_id ";
-			//sql += "order by treat_id";
-
-            //string sql = "select top 1 surname, firstname, middlename, birthdate, account_id, dict_value_11, member_id, f.spec_fed_code , p.pos_fed_code, dict_value_1 " +
-            //    " from treat t " +
-            //    " join staff s on  t.provider_id = s.member_id " +
-            //    " left join aoms_dicts_provs adp on adp.dict_key = s.pers_code " +
-            //    " left join nsr_fedspecs f on adp.dict_value_3 = f.spec_oms_code " +
-            //    " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code " +
-            //    $" where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}' order by t.treat_id ";
-
-            //string sql =
-            //    "select top 1 TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, account_id, provider_id, n.Code, s.snils, s.provider_no_1_id " +
-            //    "                from treat t  " +
-            //    "               join staff s on  t.provider_id = s.member_id  " +
-            //    "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
-            //    "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
-            //    $"           where t.patient_id = {patientId} and t.treat_date = '{treatDate:yyyy-MM-dd}'  and t.ref_status is null order by t.treat_id ";
-
-            string sql = $"SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils FROM sp_semd_get_data_new({accountId})";
-
+            string sql = "SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils, s.sex as prov_sex " +
+                         $"FROM sp_semd_get_data_new({accountId}) sp JOIN staff s ON sp.prov_id = s.member_id";
 
             DoctorEmk doc = new DoctorEmk();
             try
@@ -84,16 +63,16 @@ namespace Emk.Repository
                     {
                         while (reader.Read())
                         {
-                            doc.Surname = reader["prov_fam"].ToString();
-                            doc.Name = reader["prov_name"].ToString();
-                            doc.MiddleName = reader["prov_otch"].ToString();
-                            doc.BirthDay = (DateTime)reader["prov_dr"];
-                            doc.AccountId = (int?)reader["acc_id"] ?? 0;
-                            doc.MemberId = reader.IsDBNull(5) ? 0 : int.Parse(reader[5].ToString());
-                            doc.Speciality = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
-                            doc.Position = reader.IsDBNull(7) ? 0 : int.Parse(reader[7].ToString());
-                            doc.Snils = reader.IsDBNull(8) ? string.Empty : reader[8].ToString();
-                            doc.SexStr = reader.IsDBNull(9) ? string.Empty : reader[9].ToString();
+                            doc.Surname = reader.Get<string>("prov_fam");
+                            doc.Name = reader.Get<string>("prov_name");
+                            doc.MiddleName = reader.Get<string>("prov_otch");
+                            doc.BirthDay = reader.Get<DateTime>("prov_dr");
+                            doc.AccountId = reader.Get<int?>("acc_id") ?? 0;
+                            doc.MemberId = reader.Get<int?>("prov_id") ?? 0;
+                            doc.Speciality = reader.Get<int?>("prov_spec_code") ?? 0;
+                            doc.Position = reader.Get<int?>("prov_dolzn_code") ?? 0;
+                            doc.Snils = reader.Get<string>("prov_snils");
+                            doc.SexStr = reader.Get<string>("prov_sex");
                         }
                     }
                 }
@@ -223,52 +202,14 @@ namespace Emk.Repository
 
         public PayType GetPayType(int accountId)
         {
-            /*var query = "SELECT distinct " +
-                        "send_acc_to_third_party_id " +
-                        ",IF send_acc_to_pat_id IS NOT NULL  " +
-                        "THEN  " +
-                        "'Собственные средства' " +
-                        "ELSE  " +
-                        "COALESCE((SELECT scheme_name FROM insur_schemes WHERE scheme_id =  " +
-                        "    (SELECT scheme_id FROM hf_plans WHERE hf_plan_id =  " +
-                        "          (SELECT MAX(hf_plan_id) FROM hf_plans WHERE hf_id = send_acc_to_third_party_id)   " +
-                        "            AND hf_id = send_acc_to_third_party_id)),'Бюджет') " +
-                        "END IF AS pay_metod " +
-                        $"FROM treat JOIN patients_accounts WHERE treat.ref_status IS NULL AND account_id = {accountId}";*/
-            //1 - ОМС
-            //2 - бюджет
-            //3 - платные услуги
-            //4 - ДМС
-            //5 - Собственные средства
-            //6 - другое
-            /*var query = "SELECT " +
-                                "COALESCE(IF vt.send_acc_to_pat_id IS NOT NULL THEN 5 ELSE " +
-                                "IF vt.send_acc_to_pat_id IS NULL AND vt.thp_type = 1 AND vt.scheme_id = 1 THEN 1 ELSE " +
-                                "IF vt.send_acc_to_pat_id IS NULL AND vt.thp_type = 1 AND vt.scheme_id = 2 THEN 4 " +
-                                "END IF END IF END IF, 6) AS IdPaymentType " +
-                                "FROM " +
-                                "(SELECT TOP(1) " +
-                                "pa.send_acc_to_pat_id " +
-                                ",tp.thp_type " +
-                                ",(SELECT scheme_id FROM hf_plans WHERE hf_plan_id IN " +
-                                "(SELECT hf_plan_id FROM account_payment_plan WHERE patient_account_id = pa.id)) AS scheme_id " +
-                                "FROM patients_accounts pa " +
-                                "LEFT JOIN third_parties tp " +
-                                $"WHERE pa.ref_status IS NULL AND pa.id = {accountId} " +
-                                "ORDER BY id DESC)vt";*/
             var query = Resources.GetPayType;
 
-            using (var r = Connection.Query(query, accountId)) {
-                if (r.HasRows) {
-                    while (r.Read())
-                    {
-                        if (r["thp_type"] == DBNull.Value)
-                            return PayType.Unknown;
-                        var thp_type = (int.Parse(r["thp_type"].ToString()));
-                        return (PayType)thp_type;
-                    }
-                }
-
+            using var r = Connection.Query(query, accountId);
+            if (!r.HasRows) return PayType.Unknown;
+            while (r.Read())
+            {
+                return (PayType)setPaymentType(r.Get<int?>("send_acc_to_pat_id"), r.Get<int?>("thp_type"),
+                    r.Get<int?>("scheme_id"));
             }
 
             return PayType.Unknown;
@@ -276,10 +217,17 @@ namespace Emk.Repository
 
         public void UpdateEsignFiles(PatientAccount pa)
         {
-            //var sql = $"Update esign_files set date_sent = {DateTime.Now} where account_id = {pa.AccountId}";
             var sql = $"Update esign_files set date_sent = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' where account_id = {pa.AccountId}";
             Connection.ExecuteNonQuery(sql);
         }
 
+
+        private int setPaymentType(int? send_acc_to_pat_id, int? thp_type, int? scheme_id)
+        {
+            if (send_acc_to_pat_id.HasValue) return 5;
+            if (thp_type == 1 && scheme_id == 1) return 1;
+            if (thp_type == 1 && scheme_id == 2) return 4;
+            return 6;
+        }
     }
 }

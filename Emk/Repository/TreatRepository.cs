@@ -208,7 +208,7 @@ namespace Emk.Repository
             "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
             "DATE(esf.date_created) EsfDate " +
             "FROM treat t JOIN procedures pr " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -225,7 +225,7 @@ namespace Emk.Repository
             "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
             "DATE(esf.date_created) EsfDate " +
             "FROM treat t JOIN procedures pr " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -242,7 +242,7 @@ namespace Emk.Repository
             "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
             "DATE(esf.date_created) EsfDate " +
             "FROM treat t JOIN procedures pr " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
