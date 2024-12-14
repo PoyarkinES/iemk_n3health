@@ -192,5 +192,13 @@ namespace Emk.Repository
             return reader.Get<string>("pay_metod");
         }
 
+
+        private int setPaymentType(int? send_acc_to_pat_id, int? thp_type, int? scheme_id)
+        {
+            if (send_acc_to_pat_id.HasValue) return 5;
+            if (thp_type == 1 && scheme_id == 1) return 1;
+            if (thp_type == 1 && scheme_id == 2) return 4;
+            return 6;
+        }
     }
 }
