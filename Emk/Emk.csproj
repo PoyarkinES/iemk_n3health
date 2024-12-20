@@ -62,8 +62,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Factory.cs" />
-    <Compile Include="Interface\IDoctorRepository.cs" />
-    <Compile Include="Interface\ILicenseRepository.cs" />
+    <Compile Include="Repository\Dto\DoctorEmkDto.cs" />
+    <Compile Include="Repository\Interface\IDoctorRepository.cs" />
+    <Compile Include="Repository\Interface\ILicenseRepository.cs" />
     <Compile Include="Models\BaseDoctor.cs" />
     <Compile Include="Models\CartNote.cs" />
     <Compile Include="Models\Comparers\DoctorComparer.cs" />
@@ -72,8 +73,8 @@
     <Compile Include="Models\Doctor.cs" />
     <Compile Include="Models\DiagnosisEmk.cs" />
     <Compile Include="Models\DoctorEmk.cs" />
-    <Compile Include="Models\Dto\DoctorDto.cs" />
-    <Compile Include="Models\Dto\InsuranceCompanyDto.cs" />
+    <Compile Include="Repository\Dto\DoctorDto.cs" />
+    <Compile Include="Repository\Dto\InsuranceCompanyDto.cs" />
     <Compile Include="Models\EmkSettings.cs" />
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\InsuranceCompany.cs" />
@@ -105,7 +106,7 @@
     <Compile Include="Repository\DoctorRepository.cs" />
     <Compile Include="Repository\EmkRepository.cs" />
     <Compile Include="Repository\InsuranceCompanyRepository.cs" />
-    <Compile Include="Interface\IRepository.cs" />
+    <Compile Include="Repository\Interface\IDbRepository.cs" />
     <Compile Include="Repository\LicenseRepository.cs" />
     <Compile Include="Repository\PatientRepository.cs" />
     <Compile Include="Repository\SettingsRepository.cs" />

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Emk.Interface
+namespace Emk.Repository.Dto
 {
-    public interface ILicenseRepository: IDbRepository
+    public class DoctorEmkDto
     {
-        bool IsLicenseValid();
     }
 }

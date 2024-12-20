@@ -1,21 +1,29 @@
 ﻿using Emk.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Globalization;
+using Emk.Properties;
 
 namespace Emk.Repository
 {
 	public class EmkRepository : DbRepository
 	{
-        public virtual DoctorEmk GetDoctorByMemberId(int memberId)
+        public DoctorEmk GetDoctorByMemberId(int memberId)
         {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter(parameterName: "member_id", value: memberId),
+            };
+            var data = Query(Resources.GetPatientsTreatsByPeriod, PatientTreatMap, param.ToArray());
+            return data;
 
             string sql =
                 "select TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, null, member_id, n.Code, s.snils, s.provider_no_1_id " +
                 "               from staff s  " +
                 "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
                 "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
-                $" where member_id =  {memberId}";
+                $" where member_id =  @member_id";
 
 
             DoctorEmk doc = new DoctorEmk();

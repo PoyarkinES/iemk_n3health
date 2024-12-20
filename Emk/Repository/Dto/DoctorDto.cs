@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Emk.Models.Dto
+namespace Emk.Repository.Dto
 {
     public class DoctorDto
     {

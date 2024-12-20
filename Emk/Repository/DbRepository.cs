@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
-using Emk.Interface;
+using Emk.Repository.Interface;
 
 namespace Emk.Repository
 {
-	public abstract class DbRepository: IDbRepository
+    public abstract class DbRepository: IDbRepository
     {
         private readonly string m_ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ODBC"].ConnectionString;
 
