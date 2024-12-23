@@ -164,6 +164,13 @@ namespace Emk.Services
                     continue;
                 }
 
+                if (Factory.GetTreatRepository.CheckPatientConsentTransPersData(i.PatientId) > 0)
+                {
+                    Log.Info(
+                        $"Пациент Id={i.PatientId} Name={i.Name} не дал согласие на передачу персоналных данных. /r/n/Случай AccountId={i.AccountId} исключен из пакета данных на передачу в EmkService.");
+                    continue;
+                }
+
                 var pix = new PixService(set);
                 var emk = new EmkService(set);
 
