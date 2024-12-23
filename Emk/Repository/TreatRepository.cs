@@ -202,6 +202,14 @@ namespace Emk.Repository
             return result;
         }
 
+        public int? CheckPatientConsentTransPersData(int paientId)
+        {
+            var result =
+                Connection.Scalar<int?>(
+                    $"SELECT COUNT(patient_id) FROM patients	WHERE patient_id = {paientId} AND consent_transf_pers_data = 'N'");
+            return result;
+        }
+
         private string GetAccountStr(DateTime since) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
             "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
