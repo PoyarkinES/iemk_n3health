@@ -94,7 +94,7 @@ namespace Emk.Services
                 fd.FileDate = checkDate(data[0]);
                 fd.CartNoteId = checkCartNoteId(data[1]);
                 fd.DocType = checkDocType(data[2]);
-                fd.PatientCartNum = checkCardNum(data[3]);
+                fd.PatientCartNum = data[3];
                 fd.DoctorId = checkDoctorCode(data[4]);
                 checkFIO(data.Skip(5).ToArray(), out string error, out bool check);
 
