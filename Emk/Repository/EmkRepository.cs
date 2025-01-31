@@ -12,7 +12,7 @@ namespace Emk.Repository
         {
 
             string sql =
-                "select TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, null, member_id, n.Code, s.snils, s.provider_no_1_id " +
+                "select TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, null, member_id, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex " +
                 "               from staff s  " +
                 "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
                 "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
@@ -34,7 +34,7 @@ namespace Emk.Repository
                             // doc.Speciality = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
                             doc.Position = reader.IsDBNull(6) ? 0 : int.Parse(reader[6].ToString());
                             doc.Snils = reader.IsDBNull(7) ? string.Empty : reader[7].ToString();
-                            doc.SexStr = reader.IsDBNull(8) ? string.Empty : reader[8].ToString();
+                            doc.SexStr = reader.Get<string>("prov_sex") ?? reader.Get<string>("provider_no_1_id");
                         }
                     }
                 }
@@ -122,7 +122,7 @@ namespace Emk.Repository
             
             //    $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
 
-            string cmd = "select member_id, TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, n.Code, s.snils, s.provider_no_1_id " +
+            string cmd = "select member_id, TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex  " +
                          "               from staff s  " +
                          "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
                          "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
@@ -145,7 +145,7 @@ namespace Emk.Repository
                         //doc.Speciality = r.IsDBNull(6) ? 0 : int.Parse(r[6].ToString());
                         doc.Position = r.IsDBNull(5) ? 0 : int.Parse(r[5].ToString());
                         doc.Snils = r[6].ToString().Replace("-", "").Replace(" ", "");
-                        doc.SexStr = r.IsDBNull(7) ? string.Empty : r[7].ToString();
+                        doc.SexStr = r.Get<string>("prov_sex") ?? r.Get<string>("provider_no_1_id");
 
                     }
                     return doc;

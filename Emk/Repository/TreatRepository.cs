@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Emk.Services.ServiceEnum;
 using Newtonsoft.Json;
 
 namespace Emk.Repository
@@ -50,7 +51,8 @@ namespace Emk.Repository
                         DiagnoseName = r[7].ToString(),
                         DiagnoseCode = r[8].ToString(),
                         //SmoPostfix = string.Empty,
-                        ListProcedures = r[9].ToString()
+                        ListProcedures = r[9].ToString(),
+                        PatientsCartNum = r["patients_cart_num"].ToString()
                     };
                 }
             }
@@ -89,7 +91,8 @@ namespace Emk.Repository
                             DiagnoseName = r[7].ToString(),
                             DiagnoseCode = r[8].ToString(),
                             //SmoPostfix = string.Empty,
-                            ListProcedures = r[9].ToString()
+                            ListProcedures = r[9].ToString(),
+                            PatientsCartNum = r["patients_cart_num"].ToString()
                         });
                     }
                     catch (Exception e)
@@ -204,19 +207,22 @@ namespace Emk.Repository
 
         public int? CheckPatientConsentTransPersData(int paientId)
         {
-            var result =
-                Connection.Scalar<int?>(
-                    $"SELECT COUNT(patient_id) FROM patients	WHERE patient_id = {paientId} AND consent_transf_pers_data = 'N'");
-            return result;
+            var verbd = Connection.Scalar<int>(
+                $"SELECT CAST(Param_Value AS INTEGER) FROM APOC_Parameters_Values WHERE Object_ID = -2");
+            if (verbd >= (int)ServiceEnum.ConsentTransfPersData)
+                return Connection.Scalar<int>(
+                    $"SELECT COUNT(patient_id) FROM patients WHERE patient_id = {paientId} AND consent_transf_pers_data = 'N'");
+            return 0;
         }
 
         private string GetAccountStr(DateTime since) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
             "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
             "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
-            "DATE(esf.date_created) EsfDate " +
+            "DATE(esf.date_created) EsfDate,  p.patients_cart_num " +
             "FROM treat t JOIN procedures pr " +
-            "JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN patients p " +
+            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -231,9 +237,10 @@ namespace Emk.Repository
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
             "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
             "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
-            "DATE(esf.date_created) EsfDate " +
+            "DATE(esf.date_created) EsfDate,  p.patients_cart_num " +
             "FROM treat t JOIN procedures pr " +
-            "JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN patients p " +
+            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -246,11 +253,12 @@ namespace Emk.Repository
 
         private string GetAccountStr(DateTime since, DateTime to) =>
             "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
-            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
+            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
             "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
-            "DATE(esf.date_created) EsfDate " +
+            "DATE(esf.date_created) EsfDate,  p.patients_cart_num " +
             "FROM treat t JOIN procedures pr " +
-            "JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN patients p " +
+            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +

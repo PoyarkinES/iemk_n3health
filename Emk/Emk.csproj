@@ -112,6 +112,7 @@
     <Compile Include="Services\EmkSendingService.cs" />
     <Compile Include="Services\EmkService.cs" />
     <Compile Include="Services\EmkSendingServiceExt.cs" />
+    <Compile Include="Services\ServiceEnum\ServiceEnum.cs" />
     <Compile Include="Services\Files\DoctorFileService.cs" />
     <Compile Include="Services\Files\IDoctorFileService.cs" />
     <Compile Include="Services\ILoggerService.cs" />
@@ -278,5 +279,6 @@
   <ItemGroup>
     <None Include="Resources\Sql_Parameters.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

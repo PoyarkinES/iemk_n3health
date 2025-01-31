@@ -1,4 +1,6 @@
 ﻿using System;
+using System.CodeDom;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Emk.EmkSvc;
 using Newtonsoft.Json;
@@ -71,8 +73,11 @@ namespace Emk.Models
         {
             try
             {
-                return Regex.Replace(surname, @"^.*?([^_\W]+)$", "$1");
-
+                var fam = surname.All(c => Char.IsWhiteSpace(c) || Char.IsLetter(c));
+                if (!fam)
+                    throw new Exception("Фамилия содержит недопустимые символы.");
+                //return Regex.Replace(surname, @"^.*?([^_\W]+)$", "$1");
+                return surname;
             }
             catch (Exception e)
             {
