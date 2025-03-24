@@ -1,8 +1,7 @@
-﻿using Emk.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using Emk.Models.Dto;
 using Emk.Properties;
+using Emk.Repository.Dto;
 
 namespace Emk.Repository
 {
@@ -23,5 +22,8 @@ namespace Emk.Repository
             };
         }
 
+        public InsuranceCompanyRepository(string connectionString) : base(connectionString)
+        {
+        }
     }
 }

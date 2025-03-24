@@ -1,0 +1,1 @@
+select cart_notes_id, notes_group_id, patients_cart_time, cart_notes_description, patient_id, provider_id  from cart_notes where cart_notes_id = @noteId

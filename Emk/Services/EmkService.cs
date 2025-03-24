@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Odbc;
 using System.IO;
@@ -38,11 +39,10 @@ namespace Emk.Services
 			Url = s.EmkUrl;
 			guid = s.Guid.ToString();
 			IdLPU = s.IdLPU.ToString();
-			conString = s.DbConnectionString;
+			conString = ConfigurationManager.AppSettings["ODBC"];
 			patientsBaseDir = s.PatientDirectory;
 			_smoSrv = Factory.GetSmoService;
 			_rep = Factory.GetEmkRepository;
-            _conn = Factory.GetDbConnection();
             autoUpd = s.AutoUpdate;
 		}
 

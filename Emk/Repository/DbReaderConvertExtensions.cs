@@ -9,9 +9,9 @@ namespace Emk.Repository
 {
     public static class DbReaderConvertExtensions
     {
-        public static T Get<T>(this IDataReader reader, string name) => reader[name].to<T>(default(T));
+        public static T Get<T>(this IDataReader reader, string name) => reader[name].To<T>(default(T));
 
-        private static T to<T>(this object value, T defaultValue)
+        private static T To<T>(this object value, T defaultValue)
         {
             if (value == DBNull.Value || value == null)
                 return defaultValue;

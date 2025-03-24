@@ -2,13 +2,16 @@
 using System;
 using System.Data;
 using System.Linq;
-using Emk.Models.Dto;
 using Emk.Properties;
 
 namespace Emk.Repository
 {
     public class PatientRepository : DbRepository
     {
+        public PatientRepository(string connectionString) : base(connectionString)
+        {
+        }
+
         public virtual Patient GetPatient(int patientId)
         {
             var data = Query(Resources.GetPatientById, PatientMap).FirstOrDefault();

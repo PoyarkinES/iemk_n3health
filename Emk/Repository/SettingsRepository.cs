@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Emk.Models;
-using Emk.Models.Dto;
 using Emk.Properties;
-using Emk.Services;
 
 namespace Emk.Repository
 {
     public class SettingsRepository : DbRepository
     {
-        
+
+        public SettingsRepository(string connectionString) : base(connectionString)
+        {
+        }
+
         public IEnumerable<EmkSettings> LoadSettings()
         {
             var data = Query(Resources.Sql_Parameters, EmkSettingsMap);
@@ -117,5 +117,6 @@ namespace Emk.Repository
             }
             return e;
         }
+
     }
 }

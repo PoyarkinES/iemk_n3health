@@ -99,7 +99,7 @@ namespace Emk.Services.Docs
         {
             if (_patient == null)
                 return null;
-            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate, AccountId);
+            return EmkRep.GetDoctorOfPatientTreat(AccountId);
         }
 
         private void SetPatientAndDoctor()

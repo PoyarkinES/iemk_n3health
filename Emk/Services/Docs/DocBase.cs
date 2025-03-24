@@ -54,7 +54,7 @@ namespace Emk.Services.Docs
             if (CartNote == null)
                 throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
 
-            return EmkRep.GetDoctorOfPatientTreat(CartNote.PatientId, CartNote.DateAdded, AccountId);
+            return EmkRep.GetDoctorOfPatientTreat(AccountId);
         }
 
         protected virtual Patient GetPatient()

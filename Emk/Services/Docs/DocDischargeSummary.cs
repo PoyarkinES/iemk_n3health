@@ -89,7 +89,7 @@ namespace Emk.Services.Docs
 
         protected override DoctorEmk GetDoctor()
         {
-            return EmkRep.GetDoctorOfPatientTreat(_patient.Id, _fd.FileDate, AccountId);
+            return EmkRep.GetDoctorOfPatientTreat(AccountId);
         }
 
         private void SetPatientAndDoctor()

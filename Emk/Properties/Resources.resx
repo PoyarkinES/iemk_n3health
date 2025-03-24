@@ -119,48 +119,72 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="CheckDocumentEsignByDate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CheckDocumentEsignByDate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\CheckDocumentEsignByDate.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="CheckDocumentEsignByFlag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetCheckDocumentEsign.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\CheckDocumentEsignByFlag.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GetCartNote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetCartNote.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GetCheckDocumentEsign" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetCheckDocumentEsign.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetCheckPracticId" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetCheckPracticId.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetCheckPracticId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="GetDepartmentHead" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetDepartmentHead.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GetDoctorByMemberId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetDoctorByMemberId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="GetDoctorOfPatientTreat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetDoctorOfPatientTreat.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetDoctors_Scropt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetDoctors_Scropt.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetDoctors_Scropt.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetDocumentByAccountId" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetDocumentByAccountId.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetDocumentByAccountId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetFileDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetFileDirectory.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetFileDirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetInsuranseCompanies" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetInsuranseCompanies.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\Resources\GetInsuranseCompanies.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetPatientAccountById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetPatientAccountById.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetPatientAccountById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetPatientAccountsByDate" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetPatientAccountsByDate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetPatientAccountsByDate.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetPatientAccountsByPeriod" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetPatientAccountsByPeriod.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetPatientAccountsByPeriod.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetPatientByCartNum" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetPatientByCartNum.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetPatientByCartNum.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetPatientById" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetPatientById.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetPatientById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="GetPatientDiagnosis" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetPatientDiagnosis.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="GetPatientsTreatsByPeriod" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetPatientsTreatsByPeriod.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetPatientsTreatsByPeriod.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="GetPayType" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetPayType.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GetProcedureDescriptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetProcedureDescriptions.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="IsLicenseValid" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IsLicenseValid.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\IsLicenseValid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Sql_Parameters" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Sql_Parameters.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\Sql_Parameters.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
 </root>

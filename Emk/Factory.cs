@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Emk.Models;
 using Emk.Repository;
+using Emk.Repository.Interface;
 using Emk.Services;
 using Emk.Services.Files;
 
@@ -12,48 +13,22 @@ namespace Emk
 {
 	public static class Factory
 	{
-		private static OdbcConnection _connection;
         private static string _conStr;
 
 		private static List<EmkSettings> _settings;
-		public static OdbcConnection GetDbConnection()
-        {
-            if(string.IsNullOrEmpty(_conStr))
-                LoadSettings();
-			if (string.IsNullOrEmpty(_conStr))
-			{
-				MessageBox.Show("Не заданы настройки подключения к базе данных", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				Log.Error("Не заданы настройки подключения к базе данных");
-				return null;
-			}
-			_connection = _connection ?? new OdbcConnection(_conStr);
-			return _connection;
-		}
 
-        public static void CloseDbConnection()
-        {
-			if(_connection == null)
-				return;
-			
-			if(_connection.State != ConnectionState.Closed)
-				_connection.Close();
-
-            _connection = null;
-        }
 		public static IDoctorFileService GetSmoService => new DoctorFileService();
-		public static DoctorRepository GetDoctorRepository => new DoctorRepository();
-		public static TreatRepository GetTreatRepository => new TreatRepository();
-
-		public static EmkRepository GetEmkRepository => new EmkRepository();
+        public static DoctorRepository GetDoctorRepository => new DoctorRepository(_conStr);
+		public static TreatRepository GetTreatRepository => new TreatRepository(_conStr);
+		public static EmkRepository GetEmkRepository => new EmkRepository(_conStr);
 		public static ISettingsService GetSettingsService => new SettingsService();
-
-		public static PatientRepository GetPatientRepository => new PatientRepository();
-
+		public static PatientRepository GetPatientRepository => new PatientRepository(_conStr);
+        public static LicenseRepository GetLicenseRepository => new LicenseRepository(_conStr);
 		public static List<EmkSettings> LoadSettings(bool force = false)
 		{
 			if (force || _settings == null)
             {
-                _settings = new SettingsRepository().LoadSettings().ToList();
+                _settings = new SettingsRepository(_conStr).LoadSettings().ToList();
             }
             return _settings;
 		}

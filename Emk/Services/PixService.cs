@@ -24,9 +24,6 @@ namespace Emk.Services
             Url = s.PixUrl;
 			guid = s.Guid.ToString();
 			idLPU = s.IdLPU.ToString();
-			var conn = Factory.GetDbConnection();
-			if (conn.State != ConnectionState.Open)
-				conn.Open();
 		}
 
         public bool AddOrUpdatePatient(int patientId)

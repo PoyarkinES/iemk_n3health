@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Emk.Interface;
-using Emk.Models;
-using Emk.Properties;
+﻿using Emk.Properties;
+using Emk.Repository.Interface;
 
 namespace Emk.Repository
 {
@@ -15,6 +9,10 @@ namespace Emk.Repository
         {
             var data = Scalar<bool>(Resources.IsLicenseValid);
             return data;
+        }
+
+        public LicenseRepository(string connectionString) : base(connectionString)
+        {
         }
     }
 }

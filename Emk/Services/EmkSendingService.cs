@@ -168,13 +168,11 @@ namespace Emk.Services
                 if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
 
             }
-
-            Factory.CloseDbConnection();
         }
 
         private bool IsLicenseValid()
         {
-            if (!new LicenseRepository().IsLicenseValid()) {
+            if (Factory.GetLicenseRepository.IsLicenseValid()) {
                 Log.Warning("Отсутствует лицензия на использование обратитесь в техническую поддержку.");
                 return false;
             }

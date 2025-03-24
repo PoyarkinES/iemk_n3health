@@ -73,12 +73,32 @@ namespace Emk.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
-        ///FROM esign_files esf 
-        ///WHERE esf.account_id = @account_id AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)  .
+        ///FROM esign_files esf
+        ///WHERE esf.account_id = @paccount AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0).
         /// </summary>
         internal static string CheckDocumentEsignByFlag {
             get {
                 return ResourceManager.GetString("CheckDocumentEsignByFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select cart_notes_id, notes_group_id, patients_cart_time, cart_notes_description, patient_id, provider_id  from cart_notes where cart_notes_id = @noteId.
+        /// </summary>
+        internal static string GetCartNote {
+            get {
+                return ResourceManager.GetString("GetCartNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
+        ///FROM esign_files esf 
+        ///WHERE esf.account_id = @account_id AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)  .
+        /// </summary>
+        internal static string GetCheckDocumentEsign {
+            get {
+                return ResourceManager.GetString("GetCheckDocumentEsign", resourceCulture);
             }
         }
         
@@ -92,6 +112,41 @@ namespace Emk.Properties {
         internal static string GetCheckPracticId {
             get {
                 return ResourceManager.GetString("GetCheckPracticId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select member_id, TRIM(surname) surname, TRIM(firstname) firstname, TRIM(middlename) middlename, birthdate, n.Code, s.snils, s.provider_no_1_id 
+        ///from staff s  
+        ///    join staff_positions sp on sp.prof_id = s.Prof_id  
+        ///    left join n3h_dict n on n.id = sp.n3h_dict_id  
+        ///where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = @memberId).
+        /// </summary>
+        internal static string GetDepartmentHead {
+            get {
+                return ResourceManager.GetString("GetDepartmentHead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, member_id, n.Code, s.snils, s.provider_no_1_id 
+        ///from staff s 
+        ///    join staff_positions sp on sp.prof_id = s.Prof_id  
+        ///    left join n3h_dict n on n.id = sp.n3h_dict_id  
+        ///where member_id =  @member_id.
+        /// </summary>
+        internal static string GetDoctorByMemberId {
+            get {
+                return ResourceManager.GetString("GetDoctorByMemberId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils FROM sp_semd_get_data_new(@accountId).
+        /// </summary>
+        internal static string GetDoctorOfPatientTreat {
+            get {
+                return ResourceManager.GetString("GetDoctorOfPatientTreat", resourceCulture);
             }
         }
         
@@ -114,7 +169,7 @@ namespace Emk.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to select dba.sf_get_param_value(&apos;PATH_EXT_DOCS&apos;, @practicId) as path_ext_docs.
         /// </summary>
         internal static string GetFileDirectory {
             get {
@@ -200,6 +255,24 @@ namespace Emk.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select top (1) COALESCE(diagnosis_name,item,&apos;&apos;) diagnosis_name, COALESCE(diagnosis_code,code,&apos;&apos;) diagnosis_code
+        ///from treat 
+        ///    left join treat_diagnosis 
+        ///    left join diagnoses 
+        ///    left join treat_diagnosis_mkb10 
+        ///    left join mkb10 
+        ///where (treat_diagnosis.treat_id is not null OR treat_diagnosis_mkb10.treat_id is not null) 
+        ///    and treat.patient_id = @patient_id 
+        ///    and treat.treat_date = @treat.treat_date 
+        ///order by treat.treat_id DESC.
+        /// </summary>
+        internal static string GetPatientDiagnosis {
+            get {
+                return ResourceManager.GetString("GetPatientDiagnosis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name 
         ///FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id 
         ///    LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id 
@@ -211,6 +284,30 @@ namespace Emk.Properties {
         internal static string GetPatientsTreatsByPeriod {
             get {
                 return ResourceManager.GetString("GetPatientsTreatsByPeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
+        ///FROM esign_files esf
+        ///WHERE esf.account_id = @paccount AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0).
+        /// </summary>
+        internal static string GetPayType {
+            get {
+                return ResourceManager.GetString("GetPayType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT p.item, n.code, n.name 
+        ///FROM procedures p 
+        ///    left join n3h_dict n on p.n3h_code = n.code 
+        ///WHERE item_id IN  
+        ///        (SELECT item_id FROM treat WHERE treat.patient_id = @patientId and treat.treat_date = @procedureDate and treat.account_id = @accountId).
+        /// </summary>
+        internal static string GetProcedureDescriptions {
+            get {
+                return ResourceManager.GetString("GetProcedureDescriptions", resourceCulture);
             }
         }
         

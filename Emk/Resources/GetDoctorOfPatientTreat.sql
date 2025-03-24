@@ -1,0 +1,1 @@
+SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils FROM sp_semd_get_data_new(@accountId)

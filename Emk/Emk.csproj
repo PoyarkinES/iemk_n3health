@@ -288,31 +288,37 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GetDoctors_Scropt.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\Sql_Parameters.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\IsLicenseValid.txt" />
+    <None Include="Resources\GetPayType.sql" />
+    <None Include="Resources\GetProcedureDescriptions.sql" />
+    <None Include="Resources\GetPatientDiagnosis.sql" />
+    <None Include="Resources\Sql_Parameters.sql" />
+    <None Include="Resources\IsLicenseValid.sql" />
+    <None Include="Resources\GetPatientsTreatsByPeriod.sql" />
+    <None Include="Resources\GetPatientById.sql" />
+    <None Include="Resources\GetPatientByCartNum.sql" />
+    <None Include="Resources\GetPatientAccountsByPeriod.sql" />
+    <None Include="Resources\GetPatientAccountsByDate.sql" />
+    <None Include="Resources\GetPatientAccountById.sql" />
+    <None Include="Resources\GetDoctorOfPatientTreat.sql" />
+    <None Include="Resources\CheckDocumentEsignByDate.sql" />
+    <None Include="Resources\GetCheckDocumentEsign.sql" />
+    <None Include="Resources\GetCheckPracticId.sql" />
+    <None Include="Resources\GetDoctorByMemberId.sql" />
+    <None Include="Resources\GetDoctors_Scropt.sql" />
+    <None Include="Resources\GetDocumentByAccountId.sql" />
+    <None Include="Resources\GetFileDirectory.sql" />
+    <None Include="Resources\GetInsuranseCompanies.sql" />
+    <None Include="Resources\GetCartNote.sql" />
+    <None Include="Resources\GetDepartmentHead.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GetFileDirectory.txt" />
-    <None Include="Resources\GetDocumentByAccountId.txt" />
-    <None Include="Resources\CheckDocumentEsignByDate.txt" />
-    <None Include="Resources\GetCheckDocumentEsign.txt" />
-    <None Include="Resources\GetCheckPracticId.txt" />
-    <Content Include="Resources\GetInsuranseCompanies.txt" />
-    <None Include="Resources\GetPatientAccountsByDate.txt" />
-    <None Include="Resources\GetPatientAccountsByPeriod.txt" />
-    <None Include="Resources\GetPatientAccountById.txt" />
-    <None Include="Resources\GetPatientsTreatsByPeriod.txt" />
-    <None Include="Resources\GetPatientByCartNum.txt" />
-    <None Include="Resources\GetPatientById.txt" />
+    <None Include="Resources\CheckDocumentEsignByFlag.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

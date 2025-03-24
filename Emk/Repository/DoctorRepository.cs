@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using Emk.Interface;
 using Emk.Models;
-using Emk.Models.Dto;
 using Emk.Properties;
+using Emk.Repository.Dto;
+using Emk.Repository.Interface;
 
 namespace Emk.Repository
 {
-	public class DoctorRepository : DbRepository, IDoctorRepository
+    public class DoctorRepository : DbRepository, IDoctorRepository
 	{
+        public DoctorRepository(string connectionString) : base(connectionString)
+        {
+        }
+
         public IEnumerable<Doctor> GetDoctors()
         {
 
@@ -29,5 +33,5 @@ namespace Emk.Repository
                 Sex = reader.Get<string>(nameof(DoctorDto.sex))
             };
         }
-	}
+    }
 }

@@ -9,7 +9,12 @@ namespace Emk.Repository
 {
     public abstract class DbRepository: IDbRepository
     {
-        private readonly string m_ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ODBC"].ConnectionString;
+        private readonly string m_ConnectionString;
+
+        protected DbRepository(string connectionString)
+        {
+            m_ConnectionString = connectionString;
+        }
 
         public T Scalar<T>(string commandText, params object[] args)
         {
@@ -27,7 +32,7 @@ namespace Emk.Repository
                 }
 
                 connection.Open();
-                var result = (T)Convert.ChangeType(command.ExecuteScalar(), typeof(T));
+                var result = (T) Convert.ChangeType(command.ExecuteScalar(), typeof(T));
                 connection.Close();
 
                 return result;
@@ -63,6 +68,7 @@ namespace Emk.Repository
                     result.Add(map(reader));
                 }
                 connection.Close();
+                connection.Dispose();
 
                 return result;
             }
@@ -99,6 +105,7 @@ namespace Emk.Repository
                     result.Add(map(reader));
                 }
                 connection.Close();
+                connection.Dispose();
 
                 return result;
             }
@@ -129,6 +136,7 @@ namespace Emk.Repository
                 connection.Open();
                 result = command.ExecuteNonQuery();
                 connection.Close();
+                connection.Dispose();
 
                 return result;
             }

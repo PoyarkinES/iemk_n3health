@@ -7,12 +7,17 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Emk.Properties;
+using Emk.Repository;
 using Newtonsoft.Json;
 
 namespace Emk.Repository
 {
     public class TreatRepository : DbRepository
     {
+        public TreatRepository(string connectionString) : base(connectionString)
+        {
+        }
+
         public IEnumerable<PatientTreat> GetPatientsTreats(DateTime sinceDate, DateTime toDate)
         {
             var param = new List<SqlParameter>
@@ -89,7 +94,7 @@ namespace Emk.Repository
         {
             var tmpdir = String.Empty;
 
-            string checkDocumentAccess(IDataReader reader)
+            string CheckDocumentAccess(IDataReader reader)
             {
                 try
                 {
@@ -112,7 +117,7 @@ namespace Emk.Repository
                 new SqlParameter(parameterName: "account_id", value: accId),
             };
 
-            var data = Query(Resources.CheckDocumentEsignByFlag, checkDocumentAccess, param.ToArray());
+            var data = Query(Resources.CheckDocumentEsignByFlag, CheckDocumentAccess, param.ToArray());
             dir = tmpdir;
             return data;
         }
@@ -131,93 +136,6 @@ namespace Emk.Repository
 
             var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).FirstOrDefault();
             return data;
-        }
-
-        private string GetAccountStr(DateTime since) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
-            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
-            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
-            "DATE(esf.date_created) EsfDate " +
-            "FROM treat t JOIN procedures pr " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
-            "left join n3h_dict n on pr.n3h_code = n.code " +
-            "LEFT JOIN practice_services s on s.service_id = t.service_id " +
-            "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
-            "left join treat_diagnosis td on td.treat_id = t.treat_id " +
-            "left join diagnoses ds on ds.diagnosis_id = td.diagnosis_id " +
-            "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
-            "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
-            $"WHERE (t.treat_date = '{since.Date:yyyy-MM-dd}' OR DATE(esf.date_created) = '{since.Date:yyyy-MM-dd}') " +
-            "and t.ref_status is null AND lab_work_id IS NULL";
-
-        private string GetAccountStr(int accountId) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
-            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,''), " +
-            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
-            "DATE(esf.date_created) EsfDate " +
-            "FROM treat t JOIN procedures pr " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
-            "left join n3h_dict n on pr.n3h_code = n.code " +
-            "LEFT JOIN practice_services s on s.service_id = t.service_id " +
-            "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
-            "left join treat_diagnosis td on td.treat_id = t.treat_id " +
-            "left join diagnoses ds on ds.diagnosis_id = td.diagnosis_id " +
-            "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
-            "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
-            $"WHERE t.account_id = {accountId}  " +
-            "and t.ref_status is null AND lab_work_id IS NULL";
-
-        private string GetAccountStr(DateTime since, DateTime to) =>
-            "SELECT distinct t.patient_id, t.treat_date, t.practice_id, t.provider_id, t.account_id, d.Code, d.name, " +
-            "COALESCE(ds.diagnosis_name,mkb.item,''), COALESCE(ds.diagnosis_code,mkb.code,'')," +
-            "(SELECT LIST(pr1.item ||'/'|| n1.code) FROM treat t1 JOIN procedures pr1 left join n3h_dict n1 on pr1.n3h_code = n1.code WHERE t1.ref_status IS NULL AND t1.account_id = t.account_id), " +
-            "DATE(esf.date_created) EsfDate " +
-            "FROM treat t JOIN procedures pr " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
-            "left join n3h_dict n on pr.n3h_code = n.code " +
-            "LEFT JOIN practice_services s on s.service_id = t.service_id " +
-            "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
-            "left join treat_diagnosis td on td.treat_id = t.treat_id " +
-            "left join diagnoses ds on ds.diagnosis_id = td.diagnosis_id " +
-            "left join treat_diagnosis_mkb10 tm on tm.treat_id = t.treat_id " +
-            "left join mkb10 mkb on mkb.id_mkb10 = tm.id_mkb10 " +
-            $"WHERE (t.treat_date BETWEEN '{since.Date:yyyy-MM-dd}' AND '{to.Date:yyyy-MM-dd}' OR DATE(esf.date_created) BETWEEN '{since.Date:yyyy-MM-dd}' AND '{to.Date:yyyy-MM-dd}') " +
-            "and t.ref_status is null AND lab_work_id IS NULL";
-
-        private string GetQueryString(DateTime since, DateTime to) => to == DateTime.MinValue
-            ? $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}'  and t.ref_status is null AND lab_work_id IS NULL ORDER BY treat_date, patient_id"
-            : $"SELECT distinct t.patient_id, t.treat_date, t.practice_id, d.Code, d.name FROM treat t LEFT JOIN practice_services s on s.service_id = t.service_id LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id WHERE treat_date >= '{since:yyyy-MM-dd}' AND treat_date < '{to.AddDays(1).Date:yyyy-MM-dd}'  and t.ref_status is null AND lab_work_id IS NULL ORDER BY treat_date, patient_id";
-
-        private string CheckPracticIdQuery(int paccount)
-        {
-            return
-                "SELECT t.practice_id as tpr, pa.practice_id as ppr, pa.id as acc " +
-                ",(SELECT description FROM practice_locations WHERE practice_id = tpr) AS tpr_name " +
-                ",(SELECT description FROM practice_locations WHERE practice_id = ppr) AS ppr_name " +
-                "FROM treat t JOIN patients_accounts pa " +
-                $"WHERE t.account_id = {paccount} " +
-                "GROUP BY t.practice_id, pa.practice_id, pa.id";
-        }
-
-        private string CheckDocumentEsignByDate(int paccount)
-        {
-            return
-                "SELECT COUNT(esf.account_id) AS acc_cnt FROM esign_files esf " +
-                $"WHERE esf.account_id = {paccount} AND esf.date_sent IS NOT NULL";
-        }
-
-        private string CheckDocumentEsignByFlag(int paccount)
-        {
-            return
-                "SELECT COUNT(esf.account_id) AS acc_cnt FROM esign_files esf " +
-                $"WHERE esf.account_id = {paccount} AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)";
-        }
-
-        private string CheckDocumentAccess(int accId)
-        {
-            return "SELECT ef.account_id, ef.date_approved, ef.date_created, ef.date_sent, ef.efiles_name, ef.efiles_path, " +
-                   "ef.esign_files_id, ef.is_sign_cmn, ef.is_sign_pr, ef.patient_id, ef.practice_id, ef.provider_id " +
-                   $"FROM esign_files ef WHERE account_id =  { accId}";
         }
 
         private string GetFileDirectory(int practicId)
