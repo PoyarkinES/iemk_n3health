@@ -32,7 +32,8 @@ namespace Emk.Repository
                             DateInterval = int.TryParse(reader["N3H_BY_DAYS"].ToString(), out var n3h_by_days) ? n3h_by_days : 0,
                             IntervalFrom = DateTime.TryParse(reader["N3H_PER_FROM"].ToString(), out var n3h_per_from) ? n3h_per_from : DateTime.Now,
                             IntervalTo = DateTime.TryParse(reader["N3H_PER_TO"].ToString(), out var n3h_per_to) ? n3h_per_to : DateTime.Now,
-                            AutoUpdate = new SettingsService().LoadSettings().AutoUpdate
+                            AutoUpdate = new SettingsService().LoadSettings().AutoUpdate,
+                            IsNewMiddleName = new SettingsService().LoadSettings().IsNewMiddleName
                         });
                     }
             return GenerateSettings(settings).ToList();

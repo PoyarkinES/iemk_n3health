@@ -3,16 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Emk.Properties;
+using Emk.Services;
 
 namespace Emk.Repository
 {
 	public class EmkRepository : DbRepository
 	{
+        private EmkSettings _settings = new SettingsService().LoadSettings();
         public virtual DoctorEmk GetDoctorByMemberId(int memberId)
         {
-
+            var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
             string sql =
-                "select TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, null, member_id, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex " +
+                $"select TRIM(surname), TRIM(firstname), TRIM({middle}), birthdate, null, member_id, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex " +
                 "               from staff s  " +
                 "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
                 "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
@@ -119,10 +121,10 @@ namespace Emk.Repository
             //    " left join aoms_dicts_provs adp on adp.dict_key = s.pers_code" +
             //    " left join nsr_fedspecs f on adp.dict_value_3 = f.spec_oms_code" +
             //    " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code" +
-            
-            //    $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
 
-            string cmd = "select member_id, TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex  " +
+            //    $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
+            var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
+            string cmd = $"select member_id, TRIM(surname), TRIM(firstname), TRIM({middle}), birthdate, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex  " +
                          "               from staff s  " +
                          "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
                          "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
@@ -154,7 +156,6 @@ namespace Emk.Repository
             catch (Exception e)
             {
                 Log.Error("Ошибка при получении руководителя:" + e.Message);
-                
             }
 
             return null;

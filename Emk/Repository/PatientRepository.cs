@@ -1,15 +1,18 @@
 ﻿using Emk.Models;
 using System;
+using Emk.Services;
 
 namespace Emk.Repository
 {
     public class PatientRepository : DbRepository
     {
+        private EmkSettings _settings = new SettingsService().LoadSettings();
         public virtual Patient GetPatient(int patientId)
         {
             var p = new Patient();
+            var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
             using (var reader = Connection.Query(
-                "select patient_id, TRIM(surname), TRIM(firstname), TRIM(middlename), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, COALESCE(patients.snils,param_value) " +
+                $"select patient_id, TRIM(surname), TRIM(firstname), TRIM({middle}), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, COALESCE(patients.snils,param_value) " +
                 "from patients " +
                 "left join APOC_Parameters_Values on object_id = patient_id and param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = 'СНИЛС' and Param_Code like '%EXT%') " +
                 $"where patient_id = {patientId}"))
@@ -41,8 +44,9 @@ namespace Emk.Repository
         public virtual Patient GetPatient(string patientCartNum)
         {
             var p = new Patient();
+            var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
             using (var reader = Connection.Query(
-                "select patient_id, TRIM(surname), TRIM(firstname), TRIM(middlename), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, param_value " +
+                $"select patient_id, TRIM(surname), TRIM(firstname), TRIM({middle}), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, param_value " +
                 "from patients " +
                 "left join APOC_Parameters_Values on object_id = patient_id and param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = 'СНИЛС' and Param_Code like '%EXT%') " +
                 $"where patients_cart_num = '{patientCartNum}'"))

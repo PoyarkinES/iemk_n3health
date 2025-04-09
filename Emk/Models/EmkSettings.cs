@@ -19,6 +19,7 @@ namespace Emk.Models
         public int PracticeId { get; set; }
         public bool Enabled { get; set; }
         public int AutoUpdate { get; set; }
+        public short IsNewMiddleName { get; set; }
 
 		public override string ToString()
 		{

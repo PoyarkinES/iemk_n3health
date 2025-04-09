@@ -42,6 +42,7 @@ namespace Emk.Services
                 sw.WriteLine("IntervalFrom=" + settings.IntervalFrom);
                 sw.WriteLine("IntervalTo=" + settings.IntervalTo);
                 sw.WriteLine("AutoUpdate=" + settings.AutoUpdate);
+                sw.WriteLine("IsNewMiddleName=" + settings.IsNewMiddleName);
 			}
 		}
 
@@ -63,6 +64,7 @@ namespace Emk.Services
                 sw.WriteLine("IntervalFrom=");
                 sw.WriteLine("IntervalTo=");
                 sw.WriteLine("AutoUpdate=");
+                sw.WriteLine("IsNewMiddleName=");
 			}
 
 		}
@@ -143,9 +145,11 @@ namespace Emk.Services
                     int.TryParse(value, out int autoUpd);
                     s.AutoUpdate = autoUpd;
                     break;
-				default:
-					break;
-			}
+                case "IsNewMiddleName":
+                    short.TryParse(value, out var isNewMiddleName);
+                    s.IsNewMiddleName = isNewMiddleName;
+                    break;
+            }
 			return s;
 		}
 
