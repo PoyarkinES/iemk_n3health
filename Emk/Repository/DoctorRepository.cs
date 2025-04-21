@@ -10,9 +10,8 @@ namespace Emk.Repository
 		public IEnumerable<Doctor> GetDoctors()
 		{
 			var docs = new List<Doctor>();
-            var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
 			using (var reader = Connection.Query(
-                $"SELECT TRIM(surname), TRIM(firstname), TRIM({middle}), pers_code, tax_file_no, member_id, sex FROM staff WHERE is_active= 'Y' and member_type = 1")
+                $"SELECT TRIM(surname), TRIM(firstname), TRIM(middlename), pers_code, tax_file_no, member_id, sex FROM staff WHERE is_active= 'Y' and member_type = 1")
             )
 				if (reader.HasRows)
 					while (reader.Read())
