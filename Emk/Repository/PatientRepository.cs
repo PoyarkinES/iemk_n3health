@@ -1,5 +1,6 @@
 ﻿using Emk.Models;
 using System;
+using Emk.PixSvc;
 using Emk.Services;
 
 namespace Emk.Repository
@@ -12,9 +13,8 @@ namespace Emk.Repository
             var p = new Patient();
             var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
             using (var reader = Connection.Query(
-                $"select patient_id, TRIM(surname), TRIM(firstname), TRIM({middle}), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, COALESCE(patients.snils,param_value) " +
+                $"select patient_id, TRIM(surname), TRIM(firstname), TRIM({middle}), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2 " +
                 "from patients " +
-                "left join APOC_Parameters_Values on object_id = patient_id and param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = 'СНИЛС' and Param_Code like '%EXT%') " +
                 $"where patient_id = {patientId}"))
             {
                 if (!reader.HasRows) return p;
@@ -33,9 +33,6 @@ namespace Emk.Repository
                     if (reader[11] != DBNull.Value) p.PostId = (int)reader[11];
                     p.Address1 = reader[12].ToString();
                     p.Address2 = reader[13].ToString();
-                    p.Snils = reader[14] == DBNull.Value
-                        ? null
-                        : reader[14].ToString().Replace(" ", "").Replace("-", "");
                 }
             }
             return p;
@@ -46,9 +43,8 @@ namespace Emk.Repository
             var p = new Patient();
             var middle = _settings.IsNewMiddleName == 0 ? "middlename" : "middlename_extend";
             using (var reader = Connection.Query(
-                $"select patient_id, TRIM(surname), TRIM(firstname), TRIM({middle}), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2, param_value " +
+                $"select patient_id, TRIM(surname), TRIM(firstname), TRIM({middle}), dob, patient_sex, patients_cart_num, number, serial, name_org, date_give_out, post_id_1, address_1, address_2 " +
                 "from patients " +
-                "left join APOC_Parameters_Values on object_id = patient_id and param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = 'СНИЛС' and Param_Code like '%EXT%') " +
                 $"where patients_cart_num = '{patientCartNum}'"))
             {
                 if (!reader.HasRows) return p;
@@ -68,12 +64,100 @@ namespace Emk.Repository
                     if (reader[11] != DBNull.Value) p.PostId = (int)reader[11];
                     p.Address1 = reader[12].ToString();
                     p.Address2 = reader[13].ToString();
-                    p.Snils = reader[14] == DBNull.Value
-                        ? null
-                        : reader[14].ToString().Replace(" ", "").Replace("-", "");
                 }
             }
             return p;
+        }
+
+        public DocumentDto GetSnils(int patientId)
+        {
+            var p = new DocumentDto();
+            using (var reader = Connection.Query(
+                $"select COALESCE(p.snils, params.param_value) from patients p left join APOC_Parameters_Values params on params.object_id = p.patient_id " +
+                $"and params.param_id = (SELECT Param_ID FROM APOC_Parameters WHERE Param_Name = 'СНИЛС' and Param_Code like '%EXT%') WHERE p.patient_id = { patientId }"))
+            {
+                if (!reader.HasRows) return null;
+                while (reader.Read())
+                {
+                    p.DocN = reader[0].ToString().Replace(" ", "").Replace("-", "");
+                    p.DocumentName = "СНИЛС";
+                    p.IdDocumentType = 223;
+                    p.ProviderName = "ПФР";
+                }
+            }
+            return p;
+        }
+
+        public DocumentDto GetPolicy(int accId)
+        {
+            var p = new DocumentDto();
+            var schemeId = GetSourcePayCode(accId);
+            string docName;
+            byte docType = 0;
+            switch (schemeId)
+            {
+                case 1:
+                    docName = "Полис ОМС единого образца";
+                    docType = 228;
+                    break;
+                case 3:
+                    docName = "Полис ДМС";
+                    docType = 240;
+                    break;
+                default:
+                    docName = String.Empty;
+                    break;
+            }
+
+            using var reader = Connection.Query(
+                $@"SELECT DISTINCT phf.hf_member_code code, phf.hf_plan_series series, hfp.hf_plan_name name, pa.id, t.patient_id, hfp.hf_plan_code
+                            FROM patients_accounts pa
+                                LEFT JOIN treat t ON t.account_id = pa.id
+                                LEFT JOIN third_parties tp
+                                LEFT JOIN account_payment_plan app ON pa.id = app.patient_account_id
+                                LEFT JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
+                                LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id
+                            WHERE NULLIF(phf.hf_member_code, '') IS NOT NULL
+                                AND pa.ref_status IS NULL AND pa.send_acc_to_pat_id IS NULL
+                                AND tp.thp_type = 1 AND hfp.scheme_id = {schemeId}
+                                AND pa.id = {accId}
+                            ORDER BY id DESC; ");
+            if (!reader.HasRows) return null;
+            while (reader.Read())
+            {
+                p.DocN = reader["code"].ToString();
+                p.DocS = reader["series"].ToString();
+                p.DocumentName = docName;
+                p.IdDocumentType = docType;
+                p.ProviderName = reader["name"].ToString();
+                p.IdProvider = reader["hf_plan_code"].ToString();
+            }
+
+            return p;
+        }
+
+        private int GetSourcePayCode(int accId)
+        {
+            var result = 0;
+            using var reader = Connection.Query(
+                $@"(SELECT TOP(1) COALESCE(
+                    IF pa.send_acc_to_pat_id IS NOT NULL THEN 4 ELSE
+                    IF pa.send_acc_to_pat_id IS NULL AND tp.thp_type = 1 AND hfp.scheme_id = 1 THEN 1 ELSE
+                    IF pa.send_acc_to_pat_id IS NULL AND tp.thp_type = 1 AND hfp.scheme_id = 2 THEN 3
+                    END IF END IF END IF, 6)
+                FROM patients_accounts pa
+                    LEFT JOIN third_parties tp
+                    LEFT JOIN account_payment_plan app ON pa.id = app.patient_account_id
+                    LEFT JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
+                WHERE pa.ref_status IS NULL AND pa.id = {accId}
+                ORDER BY id DESC)");
+            if (!reader.HasRows) return result;
+            while (reader.Read())
+            {
+                int.TryParse(reader[0].ToString(), out result);
+            }
+
+            return result;
         }
     }
 }

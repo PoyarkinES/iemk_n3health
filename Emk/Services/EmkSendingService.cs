@@ -84,7 +84,7 @@ namespace Emk.Services
                 return;
             }
 
-            new PixService(set).UpdatePatient(smo.PatientId);
+            new PixService(set).UpdatePatient(smo);
             var result = new EmkService(set).UpdateCase(smo, dir);
             if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(smo);
         }
@@ -169,7 +169,7 @@ namespace Emk.Services
                 var pix = new PixService(set);
                 var emk = new EmkService(set);
 
-                var result = pix.AddPatient(i.PatientId) ? 0 : -1;
+                var result = pix.AddPatient(i) ? 0 : -1;
                 if (result == 0)
                     result = emk.AddCase(i, false, dir);
                 else

@@ -29,13 +29,13 @@ namespace Emk.Services
 				conn.Open();
 		}
 
-        public bool AddOrUpdatePatient(int patientId)
+        public bool AddOrUpdatePatient(PatientAccount pa)
         {
-            return GetPatient(patientId) == null ? AddPatient(patientId) : UpdatePatient(patientId);
+            return GetPatient(pa.PatientId) == null ? AddPatient(pa) : UpdatePatient(pa);
         }
 
 
-		public bool AddPatient(int patientId)
+		public bool AddPatient(PatientAccount pa)
 		{
 
 			try {
@@ -43,7 +43,7 @@ namespace Emk.Services
 				var endpointAddress = new EndpointAddress(new Uri(Url), Array.Empty<AddressHeader>());
                 var client = new PixServiceClient(binding, endpointAddress);
 
-                var setResult = SetPatient(patientId);
+                var setResult = SetPatient(pa);
                 if (string.IsNullOrEmpty(setResult))
                 {
                     Log.Info(
@@ -67,20 +67,20 @@ namespace Emk.Services
 				Log.Error(ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message);
 			}
 			catch (Exception ex) {
-				Log.Error($"PIX Ошибка при добавлении пациента:{patientId} " + ex.Message);
+				Log.Error($"PIX Ошибка при добавлении пациента:{pa.PatientId} " + ex.Message);
             }
 
             return false;
         }
 
-		public bool UpdatePatient(int patientId)
+		public bool UpdatePatient(PatientAccount pa)
 		{
 			try {
 				BasicHttpBinding binding = new BasicHttpBinding();
 				EndpointAddress endpointAddress = new EndpointAddress(new Uri(Url));
 				PixServiceClient client = new PixServiceClient(binding, endpointAddress);
 
-                var setResult = SetPatient(patientId);
+                var setResult = SetPatient(pa);
                 if (string.IsNullOrEmpty(setResult))
                 {
                     client.UpdatePatient(guid, idLPU, _patient1);
@@ -107,9 +107,9 @@ namespace Emk.Services
             return false;
         }
 
-		private string SetPatient(int patientId)
+		private string SetPatient(PatientAccount pa)
 		{
-			var patient = Factory.GetPatientRepository.GetPatient(patientId);
+			var patient = Factory.GetPatientRepository.GetPatient(pa.PatientId);
             _patient1 = new PatientDto
             {
                 FamilyName = patient.LastName,
@@ -125,20 +125,18 @@ namespace Emk.Services
                 throw new Exception("Для пациента не указан ПОЛ");
             }
 
-            if (string.IsNullOrEmpty(patient.Snils?.Trim()))
+            var documents = new List<DocumentDto>();
+            var snils = Factory.GetPatientRepository.GetSnils(pa.PatientId);
+            if (snils == null)
             {
                 throw new Exception("Для пациента не указан СНИЛС");
             }
+            documents.Add(snils);
+            var policy = Factory.GetPatientRepository.GetPolicy(pa.AccountId);
+            if (policy != null)
+                documents.Add(policy);
 
-            _patient1.Documents = new DocumentDto[1];
-            _patient1.Documents[0] = new DocumentDto()
-            {
-                DocN = patient.Snils.Replace(" ", "").Replace("-", ""),
-                DocumentName = "СНИЛС",
-                IdDocumentType = 223,
-                ProviderName = "ПФР"
-            };
-
+            _patient1.Documents = documents.ToArray();
             return null;
         }
 

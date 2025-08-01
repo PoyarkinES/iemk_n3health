@@ -222,7 +222,7 @@ namespace Emk.Repository
             "DATE(esf.date_created) EsfDate,  p.patients_cart_num " +
             "FROM treat t JOIN procedures pr " +
             "JOIN patients p " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -240,7 +240,7 @@ namespace Emk.Repository
             "DATE(esf.date_created) EsfDate,  p.patients_cart_num " +
             "FROM treat t JOIN procedures pr " +
             "JOIN patients p " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +
@@ -258,7 +258,7 @@ namespace Emk.Repository
             "DATE(esf.date_created) EsfDate,  p.patients_cart_num " +
             "FROM treat t JOIN procedures pr " +
             "JOIN patients p " +
-            "LEFT JOIN esign_files esf on t.account_id = esf.account_id " +
+            "JOIN esign_files esf on t.account_id = esf.account_id " +
             "left join n3h_dict n on pr.n3h_code = n.code " +
             "LEFT JOIN practice_services s on s.service_id = t.service_id " +
             "LEFT JOIN n3h_dict d on d.id = s.n3h_dict_id " +

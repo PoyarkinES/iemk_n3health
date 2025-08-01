@@ -211,6 +211,13 @@ namespace Emk.Services
 
                 case1.MedRecords = medDocuments.ToArray();
                 case1.Steps[0].MedRecords = medRecords.ToArray();
+
+				// Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.
+                case1.AdmissionCondition = 1;
+
+                // Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.
+                case1.IdAmbResult = 2;
+                
                 Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено количество процедур СМО: {medRecords.Count}");
 
                 if (updateOnly)
@@ -512,7 +519,7 @@ namespace Emk.Services
 					var parm3 = new OdbcParameter
 					{
 						DbType = DbType.Int32,
-						Value = patient_id
+						Value = patient_id 
 					};
 					cmd3.Parameters.Add(parm3);
 					var dr3 = cmd3.ExecuteReader();

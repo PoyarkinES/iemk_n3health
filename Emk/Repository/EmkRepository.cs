@@ -52,8 +52,32 @@ namespace Emk.Repository
 
         public virtual DoctorEmk GetDoctorOfPatientTreat(int patientId, DateTime treatDate, int accountId)
 		{
-            string sql = "SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils, s.sex as prov_sex " +
-                         $"FROM sp_semd_get_data_new({accountId}) sp JOIN staff s ON sp.prov_id = s.member_id";
+            //string sql = "SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils, s.sex as prov_sex " +
+                        // $"FROM sp_semd_get_data_new({accountId}) sp JOIN staff s ON sp.prov_id = s.member_id";
+
+
+            string sql = "SELECT TOP(1) " +
+                         "TRIM(st.surname) AS prov_fam " +
+                         ", TRIM(st.firstname) AS prov_name " +
+                         ", TRIM(st.middlename) AS prov_otch " +
+                         ", st.birthdate AS prov_dr " +
+                         ", STRING(t.account_id) AS acc_id " +
+                         ", STRING(st.member_id) AS prov_id " +
+                         ", COALESCE(n.code, '') AS prov_dolzn_code " +
+                         ", COALESCE((SELECT dict_value FROM esign_dictionaries WHERE dict_name = 'post_to_spec' AND dict_key = prov_dolzn_code),'') AS prov_spec_code " +
+                         ", REPLACE(REPLACE(st.snils, '-', ''), ' ', '') AS prov_snils " +
+                         ", st.sex AS prov_sex " +
+                         "FROM " +
+                         "patients_accounts pa " +
+                         "JOIN [treat] t ON pa.[id] = t.account_id " +
+                         "JOIN staff st ON t.provider_id = st.member_id " +
+                         "JOIN patients p ON t.patient_id = p.patient_id " +
+                         "LEFT JOIN account_payment_plan app ON pa.[id] = app.patient_account_id " +
+                         "LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id " +
+                         "LEFT JOIN staff_positions sp on sp.prof_id = st.Prof_id " +
+                         "LEFT JOIN n3h_dict n on n.id = sp.n3h_dict_id " +
+                         "WHERE " +
+                         $"pa.ref_status IS NULL AND t.account_id = {accountId} ORDER BY date_created DESC";
 
             DoctorEmk doc = new DoctorEmk();
             try
@@ -207,7 +231,7 @@ namespace Emk.Repository
             if (!r.HasRows) return PayType.Unknown;
             while (r.Read())
             {
-                return (PayType)setPaymentType(r.Get<int?>("send_acc_to_pat_id"), r.Get<int?>("thp_type"),
+                return (PayType) setPaymentType(r.Get<int?>("send_acc_to_pat_id"), r.Get<int?>("thp_type"),
                     r.Get<int?>("scheme_id"));
             }
 

@@ -54,6 +54,5 @@ namespace Emk.Models
         public string GlobalId { get; set; }
 
         public string Snils { get; set; }
-        
     }
 }
