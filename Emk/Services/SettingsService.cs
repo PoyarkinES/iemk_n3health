@@ -29,18 +29,18 @@ namespace Emk.Services
 		{
 			using (var sw = new StreamWriter(path, false))
 			{
-				sw.WriteLine("SMOSettings=" + settings.SmoSettingsPath);
+				//sw.WriteLine("SMOSettings=" + settings.SmoSettingsPath);
 				sw.WriteLine("DbConnection=" + settings.DbConnectionString);
-				sw.WriteLine("PatientDirectory=" + settings.PatientDirectory);
-				sw.WriteLine("PixUrl=" + settings.PixUrl);
-				sw.WriteLine("EmkUrl=" + settings.EmkUrl);
-				sw.WriteLine("Guid=" + settings.Guid);
-				sw.WriteLine("IdLpu=" + settings.IdLPU);
-				sw.WriteLine("UpdateTime=" + settings.UpdateTime);
-				sw.WriteLine("DayInterval=" + settings.DateInterval);
-                sw.WriteLine("SendingType=" + settings.SendingType);
-                sw.WriteLine("IntervalFrom=" + settings.IntervalFrom);
-                sw.WriteLine("IntervalTo=" + settings.IntervalTo);
+                //sw.WriteLine("PatientDirectory=" + settings.PatientDirectory);
+                //sw.WriteLine("PixUrl=" + settings.PixUrl);
+                //sw.WriteLine("EmkUrl=" + settings.EmkUrl);
+                //sw.WriteLine("Guid=" + settings.Guid);
+                //sw.WriteLine("IdLpu=" + settings.IdLPU);
+                //sw.WriteLine("UpdateTime=" + settings.UpdateTime);
+                //sw.WriteLine("DayInterval=" + settings.DateInterval);
+                //sw.WriteLine("SendingType=" + settings.SendingType);
+                //sw.WriteLine("IntervalFrom=" + settings.IntervalFrom);
+                //sw.WriteLine("IntervalTo=" + settings.IntervalTo);
                 sw.WriteLine("AutoUpdate=" + settings.AutoUpdate);
                 sw.WriteLine("IsNewMiddleName=" + settings.IsNewMiddleName);
 			}
@@ -51,18 +51,18 @@ namespace Emk.Services
 			Log.Warning("Файл настроек не найден, используется файл по умолчанию.");
 			using (var sw = new StreamWriter(path, false))
 			{
-				sw.WriteLine("SMOSettings=");
+				//sw.WriteLine("SMOSettings=");
 				sw.WriteLine("DbConnection=");
-				sw.WriteLine("PatientDirectory=");
-				sw.WriteLine("PixUrl=");
-				sw.WriteLine("EmkUrl=");
-				sw.WriteLine("Guid=");
-				sw.WriteLine("IdLpu=");
-				sw.WriteLine("UpdateTime=");
-				sw.WriteLine("DayInterval=");
-                sw.WriteLine("SendingType=");
-                sw.WriteLine("IntervalFrom=");
-                sw.WriteLine("IntervalTo=");
+				//sw.WriteLine("PatientDirectory=");
+				//sw.WriteLine("PixUrl=");
+				//sw.WriteLine("EmkUrl=");
+				//sw.WriteLine("Guid=");
+				//sw.WriteLine("IdLpu=");
+				//sw.WriteLine("UpdateTime=");
+				//sw.WriteLine("DayInterval=");
+                //sw.WriteLine("SendingType=");
+                //sw.WriteLine("IntervalFrom=");
+                //sw.WriteLine("IntervalTo=");
                 sw.WriteLine("AutoUpdate=");
                 sw.WriteLine("IsNewMiddleName=");
 			}
@@ -98,49 +98,49 @@ namespace Emk.Services
 			var value = line.Substring(eq + 1);
 			switch (header)
 			{
-				case "SMOSettings":
-					s.SmoSettingsPath = value;
-					break;
+				//case "SMOSettings":
+				//	s.SmoSettingsPath = value;
+				//	break;
 				case "DbConnection":
 					s.DbConnectionString = value;
 					break;
-				case "PatientDirectory":
-					s.PatientDirectory = value;
-					break;
-				case "PixUrl":
-					s.PixUrl = value;
-					break;
-				case "EmkUrl":
-					s.EmkUrl = value;
-					break;
-				case "Guid":
-					Guid.TryParse(value, out var guid);
-					s.Guid = guid;
-					break;
-				case "IdLpu":
-					Guid.TryParse(value, out var idLpu);
-					s.IdLPU = idLpu;
-					break;
-				case "UpdateTime":
-					TimeSpan.TryParse(value, out var t);
-					s.UpdateTime = t;
-					break;
-				case "DayInterval":
-					int.TryParse(value, out int day);
-					s.DateInterval = day;
-					break;
-                case "SendingType":
-                    Enum.TryParse(value, out SendingType type);
-                    s.SendingType = type;
-                    break;
-                case "IntervalFrom":
-                    DateTime.TryParse(value, out DateTime fromDate);
-                    s.IntervalFrom = fromDate;
-                    break;
-                case "IntervalTo":
-                    DateTime.TryParse(value, out DateTime toDate);
-                    s.IntervalTo = toDate;
-                    break;
+				//case "PatientDirectory":
+				//	s.PatientDirectory = value;
+				//	break;
+				//case "PixUrl":
+				//	s.PixUrl = value;
+				//	break;
+				//case "EmkUrl":
+				//	s.EmkUrl = value;
+				//	break;
+				//case "Guid":
+				//	Guid.TryParse(value, out var guid);
+				//	s.Guid = guid;
+				//	break;
+				//case "IdLpu":
+				//	Guid.TryParse(value, out var idLpu);
+				//	s.IdLPU = idLpu;
+				//	break;
+				//case "UpdateTime":
+				//	TimeSpan.TryParse(value, out var t);
+				//	s.UpdateTime = t;
+				//	break;
+				//case "DayInterval":
+				//	int.TryParse(value, out int day);
+				//	s.DateInterval = day;
+				//	break;
+    //            case "SendingType":
+    //                Enum.TryParse(value, out SendingType type);
+    //                s.SendingType = type;
+    //                break;
+    //            case "IntervalFrom":
+    //                DateTime.TryParse(value, out DateTime fromDate);
+    //                s.IntervalFrom = fromDate;
+    //                break;
+    //            case "IntervalTo":
+    //                DateTime.TryParse(value, out DateTime toDate);
+    //                s.IntervalTo = toDate;
+    //                break;
                 case "AutoUpdate":
                     int.TryParse(value, out int autoUpd);
                     s.AutoUpdate = autoUpd;

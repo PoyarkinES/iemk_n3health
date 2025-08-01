@@ -60,9 +60,11 @@ namespace Emk.Models
                 return 3;
             switch (SexStr.ToLower())
             {
-                case "м":
+                case "м": 
+                case "m":
                     return 1;
                 case "ж":
+                case "f":
                     return 2;
                 default:
                     return 3;
@@ -73,7 +75,7 @@ namespace Emk.Models
         {
             try
             {
-                var fam = surname.All(c => Char.IsWhiteSpace(c) || Char.IsLetter(c));
+                var fam = surname.All(c => Char.IsWhiteSpace(c) || Char.IsLetter(c) || c.Equals('-'));
                 if (!fam)
                     throw new Exception("Фамилия содержит недопустимые символы.");
                 //return Regex.Replace(surname, @"^.*?([^_\W]+)$", "$1");
