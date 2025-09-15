@@ -117,7 +117,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "EmkMainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Сервис отправки данных           Build 58.3";
+            this.Text = "Сервис отправки данных           Build 58.5";
             this.ResumeLayout(false);
 
         }

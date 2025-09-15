@@ -141,8 +141,9 @@ namespace Emk.Services
                         IdStepMis = $"{doc.AccountId}-{patient.CartNum}" ,
                         Doctor = doctor,
                         IdVisitPlace = Convert.ToByte(def.VisitPlace),
-                        IdVisitPurpose = Convert.ToByte(def.VisitPurpose)
-                    }
+                        IdVisitPurpose = Convert.ToByte(def.VisitPurpose),
+                        IdPaymentType = (byte)_rep.GetPayType(doc.AccountId)
+			}
                 };
                 var medDocuments = new List<MedRecord>
                 {
@@ -239,7 +240,7 @@ namespace Emk.Services
             }
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
-                Log.Error(errDescription);
+                getError(ex.Detail.Errors);
 				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
                     UpdateCase(treat,path);
 				return -1;
