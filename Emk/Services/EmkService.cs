@@ -226,37 +226,45 @@ namespace Emk.Services
                     client.UpdateCase(guid, case1);
                     client.Close();
                     Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} обновлен.");
+                    _rep.SaveCase(-1, DateTime.Now, "upd", treat.PatientId, treat.AccountId, null, 'S', null);
                     return 0;
                 }
 
                 client.AddCase(guid, case1);
                 client.Close();
                 Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
-                return 0;
+                _rep.SaveCase(-1, DateTime.Now, "add", treat.PatientId, treat.AccountId, null, 'S', null);
+
+				return 0;
             }
             catch (FaultException<RequestFault[]> ex) {
-				getError(ex.Detail);
+                getFullError(ex.Detail);
+                _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, null, 'S', getError(ex.Detail));
 				return -1;
             }
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
-                getError(ex.Detail.Errors);
+                getFullError(ex.Detail.Errors);
 				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
                     UpdateCase(treat,path);
+                _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, null, 'S', getError(ex.Detail.Errors));
 				return -1;
             }
             catch (FaultException<RequestWarning> ex) {
                 Log.Warning(ex.Detail.WarningCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n");
+                _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, getWarning(ex.Detail.Warnings), 'S', null);
                 return -1;
             }
             catch (FaultException<RequestWarning[]> ex) {
 
                 getWarning(ex.Detail);
+                _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, getWarning(ex.Detail), 'S', null);
 				return -1;
             }
             catch (Exception ex) {
                 Log.Warning($"Случай медицинского обслуживания для пациента {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy} не отправлен.");
                 Log.Error(ex.ToString());
+                _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, null, 'S', ex.Message);
                 return -1;
             }
         }
@@ -734,20 +742,37 @@ namespace Emk.Services
             return result.ToString().Remove(result.ToString().Length -1, 1);
 		}
 
-        private void getError(RequestFault[] rWarning)
+        private void getFullError(RequestFault[] rError)
         {
 
-            foreach (var e in rWarning)
+            foreach (var e in rError)
             {
                 Log.Error($"{e.ErrorCode} : {e.PropertyName} {e.Message} ");
                 if (e.Errors.Length > 0)
                 {
-                    getError(e.Errors);
+                    getFullError(e.Errors);
                 }
             }
         }
 
-        private void getWarning(RequestWarning[] rWarning)
+        private string getError(RequestFault[] rError)
+        {
+			foreach (var e in rError)
+            {
+                if (e.Errors.Length > 0)
+                {
+                    getError(e.Errors);
+                }
+                else
+                {
+					return $"{e.ErrorCode} : {e.PropertyName} {e.Message} ";
+                }
+			}
+
+            return null;
+        }
+        
+        private void getFullWarning(RequestWarning[] rWarning)
         {
             foreach (var e in rWarning)
             {
@@ -757,6 +782,23 @@ namespace Emk.Services
 					getWarning(e.Warnings);
                 }
             }
+        }
+
+        private string getWarning(RequestWarning[] rWarning)
+        {
+            foreach (var e in rWarning)
+            {
+                if (e.Warnings.Length > 0)
+                {
+                    getWarning(e.Warnings);
+                }
+                else
+                {
+                    return $"{e.WarningCode} : {e.PropertyName} {e.Message} ";
+                }
+			}
+
+            return null;
         }
     }
 }
