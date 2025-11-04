@@ -49,7 +49,6 @@ namespace Emk.Repository
             return doc;
         }
 
-
         public virtual DoctorEmk GetDoctorOfPatientTreat(int patientId, DateTime treatDate, int accountId)
 		{
             //string sql = "SELECT prov_fam, prov_name, prov_otch, prov_dr, acc_id, prov_id, prov_spec_code, prov_dolzn_code, prov_snils, s.sex as prov_sex " +
@@ -246,7 +245,8 @@ namespace Emk.Repository
 
         public void SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
         {
-            var sql = $"INSERT INTO ruegisz_log VALUES({smo}, {upload_time}, {upload_meth}, {patient_id}, {account_id}, {response_text}, {is_success}, {error_text} )";
+            var sql = $@"INSERT INTO ruegisz_log(smo, upload_time, upload_meth, patient_id, account_id, response_text, is_success, error_text)
+                        VALUES({smo}, '{upload_time.ToString("yyyy-MM-dd HH:mm:ss")}', '{upload_meth}', {patient_id}, {account_id}, '{response_text}', '{is_success}', '{error_text}' )";
             Connection.ExecuteNonQuery(sql);
         }
 
