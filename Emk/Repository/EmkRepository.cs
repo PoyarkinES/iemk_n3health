@@ -10,6 +10,7 @@ namespace Emk.Repository
 	public class EmkRepository : DbRepository
 	{
         private EmkSettings _settings = new SettingsService().LoadSettings();
+
         public virtual DoctorEmk GetDoctorByMemberId(int memberId)
         {
             string sql =
@@ -245,6 +246,7 @@ namespace Emk.Repository
 
         public void SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
         {
+            if (versionDB() < 6236) return;
             var sql = $@"INSERT INTO ruegisz_log(smo, upload_time, upload_meth, patient_id, account_id, response_text, is_success, error_text)
                         VALUES({smo}, '{upload_time.ToString("yyyy-MM-dd HH:mm:ss")}', '{upload_meth}', {patient_id}, {account_id}, '{response_text}', '{is_success}', '{error_text}' )";
             Connection.ExecuteNonQuery(sql);
@@ -257,5 +259,13 @@ namespace Emk.Repository
             if (thp_type == 1 && scheme_id == 2) return 4;
             return 6;
         }
+
+        private int versionDB()
+        {
+            var verdb = Connection.Scalar<int>(
+                $"SELECT CAST(Param_Value AS INTEGER) FROM APOC_Parameters_Values WHERE Object_ID = -2");
+            return verdb;
+        }
+
     }
 }
