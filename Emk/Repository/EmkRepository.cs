@@ -56,28 +56,29 @@ namespace Emk.Repository
                         // $"FROM sp_semd_get_data_new({accountId}) sp JOIN staff s ON sp.prov_id = s.member_id";
 
 
-            string sql = "SELECT TOP(1) " +
-                         "TRIM(st.surname) AS prov_fam " +
-                         ", TRIM(st.firstname) AS prov_name " +
-                         ", TRIM(st.middlename) AS prov_otch " +
-                         ", st.birthdate AS prov_dr " +
-                         ", STRING(t.account_id) AS acc_id " +
-                         ", STRING(st.member_id) AS prov_id " +
-                         ", COALESCE(n.code, '') AS prov_dolzn_code " +
-                         ", COALESCE((SELECT dict_value FROM esign_dictionaries WHERE dict_name = 'post_to_spec' AND dict_key = prov_dolzn_code),'') AS prov_spec_code " +
-                         ", REPLACE(REPLACE(st.snils, '-', ''), ' ', '') AS prov_snils " +
-                         ", st.sex AS prov_sex " +
-                         "FROM " +
-                         "patients_accounts pa " +
-                         "JOIN [treat] t ON pa.[id] = t.account_id " +
-                         "JOIN staff st ON t.provider_id = st.member_id " +
-                         "JOIN patients p ON t.patient_id = p.patient_id " +
-                         "LEFT JOIN account_payment_plan app ON pa.[id] = app.patient_account_id " +
-                         "LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id " +
-                         "LEFT JOIN staff_positions sp on sp.prof_id = st.Prof_id " +
-                         "LEFT JOIN n3h_dict n on n.id = sp.n3h_dict_id " +
-                         "WHERE " +
-                         $"pa.ref_status IS NULL AND t.account_id = {accountId} ORDER BY date_created DESC";
+            string sql = $@"
+SELECT TOP(1) 
+     TRIM(st.surname) AS prov_fam 
+     , TRIM(st.firstname) AS prov_name 
+     , TRIM((IF NULLIF(st.middlename,'') IS NOT NULL AND NULLIF(st.notes,'') IS NOT NULL AND  UPPER(SUBSTR(st.middlename,1,3)) = UPPER(SUBSTR(st.notes,1,3)) THEN st.notes ELSE st.middlename END IF) AS 'middlename') AS prov_otch
+     , st.birthdate AS prov_dr 
+     , STRING(t.account_id) AS acc_id 
+     , STRING(st.member_id) AS prov_id 
+     , COALESCE(n.code, '') AS prov_dolzn_code 
+     , COALESCE((SELECT dict_value FROM esign_dictionaries WHERE dict_name = 'post_to_spec' AND dict_key = prov_dolzn_code),'') AS prov_spec_code 
+     , REPLACE(REPLACE(st.snils, '-', ''), ' ', '') AS prov_snils 
+     , st.sex AS prov_sex 
+ FROM 
+     patients_accounts pa 
+     JOIN [treat] t ON pa.[id] = t.account_id 
+     JOIN staff st ON t.provider_id = st.member_id 
+     JOIN patients p ON t.patient_id = p.patient_id 
+     LEFT JOIN account_payment_plan app ON pa.[id] = app.patient_account_id 
+     LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id 
+     LEFT JOIN staff_positions sp on sp.prof_id = st.Prof_id 
+     LEFT JOIN n3h_dict n on n.id = sp.n3h_dict_id 
+ WHERE 
+     pa.ref_status IS NULL AND t.account_id = {accountId} ORDER BY date_created DESC";
 
             DoctorEmk doc = new DoctorEmk();
             try
@@ -146,11 +147,20 @@ namespace Emk.Repository
             //    " left join nsr_fedpositions p on adp.dict_value_7 = p.pos_oms_code" +
 
             //    $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
-            string cmd = $"select member_id, TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex  " +
-                         "               from staff s  " +
-                         "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
-                         "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
-                         $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
+            string cmd = $@"
+select member_id, 
+    TRIM(surname), 
+    TRIM(firstname), 
+    TRIM(IF NULLIF(middlename,'') IS NOT NULL AND NULLIF(notes,'') IS NOT NULL AND  UPPER(SUBSTR(middlename,1,3)) = UPPER(SUBSTR(notes,1,3)) THEN notes ELSE middlename END IF) AS 'middlename', 
+    birthdate, 
+    n.Code, 
+    s.snils, 
+    s.provider_no_1_id, 
+    s.sex as prov_sex  
+from staff s  
+    join staff_positions sp on sp.prof_id = s.Prof_id  
+    left join n3h_dict n on n.id = sp.n3h_dict_id  
+where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
             try
             {
                 using (var r =
