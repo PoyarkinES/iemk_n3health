@@ -60,7 +60,7 @@ namespace Emk.Repository
 SELECT TOP(1) 
      TRIM(st.surname) AS prov_fam 
      , TRIM(st.firstname) AS prov_name 
-     , TRIM((IF NULLIF(st.middlename,'') IS NOT NULL AND NULLIF(st.notes,'') IS NOT NULL AND  UPPER(SUBSTR(st.middlename,1,3)) = UPPER(SUBSTR(st.notes,1,3)) THEN st.notes ELSE st.middlename END IF) AS 'middlename') AS prov_otch
+     , TRIM((IF NULLIF(st.middlename,'') IS NOT NULL AND NULLIF(st.notes,'') IS NOT NULL AND  UPPER(SUBSTR(st.middlename,1,3)) = UPPER(SUBSTR(st.notes,1,3)) THEN st.notes ELSE st.middlename END IF)) AS prov_otch
      , st.birthdate AS prov_dr 
      , STRING(t.account_id) AS acc_id 
      , STRING(st.member_id) AS prov_id 
