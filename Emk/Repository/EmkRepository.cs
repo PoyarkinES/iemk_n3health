@@ -13,12 +13,21 @@ namespace Emk.Repository
 
         public virtual DoctorEmk GetDoctorByMemberId(int memberId)
         {
-            string sql =
-                $"select TRIM(surname), TRIM(firstname), TRIM(middlename), birthdate, null, member_id, n.Code, s.snils, s.provider_no_1_id, s.sex as prov_sex " +
-                "               from staff s  " +
-                "                 join staff_positions sp on sp.prof_id = s.Prof_id  " +
-                "                left join n3h_dict n on n.id = sp.n3h_dict_id  " +
-                $" where member_id =  {memberId}";
+            string sql = $@"
+select TRIM(surname)
+    , TRIM(firstname)
+    , TRIM((IF NULLIF(middlename,'') IS NOT NULL AND NULLIF(notes,'') IS NOT NULL AND  UPPER(SUBSTR(middlename,1,3)) = UPPER(SUBSTR(notes,1,3)) THEN notes ELSE middlename END IF))
+    , birthdate
+    , null
+    , member_id
+    , n.Code
+    , s.snils
+    , s.provider_no_1_id
+    , s.sex as prov_sex 
+from staff s  
+    join staff_positions sp on sp.prof_id = s.Prof_id  
+    left join n3h_dict n on n.id = sp.n3h_dict_id  
+where member_id =  {memberId}";
 
 
             DoctorEmk doc = new DoctorEmk();
@@ -149,13 +158,13 @@ SELECT TOP(1)
             //    $" where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
             string cmd = $@"
 select member_id, 
-    TRIM(surname), 
-    TRIM(firstname), 
+    TRIM(surname) surname, 
+    TRIM(firstname) firstname, 
     TRIM(IF NULLIF(middlename,'') IS NOT NULL AND NULLIF(notes,'') IS NOT NULL AND  UPPER(SUBSTR(middlename,1,3)) = UPPER(SUBSTR(notes,1,3)) THEN notes ELSE middlename END IF) AS 'middlename', 
     birthdate, 
-    n.Code, 
-    s.snils, 
-    s.provider_no_1_id, 
+    n.Code Code, 
+    s.snils snils, 
+    s.provider_no_1_id provider_no_1_id, 
     s.sex as prov_sex  
 from staff s  
     join staff_positions sp on sp.prof_id = s.Prof_id  
@@ -163,23 +172,23 @@ from staff s
 where member_id = (Select d.manager_id from staff s join departments d on d.depart_id = s.depart_id where s.member_id = {memberId})";
             try
             {
-                using (var r =
+                using (var reader =
                     Connection.Query(cmd)) {
-                    if (!r.HasRows)
+                    if (!reader.HasRows)
                         return null;
                     DoctorEmk doc = new DoctorEmk();
-                    while (r.Read()) {
+                    while (reader.Read()) {
                         //doc.MemberId = (int)r[0];
-                        doc.MemberId = r.IsDBNull(0) ? 0 : int.Parse(r[0].ToString());
-                        doc.Surname = r[1].ToString();
-                        doc.Name = r[2].ToString();
-                        doc.MiddleName = r[3].ToString();
-                        doc.BirthDay = (DateTime)r[4];
+                        doc.MemberId = reader.Get<int?>("member_id") ?? 0;
+                        doc.Surname = reader.Get<string>("surname");
+                        doc.Name = reader.Get<string>("firstname");
+                        doc.MiddleName = reader.Get<string>("middlename");
+                        doc.BirthDay = reader.Get<DateTime>("birthdate");
                         doc.IdLpu = idLpu;
                         //doc.Speciality = r.IsDBNull(6) ? 0 : int.Parse(r[6].ToString());
-                        doc.Position = r.IsDBNull(5) ? 0 : int.Parse(r[5].ToString());
-                        doc.Snils = r[6].ToString().Replace("-", "").Replace(" ", "");
-                        doc.SexStr = r.Get<string>("prov_sex") ?? r.Get<string>("provider_no_1_id");
+                        doc.Position = reader.Get<int?>("Code") ?? 0;
+                        doc.Snils = reader.Get<string>("snils")?.Replace("-", "").Replace(" ", "");
+                        doc.SexStr = reader.Get<string>("prov_sex") ?? reader.Get<string>("provider_no_1_id");
 
                     }
                     return doc;

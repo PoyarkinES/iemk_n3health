@@ -113,10 +113,11 @@ namespace Emk.Repository
                 $@"SELECT DISTINCT phf.hf_member_code code, phf.hf_plan_series series, hfp.hf_plan_name name, pa.id, t.patient_id, hfp.hf_plan_code
                             FROM patients_accounts pa
                                 LEFT JOIN treat t ON t.account_id = pa.id
+                                LEFT JOIN patients_hf phf ON phf.patient_id = t.patient_id
                                 LEFT JOIN third_parties tp
                                 LEFT JOIN account_payment_plan app ON pa.id = app.patient_account_id
                                 LEFT JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
-                                LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id
+                                /*LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id*/
                             WHERE NULLIF(phf.hf_member_code, '') IS NOT NULL
                                 AND pa.ref_status IS NULL AND pa.send_acc_to_pat_id IS NULL
                                 AND tp.thp_type = 1 AND hfp.scheme_id = {schemeId}
