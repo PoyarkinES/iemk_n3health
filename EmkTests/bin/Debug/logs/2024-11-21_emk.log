@@ -1,0 +1,235 @@
+21.11.2024 8:28:01 | Info | Загружаю настройки.
+21.11.2024 8:28:01 | Warning | Файл настроек не найден, используется файл по умолчанию.
+21.11.2024 8:28:01 | Info | Настройки загружены
+21.11.2024 8:28:07 | Error | Не заданы настройки подключения к базе данных
+21.11.2024 8:29:40 | Info | Загружаю настройки.
+21.11.2024 8:29:40 | Info | Настройки загружены
+21.11.2024 8:30:38 | Info | Загружаю настройки.
+21.11.2024 8:31:51 | Info | Загружаю настройки.
+21.11.2024 8:31:55 | Info | Настройки загружены
+21.11.2024 8:34:11 | Info | Загружаю настройки.
+21.11.2024 8:34:11 | Info | Настройки загружены
+21.11.2024 8:35:23 | Info | Загружаю настройки.
+21.11.2024 8:35:23 | Info | Настройки загружены
+21.11.2024 8:35:31 | Info | Загружаю настройки.
+21.11.2024 8:35:31 | Info | Настройки загружены
+21.11.2024 8:36:06 | Info | Загружаю настройки.
+21.11.2024 8:37:53 | Info | Загружаю настройки.
+21.11.2024 8:37:57 | Info | Настройки загружены
+21.11.2024 8:37:57 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:38:21 | Info | Загружаю настройки.
+21.11.2024 8:38:21 | Info | Настройки загружены
+21.11.2024 8:38:26 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:40:10 | Info | Загружаю настройки.
+21.11.2024 8:40:10 | Info | Настройки загружены
+21.11.2024 8:40:11 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:41:10 | Info | Загружаю настройки.
+21.11.2024 8:41:10 | Info | Настройки загружены
+21.11.2024 8:41:27 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:42:37 | Info | Загружаю настройки.
+21.11.2024 8:42:37 | Info | Настройки загружены
+21.11.2024 8:42:38 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:42:56 | Info | Загружаю настройки.
+21.11.2024 8:42:56 | Info | Настройки загружены
+21.11.2024 8:42:57 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:43:16 | Info | Загружаю настройки.
+21.11.2024 8:43:16 | Info | Настройки загружены
+21.11.2024 8:43:16 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:43:54 | Info | Загружаю настройки.
+21.11.2024 8:43:54 | Info | Настройки загружены
+21.11.2024 8:43:54 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:44:25 | Info | Загружаю настройки.
+21.11.2024 8:44:25 | Info | Настройки загружены
+21.11.2024 8:44:25 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:47:22 | Info | Загружаю настройки.
+21.11.2024 8:47:22 | Info | Настройки загружены
+21.11.2024 8:47:22 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [IM014] [Microsoft][Диспетчер драйверов ODBC] В указанном DSN архитектура драйвера и архитектура приложения не соответствуют друг другу.
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcConnectionHandle..ctor(OdbcConnection connection, OdbcConnectionString constr, OdbcEnvironmentHandle environmentHandle)
+   в System.Data.Odbc.OdbcConnectionOpen..ctor(OdbcConnection outerConnection, OdbcConnectionString connectionOptions)
+   в System.Data.Odbc.OdbcConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningObject)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.CreateNonPooledConnection(DbConnection owningConnection, DbConnectionPoolGroup poolGroup, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   в System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionClosed.TryOpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   в System.Data.ProviderBase.DbConnectionInternal.OpenConnection(DbConnection outerConnection, DbConnectionFactory connectionFactory)
+   в System.Data.Odbc.OdbcConnection.Open()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 59
+21.11.2024 8:48:00 | Info | Загружаю настройки.
+21.11.2024 8:48:00 | Info | Настройки загружены
+21.11.2024 8:48:00 | Info | Загружаю настройки.
+21.11.2024 8:48:00 | Info | Настройки загружены
+21.11.2024 8:48:00 | Info | Загружаю настройки.
+21.11.2024 8:48:00 | Info | Настройки загружены
+21.11.2024 8:48:00 | Info | Загружаю настройки.
+21.11.2024 8:48:00 | Info | Настройки загружены
+21.11.2024 8:48:17 | Info | Загружаю настройки.
+21.11.2024 8:48:17 | Info | Настройки загружены
+21.11.2024 8:48:17 | Info | Загружаю настройки.
+21.11.2024 8:48:17 | Info | Настройки загружены
+21.11.2024 8:48:17 | Info | Загружаю настройки.
+21.11.2024 8:48:17 | Info | Настройки загружены
+21.11.2024 8:50:20 | Info | Загружаю настройки.
+21.11.2024 8:50:20 | Info | Настройки загружены
+21.11.2024 8:50:20 | Info | Загружаю настройки.
+21.11.2024 8:50:20 | Info | Настройки загружены
+21.11.2024 8:50:20 | Info | Загружаю настройки.
+21.11.2024 8:50:20 | Info | Настройки загружены
+21.11.2024 8:50:29 | Info | Загружаю настройки.
+21.11.2024 8:50:29 | Info | Настройки загружены
+21.11.2024 8:50:29 | Info | Загружаю настройки.
+21.11.2024 8:50:29 | Info | Настройки загружены
+21.11.2024 8:50:29 | Info | Загружаю настройки.
+21.11.2024 8:50:29 | Info | Настройки загружены
+21.11.2024 8:50:42 | Info | Загружаю настройки.
+21.11.2024 8:50:42 | Info | Настройки загружены
+21.11.2024 8:50:42 | Info | Загружаю настройки.
+21.11.2024 8:50:42 | Info | Настройки загружены
+21.11.2024 8:50:42 | Info | Загружаю настройки.
+21.11.2024 8:50:42 | Info | Настройки загружены
+21.11.2024 8:50:42 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [42S22] [SAP][ODBC Driver][SQL Anywhere]Column '@paId' not found
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcCommand.ExecuteReaderObject(CommandBehavior behavior, String method, Boolean needReader, Object[] methodArguments, SQL_API odbcApiMethod)
+   в System.Data.Odbc.OdbcCommand.ExecuteReaderObject(CommandBehavior behavior, String method, Boolean needReader)
+   в System.Data.Odbc.OdbcCommand.ExecuteReader(CommandBehavior behavior)
+   в System.Data.Odbc.OdbcCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   в System.Data.Common.DbCommand.ExecuteReader()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 72
+21.11.2024 8:50:51 | Info | Загружаю настройки.
+21.11.2024 8:50:51 | Info | Настройки загружены
+21.11.2024 8:50:51 | Info | Загружаю настройки.
+21.11.2024 8:50:51 | Info | Настройки загружены
+21.11.2024 8:50:51 | Info | Загружаю настройки.
+21.11.2024 8:50:51 | Info | Настройки загружены
+21.11.2024 8:50:51 | Error | System.Data.Odbc.OdbcException (0x80131937): ERROR [42S22] [SAP][ODBC Driver][SQL Anywhere]Column '@paId' not found
+   в System.Data.Odbc.OdbcConnection.HandleError(OdbcHandle hrHandle, RetCode retcode)
+   в System.Data.Odbc.OdbcCommand.ExecuteReaderObject(CommandBehavior behavior, String method, Boolean needReader, Object[] methodArguments, SQL_API odbcApiMethod)
+   в System.Data.Odbc.OdbcCommand.ExecuteReaderObject(CommandBehavior behavior, String method, Boolean needReader)
+   в System.Data.Odbc.OdbcCommand.ExecuteReader(CommandBehavior behavior)
+   в System.Data.Odbc.OdbcCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   в System.Data.Common.DbCommand.ExecuteReader()
+   в Emk.Repository.DbHelper.Query(DbConnection connection, String commandText, Object[] args) в D:\WorkTL\iemk_n3health\Emk\Repository\DbHelper.cs:строка 72
+21.11.2024 8:53:09 | Info | Загружаю настройки.
+21.11.2024 8:53:09 | Info | Настройки загружены
+21.11.2024 8:53:10 | Info | Загружаю настройки.
+21.11.2024 8:53:10 | Info | Настройки загружены
+21.11.2024 8:53:10 | Info | Загружаю настройки.
+21.11.2024 8:53:10 | Info | Настройки загружены
+21.11.2024 8:53:23 | Info | Загружаю настройки.
+21.11.2024 8:53:23 | Info | Настройки загружены
+21.11.2024 8:53:23 | Info | Загружаю настройки.
+21.11.2024 8:53:23 | Info | Настройки загружены
+21.11.2024 8:53:23 | Info | Загружаю настройки.
+21.11.2024 8:53:23 | Info | Настройки загружены
+21.11.2024 8:55:41 | Info | Загружаю настройки.
+21.11.2024 8:55:41 | Info | Настройки загружены
+21.11.2024 8:55:41 | Info | Загружаю настройки.
+21.11.2024 8:55:41 | Info | Настройки загружены
+21.11.2024 8:55:41 | Info | Загружаю настройки.
+21.11.2024 8:55:41 | Info | Настройки загружены

@@ -1,0 +1,5 @@
+D:\WorkTL\iemk_n3health\EmkCda\bin\x86\Debug\EmkCda.dll
+D:\WorkTL\iemk_n3health\EmkCda\bin\x86\Debug\EmkCda.pdb
+D:\WorkTL\iemk_n3health\EmkCda\obj\x86\Debug\EmkCda.csproj.CoreCompileInputs.cache
+D:\WorkTL\iemk_n3health\EmkCda\obj\x86\Debug\EmkCda.dll
+D:\WorkTL\iemk_n3health\EmkCda\obj\x86\Debug\EmkCda.pdb

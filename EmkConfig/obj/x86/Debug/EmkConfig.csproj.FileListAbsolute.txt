@@ -1,0 +1,15 @@
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\EmkConfig.exe.config
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\EmkConfig.exe
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\EmkConfig.pdb
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\Emk.dll
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\Newtonsoft.Json.dll
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\Emk.pdb
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\Emk.dll.config
+D:\WorkTL\iemk_n3health\EmkConfig\bin\x86\Debug\Newtonsoft.Json.xml
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.csproj.AssemblyReference.cache
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.Properties.Resources.resources
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.csproj.GenerateResource.cache
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.csproj.CoreCompileInputs.cache
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.csproj.CopyComplete
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.exe
+D:\WorkTL\iemk_n3health\EmkConfig\obj\x86\Debug\EmkConfig.pdb

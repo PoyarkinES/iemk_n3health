@@ -1,0 +1,17 @@
+C:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.dll
+C:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.pdb
+C:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.CoreCompileInputs.cache
+C:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.dll
+C:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.pdb
+C:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.AssemblyReference.cache
+Z:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.dll
+Z:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.pdb
+Z:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.CoreCompileInputs.cache
+Z:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.dll
+Z:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.pdb
+Z:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.AssemblyReference.cache
+D:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.dll
+D:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.pdb
+D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.CoreCompileInputs.cache
+D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.dll
+D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.pdb

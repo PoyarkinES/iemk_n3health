@@ -1,0 +1,456 @@
+<?xml version="1.0"?>
+<SmoSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Doctors>
+    <Doctor>
+      <MemberId>1</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>99</PersCode>
+      <Surname>Бунева</Surname>
+      <Name>Зоя</Name>
+      <MiddleName />
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>2</MemberId>
+      <Snils>11111</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>1Д</PersCode>
+      <Surname>Бабкина</Surname>
+      <Name>Алла</Name>
+      <MiddleName>Евгеньевна</MiddleName>
+      <Sex>F</Sex>
+    </Doctor>
+    <Doctor>
+      <MemberId>23</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>4</PersCode>
+      <Surname>Брезгина</Surname>
+      <Name>Генриетта</Name>
+      <MiddleName>Леонидовна</MiddleName>
+      <Sex>F</Sex>
+    </Doctor>
+    <Doctor>
+      <MemberId>26</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>5</PersCode>
+      <Surname>Бунева</Surname>
+      <Name>Зоя</Name>
+      <MiddleName>Николаевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>27</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>6</PersCode>
+      <Surname>Варро</Surname>
+      <Name>Зоя</Name>
+      <MiddleName>Павловна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>28</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>7</PersCode>
+      <Surname>Вишнякова</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Викторовна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>30</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>9</PersCode>
+      <Surname>Гамов</Surname>
+      <Name>Владимир</Name>
+      <MiddleName>Иванович</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>31</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>11</PersCode>
+      <Surname>Исакова</Surname>
+      <Name>Любовь</Name>
+      <MiddleName>Казимировна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>32</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>12</PersCode>
+      <Surname>Клименко</Surname>
+      <Name>Алексей</Name>
+      <MiddleName>Петрович</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>33</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>13</PersCode>
+      <Surname>Краснощекова</Surname>
+      <Name>Надежда</Name>
+      <MiddleName>Витальевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>34</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>14</PersCode>
+      <Surname>Лянко</Surname>
+      <Name>Любовь</Name>
+      <MiddleName>Павловна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>35</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>15</PersCode>
+      <Surname>Малышева</Surname>
+      <Name>Валентина</Name>
+      <MiddleName>Пантелеевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>38</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>18</PersCode>
+      <Surname>Назарова</Surname>
+      <Name>Галина</Name>
+      <MiddleName>Николаевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>39</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>19</PersCode>
+      <Surname>Осарчук</Surname>
+      <Name>Анатолий</Name>
+      <MiddleName>Васильевич</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>40</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>20</PersCode>
+      <Surname>Петрашева</Surname>
+      <Name>Лилия</Name>
+      <MiddleName>Николаевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>41</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>21</PersCode>
+      <Surname>Поляков</Surname>
+      <Name>Юрий</Name>
+      <MiddleName>Никоаевич</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>42</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>22</PersCode>
+      <Surname>Попова</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Анатольевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>45</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>25</PersCode>
+      <Surname>Салтунова</Surname>
+      <Name>Татьяна Васильевна</Name>
+      <MiddleName>17.11.1949</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>47</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>27</PersCode>
+      <Surname>Сидоренко</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Дмитриевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>48</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>28</PersCode>
+      <Surname>Синицына</Surname>
+      <Name>Виктория Васильевна</Name>
+      <MiddleName>21.07.1976</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>49</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>29</PersCode>
+      <Surname>Сушкевич</Surname>
+      <Name>Ирина</Name>
+      <MiddleName>Николаевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>50</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>30</PersCode>
+      <Surname>Ходненко</Surname>
+      <Name>Ольга</Name>
+      <MiddleName>Владимировна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>51</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>31</PersCode>
+      <Surname>Хохлов</Surname>
+      <Name>Алексей</Name>
+      <MiddleName>Владимирович</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>52</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>32</PersCode>
+      <Surname>Голик</Surname>
+      <Name>Людмила</Name>
+      <MiddleName>Александровна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>55</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>10</PersCode>
+      <Surname>Завальнюк</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Владимировна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>57</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>55</PersCode>
+      <Surname>Козлочков</Surname>
+      <Name>Андрей</Name>
+      <MiddleName>Владимирович</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>59</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>61</PersCode>
+      <Surname>Романова</Surname>
+      <Name>Людмила</Name>
+      <MiddleName>Викторовна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>60</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>46</PersCode>
+      <Surname>Лашенко</Surname>
+      <Name>А</Name>
+      <MiddleName>Е</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>62</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>110</PersCode>
+      <Surname>Капошина</Surname>
+      <Name>Лариса</Name>
+      <MiddleName>Григорьевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>65</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>141</PersCode>
+      <Surname>Клочкова</Surname>
+      <Name>Наталья</Name>
+      <MiddleName>Валерьевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>66</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>132</PersCode>
+      <Surname>Ефремян</Surname>
+      <Name>А</Name>
+      <MiddleName>Б</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>67</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>102</PersCode>
+      <Surname>Хроменков</Surname>
+      <Name>И</Name>
+      <MiddleName>М</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>68</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>38</PersCode>
+      <Surname>Шувалова</Surname>
+      <Name>Любовь</Name>
+      <MiddleName>Яковлевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>69</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>56</PersCode>
+      <Surname>Дорофеева</Surname>
+      <Name>Раиса</Name>
+      <MiddleName>Викторовна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>70</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>52</PersCode>
+      <Surname>Шенкоренко</Surname>
+      <Name>Валентина</Name>
+      <MiddleName>Александровна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>71</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>60</PersCode>
+      <Surname>Меликидзе</Surname>
+      <Name>Александр</Name>
+      <MiddleName>Автондилович</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>72</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>49</PersCode>
+      <Surname>Перцухова</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Васильевна</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>104</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>33</PersCode>
+      <Surname>Бунева</Surname>
+      <Name>Зоя</Name>
+      <MiddleName />
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>106</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>Тер</PersCode>
+      <Surname>Иванов</Surname>
+      <Name>Иван</Name>
+      <MiddleName>Иванович</MiddleName>
+      <Sex />
+    </Doctor>
+    <Doctor>
+      <MemberId>109</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>1Т</PersCode>
+      <Surname>Бабкина</Surname>
+      <Name>Алла</Name>
+      <MiddleName>Евгеньевна</MiddleName>
+      <Sex>F</Sex>
+    </Doctor>
+  </Doctors>
+  <Default>
+    <ConfidentialityLevel>0</ConfidentialityLevel>
+    <ConfidentialityRepresentativeLevel>0</ConfidentialityRepresentativeLevel>
+    <ConfidentialityDoctorLevel>0</ConfidentialityDoctorLevel>
+    <IdentityCaseType>0</IdentityCaseType>
+    <DiagnosisStatus>0</DiagnosisStatus>
+    <DiagnosisStage>0</DiagnosisStage>
+    <DiagnosisCharacter>0</DiagnosisCharacter>
+    <VisitPlace>0</VisitPlace>
+    <VisitPurpose>0</VisitPurpose>
+  </Default>
+</SmoSettings>
