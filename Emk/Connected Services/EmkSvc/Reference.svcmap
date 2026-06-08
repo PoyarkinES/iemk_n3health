@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="67b11fc2-e007-438f-af07-caa74da87f9f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://b2b-demo.n3health.ru/emk/EMKService.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="EMKService5.xsd" MetadataType="Schema" ID="1b7380a5-3052-4005-8a08-d9992838dcf3" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd9" />
+    <MetadataFile FileName="EMKService8.xsd" MetadataType="Schema" ID="03ae25bd-9dc2-4129-b72c-79635f384454" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd0" />
+    <MetadataFile FileName="EMKService6.xsd" MetadataType="Schema" ID="abab5263-3975-4e1a-930c-57b55a7c724c" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd6" />
+    <MetadataFile FileName="EMKService2.xsd" MetadataType="Schema" ID="00150c4b-1c97-4808-8c17-5a7e70d909d2" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd4" />
+    <MetadataFile FileName="EmkService.wsdl" MetadataType="Wsdl" ID="87b20d8a-6abe-4e12-986d-e25f2cb556af" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?wsdl" />
+    <MetadataFile FileName="EMKService3.xsd" MetadataType="Schema" ID="08a3b420-31bb-49cd-840c-0e897ef05339" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd3" />
+    <MetadataFile FileName="EMKService1.xsd" MetadataType="Schema" ID="b30d329a-322e-438f-8341-d4dcbe763859" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd10" />
+    <MetadataFile FileName="EMKService10.xsd" MetadataType="Schema" ID="5b05bdab-aae0-4cd0-aac6-cb40f9d864e8" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd8" />
+    <MetadataFile FileName="EMKService4.xsd" MetadataType="Schema" ID="132f772d-754a-49fd-a11d-9a14bcbc4e8f" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd2" />
+    <MetadataFile FileName="EMKService7.xsd" MetadataType="Schema" ID="27f92a88-c019-4943-ad53-641a30abcf54" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd7" />
+    <MetadataFile FileName="EMKService.xsd" MetadataType="Schema" ID="37942bc3-70f9-4953-bc29-618adb7dfa02" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd1" />
+    <MetadataFile FileName="EMKService9.xsd" MetadataType="Schema" ID="60eef617-313c-40e8-a391-c4586a2b8176" SourceId="1" SourceUrl="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd5" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

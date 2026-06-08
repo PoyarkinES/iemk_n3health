@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto.MedRec" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" />
+  <xs:import schemaLocation="http://b2b-demo.n3health.ru/emk/EMKService.svc?xsd=xsd9" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <xs:complexType name="ArrayOfMedRecord">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MedRecord" nillable="true" type="tns:MedRecord" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMedRecord" nillable="true" type="tns:ArrayOfMedRecord" />
+  <xs:complexType name="MedRecord">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="MedRecord" nillable="true" type="tns:MedRecord" />
+  <xs:complexType name="DeathInfo">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="MkbCode" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DeathInfo" nillable="true" type="tns:DeathInfo" />
+  <xs:complexType name="ArrayOfParam">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Param" nillable="true" type="tns:Param" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfParam" nillable="true" type="tns:ArrayOfParam" />
+  <xs:complexType name="Param">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" type="xs:int" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Param" nillable="true" type="tns:Param" />
+  <xs:complexType name="Problem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IdProblemMis" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="DiagnosisMkb" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Performer" nillable="true" type="q1:MedicalStaff" />
+          <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Status" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Problem" nillable="true" type="tns:Problem" />
+  <xs:complexType name="AppointedMedication">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AnatomicTherapeuticChemicalClassification" nillable="true" type="xs:string" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="CourseDose" nillable="true" type="q2:Quantity" />
+          <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="DayDose" nillable="true" type="q3:Quantity" />
+          <xs:element minOccurs="0" name="DaysCount" type="xs:unsignedShort" />
+          <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Doctor" nillable="true" type="q4:MedicalStaff" />
+          <xs:element minOccurs="0" name="IssuedDate" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="MedicineIssueType" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MedicineName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MedicineType" type="xs:unsignedShort" />
+          <xs:element minOccurs="0" name="MedicineUseWay" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" name="Number" nillable="true" type="xs:string" />
+          <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="OneTimeDose" nillable="true" type="q5:Quantity" />
+          <xs:element minOccurs="0" name="IdINN" type="xs:int" />
+          <xs:element minOccurs="0" name="Seria" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Status" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="0" name="CourseStartDate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="CourseEndDate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="FrequencyAdmission" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TradeName" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="CancellationReason" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="CancellationDate" nillable="true" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AppointedMedication" nillable="true" type="tns:AppointedMedication" />
+  <xs:complexType name="TfomsInfo">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Count" type="xs:int" />
+          <xs:element minOccurs="0" name="IdTfomsType" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Tariff" type="xs:decimal" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TfomsInfo" nillable="true" type="tns:TfomsInfo" />
+  <xs:complexType name="Service">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DateEnd" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="DateStart" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="IdServiceType" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Params" nillable="true" type="tns:ArrayOfParam" />
+          <xs:element minOccurs="0" name="PaymentInfo" nillable="true" type="tns:PaymentInfo" />
+          <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Performer" nillable="true" type="q6:Participant" />
+          <xs:element minOccurs="0" name="ServiceName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Status" nillable="true" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Service" nillable="true" type="tns:Service" />
+  <xs:complexType name="PaymentInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="HealthCareUnit" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="IdPaymentType" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="PaymentState" type="xs:unsignedByte" />
+      <xs:element minOccurs="0" name="Quantity" type="xs:int" />
+      <xs:element minOccurs="0" name="Tariff" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PaymentInfo" nillable="true" type="tns:PaymentInfo" />
+  <xs:complexType name="NonDrugTreatment">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Scheme" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Start" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="End" nillable="true" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="NonDrugTreatment" nillable="true" type="tns:NonDrugTreatment" />
+  <xs:complexType name="Procedure">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Date" nillable="true" type="xs:dateTime" />
+          <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Performer" nillable="true" type="q7:MedicalStaff" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Procedure" nillable="true" type="tns:Procedure" />
+  <xs:complexType name="Immunize">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Performer" nillable="true" type="q8:MedicalStaff" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Immunize" nillable="true" type="tns:Immunize" />
+  <xs:complexType name="Vaccination">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Immunize">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Lpu" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Code" type="xs:int" />
+          <xs:element minOccurs="0" name="VacType" nillable="true" type="xs:string" />
+          <xs:element xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Inf" nillable="true" type="q9:ArrayOfint" />
+          <xs:element minOccurs="0" name="IdVaccinationMis" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Status" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Vaccination" nillable="true" type="tns:Vaccination" />
+  <xs:complexType name="Reaction">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Immunize">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Lpu" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ReactionType" type="xs:int" />
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Code" type="xs:int" />
+          <xs:element xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Inf" nillable="true" type="q10:ArrayOfint" />
+          <xs:element minOccurs="0" name="MedicalReactionType" nillable="true" type="xs:int" />
+          <xs:element minOccurs="0" name="MedicalReactionValue" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IdReactionMis" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Status" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Reaction" nillable="true" type="tns:Reaction" />
+  <xs:complexType name="MedicalExemption">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Immunize">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DateStart" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="DateEnd" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="ExemptionType" type="xs:int" />
+          <xs:element xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ExemptionInf" nillable="true" type="q11:ArrayOfint" />
+          <xs:element minOccurs="0" name="ExemptionReason" type="xs:int" />
+          <xs:element minOccurs="0" name="ExemptionDisease" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="IdMedicalExemptionMis" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Status" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MedicalExemption" nillable="true" type="tns:MedicalExemption" />
+  <xs:complexType name="ImmunizationPlan">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Immunize">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ImmunizationType" nillable="true" type="tns:ImmunizationType" />
+          <xs:element xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Inf" nillable="true" type="q12:ArrayOfint" />
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="VacType" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ImmunizationPlan" nillable="true" type="tns:ImmunizationPlan" />
+  <xs:complexType name="ImmunizationType">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:element name="ImmunizationType" nillable="true" type="tns:ImmunizationType" />
+  <xs:complexType name="ReactionType">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ImmunizationType">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ReactionType" nillable="true" type="tns:ReactionType" />
+  <xs:complexType name="VaccinationType">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:ImmunizationType">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="VaccinationType" nillable="true" type="tns:VaccinationType" />
+  <xs:complexType name="ResInstr">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Type" type="xs:int" />
+          <xs:element minOccurs="0" name="Priority" type="xs:int" />
+          <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+          <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/N3.EMK.Dto" minOccurs="0" name="Performer" nillable="true" type="q13:MedicalStaff" />
+          <xs:element minOccurs="0" name="Activities" nillable="true" type="tns:ArrayOfResInstr.Activity" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResInstr" nillable="true" type="tns:ResInstr" />
+  <xs:complexType name="ArrayOfResInstr.Activity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ResInstr.Activity" nillable="true" type="tns:ResInstr.Activity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfResInstr.Activity" nillable="true" type="tns:ArrayOfResInstr.Activity" />
+  <xs:complexType name="ResInstr.Activity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ResInstr.Activity" nillable="true" type="tns:ResInstr.Activity" />
+  <xs:complexType name="Scores">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="Scale" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Scores" nillable="true" type="tns:Scores" />
+  <xs:complexType name="AllergyDrug">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AllergyBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IdINN" type="xs:int" />
+          <xs:element minOccurs="0" name="Id" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AllergyDrug" nillable="true" type="tns:AllergyDrug" />
+  <xs:complexType name="AllergyBase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Type" type="xs:int" />
+          <xs:element minOccurs="0" name="Comment" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Time" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="ReactionCode" type="xs:int" />
+          <xs:element minOccurs="0" name="IdStep" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AllergyBase" nillable="true" type="tns:AllergyBase" />
+  <xs:complexType name="AllergyNonDrug">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:AllergyBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AllergyNonDrug" nillable="true" type="tns:AllergyNonDrug" />
+  <xs:complexType name="SocialAnamnesis">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:MedRecord">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Privileges" nillable="true" type="tns:ArrayOfPrivilege" />
+          <xs:element minOccurs="0" name="Disability" nillable="true" type="tns:Disability" />
+          <xs:element xmlns:q14="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="SocialRiskFactors" nillable="true" type="q14:ArrayOfint" />
+          <xs:element xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="OccupationalHazards" nillable="true" type="q15:ArrayOfint" />
+          <xs:element xmlns:q16="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="BadHabits" nillable="true" type="q16:ArrayOfint" />
+          <xs:element minOccurs="0" name="RegistryArea" type="xs:int" />
+          <xs:element minOccurs="0" name="SocialGroup" nillable="true" type="tns:SocialGroup" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SocialAnamnesis" nillable="true" type="tns:SocialAnamnesis" />
+  <xs:complexType name="ArrayOfPrivilege">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Privilege" nillable="true" type="tns:Privilege" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPrivilege" nillable="true" type="tns:ArrayOfPrivilege" />
+  <xs:complexType name="Privilege">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" type="xs:int" />
+      <xs:element minOccurs="0" name="Start" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="End" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Privilege" nillable="true" type="tns:Privilege" />
+  <xs:complexType name="Disability">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" type="xs:int" />
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Order" nillable="true" type="xs:int" />
+      <xs:element minOccurs="0" name="CausingDisease" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LastMedicalExaminationDate" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Disability" nillable="true" type="tns:Disability" />
+  <xs:complexType name="SocialGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Code" type="xs:int" />
+      <xs:element minOccurs="0" name="Text" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProfessionCode" nillable="true" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SocialGroup" nillable="true" type="tns:SocialGroup" />
+</xs:schema>

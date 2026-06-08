@@ -1,0 +1,2078 @@
+<?xml version="1.0"?>
+<SmoSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Doctors>
+    <Doctor>
+      <MemberId>4</MemberId>
+      <Snils>01077367129</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>3</PersCode>
+      <Surname>ОМС Т Бушуева</Surname>
+      <Name>Тамара</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>5</MemberId>
+      <Snils>14162809750</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>4</PersCode>
+      <Surname>ОМС Т Григорьянц</Surname>
+      <Name>Розанна</Name>
+      <MiddleName>Артуровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>7</MemberId>
+      <Snils>12486118053</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>6</PersCode>
+      <Surname>ОМС Т Корхова</Surname>
+      <Name>Галина</Name>
+      <MiddleName>Викторовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>8</MemberId>
+      <Snils>04282018527</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>7</PersCode>
+      <Surname>ОМС Т Крыль</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Геннадиевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>9</MemberId>
+      <Snils>14381818267</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>8</PersCode>
+      <Surname>ОМС Т Лампасова</Surname>
+      <Name>Наталия</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>11</MemberId>
+      <Snils>13712923550</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>10</PersCode>
+      <Surname>ОМС Т Новикова</Surname>
+      <Name>Екатерина</Name>
+      <MiddleName>Дмитриевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>12</MemberId>
+      <Snils>02180197015</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>11</PersCode>
+      <Surname>ОМС Т Полякова</Surname>
+      <Name>Ольга</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>13</MemberId>
+      <Snils>02036261698</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>12</PersCode>
+      <Surname>ОМС Т Иванова</Surname>
+      <Name>Софья</Name>
+      <MiddleName>Евгеньевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>18</MemberId>
+      <Snils>02036263197</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>17</PersCode>
+      <Surname>ОМС Т Каминская</Surname>
+      <Name>Любовь</Name>
+      <MiddleName>Васильевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>21</MemberId>
+      <Snils>06877390523</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>20</PersCode>
+      <Surname>ОМС Т Маришина</Surname>
+      <Name>Юлия</Name>
+      <MiddleName>Валерьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>22</MemberId>
+      <Snils>02036268409</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>21</PersCode>
+      <Surname>ОМС Т Николаева</Surname>
+      <Name>Марина</Name>
+      <MiddleName>Витальевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>26</MemberId>
+      <Snils>02036268712</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>25</PersCode>
+      <Surname>ОМС Т Михайлова</Surname>
+      <Name>Арина</Name>
+      <MiddleName>Витальевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>27</MemberId>
+      <Snils>14643744271</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>26</PersCode>
+      <Surname>ОМС Х Вахуль</Surname>
+      <Name>Максим</Name>
+      <MiddleName>Николаевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>28</MemberId>
+      <Snils>16258530372</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>27</PersCode>
+      <Surname>ОМС Х Веселова</Surname>
+      <Name>Ксения</Name>
+      <MiddleName>Александровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>34</MemberId>
+      <Snils>14542423542</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>33</PersCode>
+      <Surname>ОМС Х Рыбалко</Surname>
+      <Name>Мария</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>40</MemberId>
+      <Snils>01993970197</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>39</PersCode>
+      <Surname>ОМС Т Дорошенко</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Зиновьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>47</MemberId>
+      <Snils>08216385160</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>46</PersCode>
+      <Surname>ОМС Х Стахович</Surname>
+      <Name>Павел</Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>48</MemberId>
+      <Snils>01077355324</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>47</PersCode>
+      <Surname>ОМС Т Толкачева</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>49</MemberId>
+      <Snils>03469065868</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>48</PersCode>
+      <Surname>ОМС Х Шумченко</Surname>
+      <Name>Марина</Name>
+      <MiddleName>Антоновна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>50</MemberId>
+      <Snils>13618734065</Snils>
+      <Speciality>233</Speciality>
+      <Position>142</Position>
+      <PersCode>49</PersCode>
+      <Surname>ОМС Г Айрапетян</Surname>
+      <Name>Анаида</Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>52</MemberId>
+      <Snils>07440416745</Snils>
+      <Speciality>171</Speciality>
+      <Position>191</Position>
+      <PersCode>51</PersCode>
+      <Surname>ОМС О Алямовский</Surname>
+      <Name>Сергей</Name>
+      <MiddleName>Александрович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>54</MemberId>
+      <Snils>16315313231</Snils>
+      <Speciality>171</Speciality>
+      <Position>191</Position>
+      <PersCode>53</PersCode>
+      <Surname>ОМС О Севостьянова</Surname>
+      <Name>Дарья</Name>
+      <MiddleName>Юрьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>55</MemberId>
+      <Snils>16510656755</Snils>
+      <Speciality>171</Speciality>
+      <Position>191</Position>
+      <PersCode>54</PersCode>
+      <Surname>ОМС О Фролова</Surname>
+      <Name>Надежда</Name>
+      <MiddleName>Эдуардовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>61</MemberId>
+      <Snils>07235991582</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>60</PersCode>
+      <Surname>ОМС Д Ковалева</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Викторовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>63</MemberId>
+      <Snils>07235964781</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>62</PersCode>
+      <Surname>ОМС Д Кулакова</Surname>
+      <Name>Марина</Name>
+      <MiddleName>Анатольевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>64</MemberId>
+      <Snils>17573403482</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>63</PersCode>
+      <Surname>ОМС Д Новосельцева</Surname>
+      <Name>Анастасия</Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>65</MemberId>
+      <Snils>12780680372</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>64</PersCode>
+      <Surname>ОМС Д Соколова</Surname>
+      <Name>Ольга</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>70</MemberId>
+      <Snils>13608592570</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>69</PersCode>
+      <Surname>ОМС Д Котлярова</Surname>
+      <Name>Мария</Name>
+      <MiddleName>Михайловна(Хир)</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>72</MemberId>
+      <Snils>14600356223</Snils>
+      <Speciality>233</Speciality>
+      <Position>142</Position>
+      <PersCode>71</PersCode>
+      <Surname>ОМС Г Гончарова</Surname>
+      <Name>Виктория</Name>
+      <MiddleName>Петровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>73</MemberId>
+      <Snils>15006223503</Snils>
+      <Speciality>233</Speciality>
+      <Position>142</Position>
+      <PersCode>72</PersCode>
+      <Surname>ОМС Г Шевцова</Surname>
+      <Name>Екатерина</Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>76</MemberId>
+      <Snils>12170254206</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>75</PersCode>
+      <Surname>ОМС Д Комарова</Surname>
+      <Name>Юлия</Name>
+      <MiddleName>Викторовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>77</MemberId>
+      <Snils>13460823040</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>76</PersCode>
+      <Surname>ОМС Д Никуленкова</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>79</MemberId>
+      <Snils>01579371771</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>78</PersCode>
+      <Surname>ОМС Ф Гудкова</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>100</MemberId>
+      <Snils>07541187970</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>83</PersCode>
+      <Surname>РО Фомина</Surname>
+      <Name>Ирина</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>101</MemberId>
+      <Snils>05664818997</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>84</PersCode>
+      <Surname>РО Калинина</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>102</MemberId>
+      <Snils>03030571287</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>85</PersCode>
+      <Surname>РО Миниахметов</Surname>
+      <Name>Тимур</Name>
+      <MiddleName>Камильевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>104</MemberId>
+      <Snils>04932161854</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>87</PersCode>
+      <Surname>РО Строгонова</Surname>
+      <Name>Надежда</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>127</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>90</PersCode>
+      <Surname>ОПУ Афанасьева</Surname>
+      <Name>Ирина </Name>
+      <MiddleName>Александровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>128</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>91</PersCode>
+      <Surname>ОПУ Богданова</Surname>
+      <Name>Юлия </Name>
+      <MiddleName>Геннадьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>129</MemberId>
+      <Snils>15421405928</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>92</PersCode>
+      <Surname>ОПУ Гордеева</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>130</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>93</PersCode>
+      <Surname>ОПУ Домбровская</Surname>
+      <Name>Альмира </Name>
+      <MiddleName>Львовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>131</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>94</PersCode>
+      <Surname>ОПУ Кузьмина</Surname>
+      <Name>Светлана </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>132</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>95</PersCode>
+      <Surname>ОПУ Ларина</Surname>
+      <Name>Галина </Name>
+      <MiddleName>Юрьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>133</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>96</PersCode>
+      <Surname>ОПУ Лученкова</Surname>
+      <Name>Людмила </Name>
+      <MiddleName>Михайловна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>134</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>97</PersCode>
+      <Surname>ОПУ Карпов</Surname>
+      <Name>Никита </Name>
+      <MiddleName>Евгеньевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>136</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>99</PersCode>
+      <Surname>ОПУ Байковский</Surname>
+      <Name>Игорь </Name>
+      <MiddleName>Олегович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>138</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>101</PersCode>
+      <Surname>ДОПУ Берензон</Surname>
+      <Name>Софрина </Name>
+      <MiddleName>Григорьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>162</MemberId>
+      <Snils>01170456504</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>113</PersCode>
+      <Surname>ОМП Волкова</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Валериевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>163</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>114</PersCode>
+      <Surname>ОРТ Дидух</Surname>
+      <Name>Ирина </Name>
+      <MiddleName>Юрьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>164</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>115</PersCode>
+      <Surname>ОРТ Егиазарян</Surname>
+      <Name>Арсен </Name>
+      <MiddleName>Суренович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>167</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>118</PersCode>
+      <Surname>ОРТ Рыжова</Surname>
+      <Name>Дарья </Name>
+      <MiddleName>Валерьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>168</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>119</PersCode>
+      <Surname>ОРТ Яковлев</Surname>
+      <Name>Илья </Name>
+      <MiddleName>Владимирович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>170</MemberId>
+      <Snils>07291439273</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>121</PersCode>
+      <Surname>ОРТ Аболимова</Surname>
+      <Name>Надежда</Name>
+      <MiddleName>Валентиновна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>172</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>123</PersCode>
+      <Surname>ОРТ Гордеев</Surname>
+      <Name>Михаил </Name>
+      <MiddleName>Игоревич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>174</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>125</PersCode>
+      <Surname>ОРТ Летин</Surname>
+      <Name>Алексей </Name>
+      <MiddleName>Михайлович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>175</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>126</PersCode>
+      <Surname>ОРТ Омельченко</Surname>
+      <Name>Ангелина </Name>
+      <MiddleName>Андреевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>176</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>127</PersCode>
+      <Surname>ОРТ Сидоркова</Surname>
+      <Name>Маргарита </Name>
+      <MiddleName>Юрьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>177</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>128</PersCode>
+      <Surname>ОРТ Кузнецов</Surname>
+      <Name>Александр </Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>209</MemberId>
+      <Snils>03852816369</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>67</PersCode>
+      <Surname>ОМС Х Веревкин</Surname>
+      <Name>Игорь</Name>
+      <MiddleName>Валерьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>213</MemberId>
+      <Snils>04464308750</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>81</PersCode>
+      <Surname>ОМС Х Гусаков</Surname>
+      <Name>Сергей</Name>
+      <MiddleName>Федорович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>215</MemberId>
+      <Snils>01993968513</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>88</PersCode>
+      <Surname>ОМС Х Забежинская</Surname>
+      <Name>Инна</Name>
+      <MiddleName>Захаровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>216</MemberId>
+      <Snils>01993968513</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>89</PersCode>
+      <Surname>ОМС Т Забежинская</Surname>
+      <Name>Инна</Name>
+      <MiddleName>Захаровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>221</MemberId>
+      <Snils>14284956287</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>105</PersCode>
+      <Surname>ОМС Х Наумов</Surname>
+      <Name>Денис</Name>
+      <MiddleName>Дмитриевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>227</MemberId>
+      <Snils>13497208376</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>111</PersCode>
+      <Surname>ОМС Д Романов</Surname>
+      <Name>Роман</Name>
+      <MiddleName>Викторович(хир)</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>231</MemberId>
+      <Snils>08216385160</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>132</PersCode>
+      <Surname>ОМС Т Стахович</Surname>
+      <Name>Павел</Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>234</MemberId>
+      <Snils>01077355324</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>134</PersCode>
+      <Surname>ОМС Х Толкачева</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>237</MemberId>
+      <Snils>12161827327</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>137</PersCode>
+      <Surname>ОМС Х Шандригон</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Васильевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>239</MemberId>
+      <Snils>03469065868</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>139</PersCode>
+      <Surname>ОМС Т Шумченко</Surname>
+      <Name>Марина</Name>
+      <MiddleName>Антоновна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>246</MemberId>
+      <Snils>14616972786</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>143</PersCode>
+      <Surname>ОМС Т Агафонова</Surname>
+      <Name>Виолетта</Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>252</MemberId>
+      <Snils>05287067573</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>58</PersCode>
+      <Surname>Ув ОМС Д Иванова</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Анатольевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>266</MemberId>
+      <Snils>14837165889</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>135</PersCode>
+      <Surname>ОМС Х Степанян</Surname>
+      <Name>Роберт</Name>
+      <MiddleName>Григорьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>269</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>150</PersCode>
+      <Surname>ОРТ Касабиев</Surname>
+      <Name>Марат </Name>
+      <MiddleName>Святославович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>271</MemberId>
+      <Snils>02036260797</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>152</PersCode>
+      <Surname>Хромова</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>274</MemberId>
+      <Snils>111111111111</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>130</PersCode>
+      <Surname>Детский </Surname>
+      <Name>дежурный</Name>
+      <MiddleName>стоматолог</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>275</MemberId>
+      <Snils>111111111111</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>153</PersCode>
+      <Surname>Каб.49 Осмотр детей</Surname>
+      <Name>для</Name>
+      <MiddleName>справки</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>276</MemberId>
+      <Snils>111111111111</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>154</PersCode>
+      <Surname>Каб.57 Осмотр детей</Surname>
+      <Name>для</Name>
+      <MiddleName>справки</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>278</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>28</PersCode>
+      <Surname>ОПУ Мирошниченко</Surname>
+      <Name>Виктория </Name>
+      <MiddleName>Андреевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>280</MemberId>
+      <Snils>14643744271</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>30</PersCode>
+      <Surname>ОМС Д Вахуль</Surname>
+      <Name>Максим</Name>
+      <MiddleName>Николаевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>281</MemberId>
+      <Snils>16258530372</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>31</PersCode>
+      <Surname>ОМС Д Веселова</Surname>
+      <Name>Ксения</Name>
+      <MiddleName>Александровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>284</MemberId>
+      <Snils>04464308750</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>36</PersCode>
+      <Surname>ОМС Д Гусаков</Surname>
+      <Name>Сергей</Name>
+      <MiddleName>Федорович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>285</MemberId>
+      <Snils>14284956287</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>37</PersCode>
+      <Surname>ОМС Д Наумов</Surname>
+      <Name>Денис</Name>
+      <MiddleName>Дмитриевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>287</MemberId>
+      <Snils>14542423542</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>41</PersCode>
+      <Surname>ОМС Д Рыбалко</Surname>
+      <Name>Мария</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>288</MemberId>
+      <Snils>08216385160</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>55</PersCode>
+      <Surname>ОМС Д Стахович</Surname>
+      <Name>Павел</Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>289</MemberId>
+      <Snils>14837165889</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>66</PersCode>
+      <Surname>ОМС Д Степанян</Surname>
+      <Name>Роберт</Name>
+      <MiddleName>Григорьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>290</MemberId>
+      <Snils>12161827327</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>73</PersCode>
+      <Surname>ОМС Д Шандригон</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Васильевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>291</MemberId>
+      <Snils>13150947435</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>80</PersCode>
+      <Surname>ОМС Д Шулицкая</Surname>
+      <Name>Анастасия</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>292</MemberId>
+      <Snils>14312615115</Snils>
+      <Speciality>233</Speciality>
+      <Position>142</Position>
+      <PersCode>108</PersCode>
+      <Surname>ОМС Г Сабурова</Surname>
+      <Name>Кристина</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>293</MemberId>
+      <Snils>01993970197</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>136</PersCode>
+      <Surname>ОМС Д Дорошенко</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Зновьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>295</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>145</PersCode>
+      <Surname>ОРТ Волкова</Surname>
+      <Name>Татьяна </Name>
+      <MiddleName>Валерьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>297</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>0</PersCode>
+      <Surname>Лаборатория</Surname>
+      <Name>.  </Name>
+      <MiddleName />
+    </Doctor>
+    <Doctor>
+      <MemberId>326</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>159</PersCode>
+      <Surname>Врач</Surname>
+      <Name>не</Name>
+      <MiddleName>определён</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>329</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>129</PersCode>
+      <Surname>ДОПУ Кулакова</Surname>
+      <Name>Марина </Name>
+      <MiddleName>Анатольевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>330</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>131</PersCode>
+      <Surname>ДОПУ Романов</Surname>
+      <Name>Роман </Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>331</MemberId>
+      <Snils>07440416745</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>146</PersCode>
+      <Surname>ДОПУ Алямовский</Surname>
+      <Name>Сергей</Name>
+      <MiddleName>Александрович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>333</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>161</PersCode>
+      <Surname>ДОПУ Севостьянова</Surname>
+      <Name>Дарья </Name>
+      <MiddleName>Юрьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>334</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>162</PersCode>
+      <Surname>ДОПУ Фролова</Surname>
+      <Name>Надежда </Name>
+      <MiddleName>Эдуардовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>335</MemberId>
+      <Snils>01993970197</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>148</PersCode>
+      <Surname>ПУ Дорошенко</Surname>
+      <Name>Елена </Name>
+      <MiddleName>Зиновьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>337</MemberId>
+      <Snils>01993970197</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>155</PersCode>
+      <Surname>АЛЛЕРГ Дорошенко</Surname>
+      <Name>Елена </Name>
+      <MiddleName>Зиновьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>338</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>163</PersCode>
+      <Surname>ПУ Забежинская</Surname>
+      <Name>Инна </Name>
+      <MiddleName>Захаровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>339</MemberId>
+      <Snils>01077355324</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>164</PersCode>
+      <Surname>ПУ Толкачева</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>340</MemberId>
+      <Snils>08216385160</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>165</PersCode>
+      <Surname>ПУ Стахович</Surname>
+      <Name>Павел </Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>342</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>167</PersCode>
+      <Surname>ПО Вахуль</Surname>
+      <Name>Максим </Name>
+      <MiddleName>Николаевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>343</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>168</PersCode>
+      <Surname>ПО Наумов</Surname>
+      <Name>Денис </Name>
+      <MiddleName>Дмитриевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>345</MemberId>
+      <Snils>14542423542</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>170</PersCode>
+      <Surname>ПО Рыбалко</Surname>
+      <Name>Мария</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>346</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>171</PersCode>
+      <Surname>ПО Степанян</Surname>
+      <Name>Роберт </Name>
+      <MiddleName>Григорьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>347</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>172</PersCode>
+      <Surname>ПО Шандригон</Surname>
+      <Name>Елена </Name>
+      <MiddleName>Васильевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>348</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>173</PersCode>
+      <Surname>ПО Шулицкая</Surname>
+      <Name>Анастасия </Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>349</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>174</PersCode>
+      <Surname>ПО Веревкин</Surname>
+      <Name>Игорь </Name>
+      <MiddleName>Валерьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>350</MemberId>
+      <Snils>04282018527</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>175</PersCode>
+      <Surname>ОМС Т1 Крыль</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Геннадиевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>352</MemberId>
+      <Snils>02180197015</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>177</PersCode>
+      <Surname>ОМС Т1 Полякова</Surname>
+      <Name>Ольга</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>356</MemberId>
+      <Snils>03469065868</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>181</PersCode>
+      <Surname>ПУ Шумченко</Surname>
+      <Name>Марина</Name>
+      <MiddleName>Антоновна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>358</MemberId>
+      <Snils>19359308205</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>86</PersCode>
+      <Surname>ОМС Х Гусейнов</Surname>
+      <Name>Радик</Name>
+      <MiddleName>Зиявудинович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>363</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>187</PersCode>
+      <Surname>БЗП Кадырова</Surname>
+      <Name>Нигора </Name>
+      <MiddleName>Шухратовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>450</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>226</PersCode>
+      <Surname>ПО Веселова</Surname>
+      <Name>Ксения </Name>
+      <MiddleName>Александровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>451</MemberId>
+      <Snils>01077355324</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>227</PersCode>
+      <Surname>ОМС Д Толкачева</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>461</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>233</PersCode>
+      <Surname>ПО Гусаков</Surname>
+      <Name>Сергей </Name>
+      <MiddleName>Федорович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>464</MemberId>
+      <Snils>12780680372</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>235</PersCode>
+      <Surname>ОМС Т Чура</Surname>
+      <Name>Ольга</Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>471</MemberId>
+      <Snils>14516837268</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>239</PersCode>
+      <Surname>ОМС Т Ячменёва</Surname>
+      <Name>Мария</Name>
+      <MiddleName>Игоревна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>486</MemberId>
+      <Snils>01579371771</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>242</PersCode>
+      <Surname>АЛЛЕРГ Гудкова</Surname>
+      <Name>Светлана </Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>487</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>243</PersCode>
+      <Surname>ОПУ Кадырова</Surname>
+      <Name>Нигора </Name>
+      <MiddleName>Шухратовна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>488</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>244</PersCode>
+      <Surname>БЗП Чура</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>489</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>245</PersCode>
+      <Surname>БЗП Ячменёва</Surname>
+      <Name>Мария </Name>
+      <MiddleName>Игоревна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>490</MemberId>
+      <Snils>15596556013</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>246</PersCode>
+      <Surname>ОМС Х Бородулин</Surname>
+      <Name>Иван</Name>
+      <MiddleName>Владимирович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>492</MemberId>
+      <Snils>15057095353</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>248</PersCode>
+      <Surname>ОМС Х Дубинич</Surname>
+      <Name>Зоя</Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>495</MemberId>
+      <Snils>15596556013</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>250</PersCode>
+      <Surname>ОМС Д Бородулин</Surname>
+      <Name>Иван </Name>
+      <MiddleName>Владимирович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>497</MemberId>
+      <Snils>15057095353</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>252</PersCode>
+      <Surname>ПО Дубинич</Surname>
+      <Name>Зоя </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>501</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>255</PersCode>
+      <Surname>ОРТ Магомедов</Surname>
+      <Name>Магомед </Name>
+      <MiddleName>Магомедгаджиеви</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>505</MemberId>
+      <Snils>13246881866</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>259</PersCode>
+      <Surname>ОПУ Морозова</Surname>
+      <Name>Жанна </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>511</MemberId>
+      <Snils>17272644983</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>264</PersCode>
+      <Surname>ОРТ Погосян</Surname>
+      <Name>Гор </Name>
+      <MiddleName>Сергеевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>512</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>265</PersCode>
+      <Surname>БЗП Крыль</Surname>
+      <Name>Татьяна</Name>
+      <MiddleName>Геннадиевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>522</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>272</PersCode>
+      <Surname>БЗП Новикова</Surname>
+      <Name>Екатерина </Name>
+      <MiddleName>Дмитриевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>523</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>273</PersCode>
+      <Surname>БЗП Лампасова</Surname>
+      <Name>Наталия </Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>525</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>275</PersCode>
+      <Surname>ОМС Х Петров</Surname>
+      <Name>Антон </Name>
+      <MiddleName>Алексеевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>526</MemberId>
+      <Snils>13898591535</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>276</PersCode>
+      <Surname>ОМС Т Петров</Surname>
+      <Name>Антон </Name>
+      <MiddleName>Алексеевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>528</MemberId>
+      <Snils>15514759575</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>277</PersCode>
+      <Surname>ОМС Х Седько</Surname>
+      <Name>Жанна </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>529</MemberId>
+      <Snils>15514759575</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>278</PersCode>
+      <Surname>ОМС Т Седько</Surname>
+      <Name>Жанна </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>530</MemberId>
+      <Snils>15091919670</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>279</PersCode>
+      <Surname>ДОПУ Гречушкина</Surname>
+      <Name>Алина</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>531</MemberId>
+      <Snils>150919119670</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>280</PersCode>
+      <Surname>ОМС О Гречушкина</Surname>
+      <Name>Алина </Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>533</MemberId>
+      <Snils>12202870708</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>281</PersCode>
+      <Surname>ОМС Т Еременко</Surname>
+      <Name>Татьяна </Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>534</MemberId>
+      <Snils>16163851164</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>282</PersCode>
+      <Surname>ОРТ Александров</Surname>
+      <Name>Денис </Name>
+      <MiddleName>Андреевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>536</MemberId>
+      <Snils>10522412897</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>284</PersCode>
+      <Surname>ОРТ Зуев</Surname>
+      <Name>Александр </Name>
+      <MiddleName>Сергеевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>538</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>285</PersCode>
+      <Surname>ПУ Петров</Surname>
+      <Name>Антон </Name>
+      <MiddleName>Алексеевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>540</MemberId>
+      <Snils>10046349307</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>286</PersCode>
+      <Surname>ОРТ Берман</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>541</MemberId>
+      <Snils>14636128763</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>287</PersCode>
+      <Surname>ОМС Т Иванчук</Surname>
+      <Name>Екатерина </Name>
+      <MiddleName>Игоревна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>544</MemberId>
+      <Snils>17573403482</Snils>
+      <Speciality>171</Speciality>
+      <Position>191</Position>
+      <PersCode>288</PersCode>
+      <Surname>ОМС О Новосельцева</Surname>
+      <Name>Анастасия</Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>546</MemberId>
+      <Snils>07796426829</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>289</PersCode>
+      <Surname>ОМС Т Войлокова</Surname>
+      <Name>Елена </Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>549</MemberId>
+      <Snils>15514759575</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>290</PersCode>
+      <Surname>ПУ Седько</Surname>
+      <Name>Жанна </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>550</MemberId>
+      <Snils>12453966871</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>291</PersCode>
+      <Surname>ОМС Т Тюрина</Surname>
+      <Name>Юлия </Name>
+      <MiddleName>Андреевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>551</MemberId>
+      <Snils>19042551657</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>292</PersCode>
+      <Surname>ОРТ Макаров</Surname>
+      <Name>Олег </Name>
+      <MiddleName>Юрьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>552</MemberId>
+      <Snils>04521370723</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>293</PersCode>
+      <Surname>ОРТ Новикова</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Константиновна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>553</MemberId>
+      <Snils>08216385160</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>294</PersCode>
+      <Surname>ОПУ Стахович</Surname>
+      <Name>Павел </Name>
+      <MiddleName>Викторович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>555</MemberId>
+      <Snils>14540510123</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>296</PersCode>
+      <Surname>ОПУ Вишневская</Surname>
+      <Name>Наталья </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>558</MemberId>
+      <Snils>15629860299</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>299</PersCode>
+      <Surname>ОРТ Богданов</Surname>
+      <Name>Кадим</Name>
+      <MiddleName>Камильевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>559</MemberId>
+      <Snils>15596556013</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>300</PersCode>
+      <Surname>НО Бородулин</Surname>
+      <Name>Иван</Name>
+      <MiddleName>Владимирович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>560</MemberId>
+      <Snils>14643744271</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>301</PersCode>
+      <Surname>НО Вахуль</Surname>
+      <Name>Максим</Name>
+      <MiddleName>Николаевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>561</MemberId>
+      <Snils>03852816369</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>302</PersCode>
+      <Surname>НО Веревкин</Surname>
+      <Name>Игорь</Name>
+      <MiddleName>Валерьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>562</MemberId>
+      <Snils>16258530372</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>303</PersCode>
+      <Surname>НО Веселова</Surname>
+      <Name>Ксения</Name>
+      <MiddleName>Александровна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>563</MemberId>
+      <Snils>04464308750</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>304</PersCode>
+      <Surname>НО Гусаков</Surname>
+      <Name>Сергей</Name>
+      <MiddleName>Федорович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>565</MemberId>
+      <Snils>15057095353</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>306</PersCode>
+      <Surname>НО Дубинич</Surname>
+      <Name>Зоя</Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>567</MemberId>
+      <Snils>14284956287</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>308</PersCode>
+      <Surname>НО Наумов</Surname>
+      <Name>Денис</Name>
+      <MiddleName>Дмитриевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>568</MemberId>
+      <Snils>14542423542</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>309</PersCode>
+      <Surname>НО Рыбалко</Surname>
+      <Name>Мария</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>569</MemberId>
+      <Snils>14837165889</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>310</PersCode>
+      <Surname>НО Степанян</Surname>
+      <Name>Роберт</Name>
+      <MiddleName>Григорьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>570</MemberId>
+      <Snils>12161827327</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>311</PersCode>
+      <Surname>НО Шандригон</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Васильевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>571</MemberId>
+      <Snils>13150947435</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>312</PersCode>
+      <Surname>НО Шулицкая</Surname>
+      <Name>Анастасия</Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>573</MemberId>
+      <Snils>14613480548</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>314</PersCode>
+      <Surname>ОРТ Князев</Surname>
+      <Name>Виктор </Name>
+      <MiddleName>Олегович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>574</MemberId>
+      <Snils>06400629626</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>315</PersCode>
+      <Surname>ОМС Д Ионсон</Surname>
+      <Name>Светлана </Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>575</MemberId>
+      <Snils>15421405928</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>316</PersCode>
+      <Surname>ОМС Т Гордеева</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>576</MemberId>
+      <Snils>15421405928</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>317</PersCode>
+      <Surname>ОМС Д Гордеева</Surname>
+      <Name>Ольга</Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>578</MemberId>
+      <Snils>15421405928</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>318</PersCode>
+      <Surname>ПУ Гордеева</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Сергевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>579</MemberId>
+      <Snils>13255257341</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>319</PersCode>
+      <Surname>ОРТ Тоцкий</Surname>
+      <Name>Юрий </Name>
+      <MiddleName>Сергеевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>583</MemberId>
+      <Snils>06400629626</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>321</PersCode>
+      <Surname>ДОПУ Ионсон</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>584</MemberId>
+      <Snils>06400629626</Snils>
+      <Speciality>171</Speciality>
+      <Position>191</Position>
+      <PersCode>322</PersCode>
+      <Surname>ОМС О Ионсон</Surname>
+      <Name>Светлана</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>586</MemberId>
+      <Snils>15057095353</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>323</PersCode>
+      <Surname>ОМС Д Дубинич</Surname>
+      <Name>Зоя</Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>588</MemberId>
+      <Snils>14458363680</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>324</PersCode>
+      <Surname>ОРТ Ю</Surname>
+      <Name>Мён Бок </Name>
+      <MiddleName />
+    </Doctor>
+    <Doctor>
+      <MemberId>590</MemberId>
+      <Snils>13150947435</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>325</PersCode>
+      <Surname>ОПУ Шулицкая</Surname>
+      <Name>Анастасия </Name>
+      <MiddleName>Олеговна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>591</MemberId>
+      <Snils>15485585507</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>326</PersCode>
+      <Surname>ОПУ Гончарова</Surname>
+      <Name>Юлия </Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>592</MemberId>
+      <Snils>00377274034</Snils>
+      <Speciality>233</Speciality>
+      <Position>142</Position>
+      <PersCode>327</PersCode>
+      <Surname>ОМС Г Ерёменко</Surname>
+      <Name>Оксана </Name>
+      <MiddleName>Леонтьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>593</MemberId>
+      <Snils>16424353554</Snils>
+      <Speciality>177</Speciality>
+      <Position>195</Position>
+      <PersCode>328</PersCode>
+      <Surname>ОМС Х Васильев</Surname>
+      <Name>Максим </Name>
+      <MiddleName>Андреевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>595</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>330</PersCode>
+      <Surname>ОМС Х Соколов</Surname>
+      <Name>Алексей </Name>
+      <MiddleName>Вячеславович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>598</MemberId>
+      <Snils>01703370610</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>331</PersCode>
+      <Surname>ОМС Д Хижняк</Surname>
+      <Name>Елена</Name>
+      <MiddleName>Валерьевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>599</MemberId>
+      <Snils>12342191315</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>332</PersCode>
+      <Surname>ОМС Д Соколов</Surname>
+      <Name>Алексей </Name>
+      <MiddleName>Вячеславович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>600</MemberId>
+      <Snils>15079399698</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>333</PersCode>
+      <Surname>НО Швецов</Surname>
+      <Name>Михаил </Name>
+      <MiddleName>Максимович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>601</MemberId>
+      <Snils>16424353554</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>334</PersCode>
+      <Surname>ОМС Д Васильев</Surname>
+      <Name>Михаил </Name>
+      <MiddleName>Андреевич(хир)</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>603</MemberId>
+      <Snils>15079399698</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>335</PersCode>
+      <Surname>ДОПУ Швецов</Surname>
+      <Name>Михаил </Name>
+      <MiddleName>Максимович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>604</MemberId>
+      <Snils>15079399698</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>336</PersCode>
+      <Surname>ОМС Д Швецов</Surname>
+      <Name>Михаил </Name>
+      <MiddleName>Максимович(хир)</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>605</MemberId>
+      <Snils>14312615115</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>337</PersCode>
+      <Surname>ПУ Сабурова</Surname>
+      <Name>Кристина </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>606</MemberId>
+      <Snils>16691976934</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>338</PersCode>
+      <Surname>РО Иванов</Surname>
+      <Name>Антон</Name>
+      <MiddleName>Валерьевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>608</MemberId>
+      <Snils>13618734065</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>339</PersCode>
+      <Surname>ПУ Айрапетян</Surname>
+      <Name>Анаида </Name>
+      <MiddleName>Сергеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>609</MemberId>
+      <Snils />
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>340</PersCode>
+      <Surname>ПО Соколов</Surname>
+      <Name>Алексей </Name>
+      <MiddleName>Вячеславович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>611</MemberId>
+      <Snils>16424353554</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>341</PersCode>
+      <Surname>ПО Васильев</Surname>
+      <Name>Максим </Name>
+      <MiddleName>Андреевич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>612</MemberId>
+      <Snils>02480727544</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>342</PersCode>
+      <Surname>ОМС Д Ванисова</Surname>
+      <Name>Наталья</Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>613</MemberId>
+      <Snils>03397225966</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>343</PersCode>
+      <Surname>ОМС Т Тимофеева</Surname>
+      <Name>Фирдания </Name>
+      <MiddleName>Минебелиевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>615</MemberId>
+      <Snils>12413649330</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>345</PersCode>
+      <Surname>ОМС Д Щербакова</Surname>
+      <Name>Екатерина </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>616</MemberId>
+      <Snils>15924271882</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>346</PersCode>
+      <Surname>ОПУ Михайлова</Surname>
+      <Name>Анжелика </Name>
+      <MiddleName>Андреевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>617</MemberId>
+      <Snils>09050649459</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>347</PersCode>
+      <Surname>ОМС Т Гусева</Surname>
+      <Name>Ирина </Name>
+      <MiddleName>Владимировна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>618</MemberId>
+      <Snils>01993970904</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>348</PersCode>
+      <Surname>ОМС Ф Антонова</Surname>
+      <Name>Галина </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>619</MemberId>
+      <Snils>02036267205</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>349</PersCode>
+      <Surname>ОМС Ф Модестова</Surname>
+      <Name>Наталия </Name>
+      <MiddleName>Николаевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>621</MemberId>
+      <Snils>16267200150</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>350</PersCode>
+      <Surname>ОПУ Мизин</Surname>
+      <Name>Даниил </Name>
+      <MiddleName>Игоревич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>622</MemberId>
+      <Snils>04947802392</Snils>
+      <Speciality>174</Speciality>
+      <Position>192</Position>
+      <PersCode>351</PersCode>
+      <Surname>ОМС Д Захарова</Surname>
+      <Name>Марина </Name>
+      <MiddleName>Ильинична</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>623</MemberId>
+      <Snils>19929367245</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>352</PersCode>
+      <Surname>ОМС Т Абдураманова</Surname>
+      <Name>Марина </Name>
+      <MiddleName>Ягьяевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>625</MemberId>
+      <Snils>16267200150</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <PersCode>353</PersCode>
+      <Surname>ОМС Т Мизин</Surname>
+      <Name>Даниил</Name>
+      <MiddleName>Игоревич</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>626</MemberId>
+      <Snils>06780835903</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>354</PersCode>
+      <Surname>ОРТ Сорокина</Surname>
+      <Name>Ольга </Name>
+      <MiddleName>Алексеевна</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>627</MemberId>
+      <Snils>15436970485</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>355</PersCode>
+      <Surname>ОРТ Ватаву</Surname>
+      <Name>Иван</Name>
+      <MiddleName>Петрович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>628</MemberId>
+      <Snils>16024326927</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>356</PersCode>
+      <Surname>ОМС Д Баев</Surname>
+      <Name>Дмитрий</Name>
+      <MiddleName>Олегович</MiddleName>
+    </Doctor>
+    <Doctor>
+      <MemberId>629</MemberId>
+      <Snils>14511346426</Snils>
+      <Speciality>0</Speciality>
+      <Position>0</Position>
+      <PersCode>357</PersCode>
+      <Surname>ОМС Т Магомадов</Surname>
+      <Name>Ахмар </Name>
+      <MiddleName>Русланович</MiddleName>
+    </Doctor>
+  </Doctors>
+  <Default>
+    <Doctor>
+      <MemberId>0</MemberId>
+      <Snils>19929367245</Snils>
+      <Speciality>176</Speciality>
+      <Position>194</Position>
+      <Surname>ОМС Т Абдураманова</Surname>
+      <Name>Марина</Name>
+      <MiddleName>Ягьевна</MiddleName>
+    </Doctor>
+    <Comment>Кариес эмали</Comment>
+    <ConfidentialityLevel>1</ConfidentialityLevel>
+    <ConfidentialityRepresentativeLevel>1</ConfidentialityRepresentativeLevel>
+    <ConfidentialityDoctorLevel>1</ConfidentialityDoctorLevel>
+    <IdentityCaseType>1</IdentityCaseType>
+    <DiagnosisStatus>1</DiagnosisStatus>
+    <DiagnosisDiseaseCode>K02.0</DiagnosisDiseaseCode>
+    <DiagnosisComment>Кариес эмали</DiagnosisComment>
+    <DiagnosisStage>3</DiagnosisStage>
+    <DiagnosisCharacter>1</DiagnosisCharacter>
+    <VisitPlace>1</VisitPlace>
+    <VisitPurpose>1</VisitPurpose>
+  </Default>
+</SmoSettings>
