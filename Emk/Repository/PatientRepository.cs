@@ -110,26 +110,30 @@ namespace Emk.Repository
             }
 
             using var reader = Connection.Query(
-                $@"SELECT DISTINCT phf.hf_member_code code, phf.hf_plan_series series, hfp.hf_plan_name name, pa.id, t.patient_id, hfp.hf_plan_code
-                            FROM patients_accounts pa
-                                LEFT JOIN treat t ON t.account_id = pa.id
-                                LEFT JOIN patients_hf phf ON phf.patient_id = t.patient_id
-                                LEFT JOIN third_parties tp
-                                LEFT JOIN account_payment_plan app ON pa.id = app.patient_account_id
-                                LEFT JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
-                                /*LEFT JOIN patients_hf phf ON app.hf_plan_id = phf.hf_plan_id*/
-                            WHERE NULLIF(phf.hf_member_code, '') IS NOT NULL
-                                AND pa.ref_status IS NULL AND pa.send_acc_to_pat_id IS NULL
-                                AND tp.thp_type = 1 AND hfp.scheme_id = {schemeId}
-                                AND pa.id = {accId}
-                            ORDER BY id DESC; ");
+$@"SELECT DISTINCT 
+    phf.hf_plan_series series, 
+    phf.hf_member_code number, 
+    hfp.hf_plan_name name, 
+    phf.patient_id, 
+    hfp.hf_plan_code, 
+    t.account_id,
+    hfp.scheme_id
+FROM treat t
+    JOIN account_payment_plan app ON t.account_id = app.patient_account_id
+    JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
+    JOIN patients_hf phf ON phf.patient_id = t.patient_id AND hfp.hf_plan_id = phf.hf_plan_id
+    JOIN third_parties tp ON tp.third_party_id = hfp.hf_id
+WHERE t.ref_status IS NULL 
+    AND tp.thp_type = 1 AND t.account_id = {accId}
+ORDER BY t.account_id DESC");
             if (!reader.HasRows) return null;
             while (reader.Read())
             {
-                p.DocN = reader["code"].ToString();
+                var policy = GetPolicyDocument(reader.Get<int>("scheme_id"));
+                p.DocN = reader["number"].ToString();
                 p.DocS = reader["series"].ToString();
-                p.DocumentName = docName;
-                p.IdDocumentType = docType;
+                p.DocumentName = policy.Item1;
+                p.IdDocumentType = policy.Item2;
                 p.ProviderName = reader["name"].ToString();
                 p.IdProvider = reader["hf_plan_code"].ToString();
             }
@@ -159,6 +163,18 @@ namespace Emk.Repository
             }
 
             return result;
+        }
+
+        private Tuple<string, byte> GetPolicyDocument(int schemeId)
+        {
+            var policy = schemeId switch
+            {
+                1 => new Tuple<string, byte>("Полис ОМС единого образца", 228),
+                3 => new Tuple<string, byte>("Полис ДМС", 240),
+                _ => new Tuple<string, byte>(String.Empty, 0)
+            };
+
+            return policy;
         }
     }
 }

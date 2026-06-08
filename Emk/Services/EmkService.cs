@@ -189,28 +189,25 @@ namespace Emk.Services
 					_conn ??= new OdbcConnection(conString);
 					if (_conn.State != ConnectionState.Open)
 						_conn.Open();
-
-					var hasPDF = false;
-
-
 					var dir = path;
 					if (!Directory.Exists(dir))
 						dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
 
 					var docs = new DocSelector(patient, treat.TreatDate, dir).GetDocs(treat.AccountId);
-					if (docs != null)
-						medDocuments.AddRange(docs);
+					if (docs != null && docs.Any())
+                        medDocuments.AddRange(docs);
                     else
                     {
                         Log.Info($"Документы не найдены для {treat.AccountId}.");
+                        throw new Exception($"Документы не найдены для {treat.AccountId}.");
                     }
-
 				}
-                catch
+                catch(Exception ex)
                 {
+                    throw new Exception(ex.Message, ex);
                 }
 
-                case1.MedRecords = medDocuments.ToArray();
+				case1.MedRecords = medDocuments.ToArray();
                 case1.Steps[0].MedRecords = medRecords.ToArray();
 
 				// Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.

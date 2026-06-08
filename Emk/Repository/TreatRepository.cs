@@ -190,19 +190,20 @@ namespace Emk.Repository
             return result;
         }
 
-        public string GetDocumentByAccountId(int accountId)
+        public Dictionary<string, string> GetDocumentByAccountId(int accountId)
         {
-            string result = String.Empty;
+            var items = new Dictionary<string, string>();
 
-            using (var r = Connection.Query($"SELECT efiles_name FROM esign_files WHERE account_id = {accountId}"))
+            using var r = Connection.Query(CheckDocumentAccess(accountId));
+            while (r.Read())
             {
-                while (r.Read())
-                {
-                    result = r["efiles_name"].ToString();
-                }
+                items.Add(
+                    r.Get<string>("efiles_name"),
+                    r.Get<string>("uuid")                     
+                );
             }
 
-            return result;
+            return items;
         }
 
         public int? CheckPatientConsentTransPersData(int paientId)
@@ -307,7 +308,7 @@ namespace Emk.Repository
         private string CheckDocumentAccess(int accId)
         {
             return "SELECT ef.account_id, ef.date_approved, ef.date_created, ef.date_sent, ef.efiles_name, ef.efiles_path, " +
-                   "ef.esign_files_id, ef.is_sign_cmn, ef.is_sign_pr, ef.patient_id, ef.practice_id, ef.provider_id " +
+                   "ef.esign_files_id, ef.is_sign_cmn, ef.is_sign_pr, ef.patient_id, ef.practice_id, ef.provider_id, ef.uuid " +
                    $"FROM esign_files ef WHERE account_id =  { accId}";
         }
 

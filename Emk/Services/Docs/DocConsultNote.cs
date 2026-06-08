@@ -15,10 +15,12 @@ namespace Emk.Services.Docs
         private DoctorEmk _doctor;
         private FileData _fd;
         private MedDocument _doc;
+        private readonly string _IdMis;
 
-        public DocConsultNote(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
+        public DocConsultNote(string filePath, int cartNoteId, int accountId, string idMis) : base(filePath, cartNoteId, accountId)
         {
             _doc = new MedDocument();
+            _IdMis = idMis;
             SetPatientAndDoctor();
         }
 
@@ -32,7 +34,7 @@ namespace Emk.Services.Docs
                 _doc.Author = _doctor.ToMedicalStaff();
                 _doc.CreationDate = DateTime.Now.Date;
                 _doc.Header = "Протокол консультации";
-                _doc.IdDocumentMis = $"{_patient.CartNum}-{_doctor.AccountId}";
+                _doc.IdDocumentMis = _IdMis;
                 _doc.IdMedDocumentType = (byte)DocCode;
                 return _doc;
             }
@@ -44,8 +46,7 @@ namespace Emk.Services.Docs
         }
 
         protected override int DocType { get; set; }
-
-
+        
         private MedDocumentDtoDocumentAttachment[] AddAttachments()
         {
             try
@@ -85,8 +86,6 @@ namespace Emk.Services.Docs
                 throw new Exception(e.Message);
             }
         }
-
-
 
         protected override Patient GetPatient()
         {
