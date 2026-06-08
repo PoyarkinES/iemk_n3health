@@ -27,33 +27,27 @@ namespace Emk.Services
             _patientDir = patientDir;
         }
 
-        public IEnumerable<MedRecord> GetDocs(int accountId)
+        public List<MedRecord> GetDocs(int accountId)
         {
             if (!Directory.Exists(_patientDir))
                 return null;
 
             Log.Info($"Получаю файлы из директории - {_patientDir}");
 
-            var docs = new List<MedRecord>();
-            var file = getFileFromDB(accountId);
-            if (!String.IsNullOrEmpty(file.Trim()))
+            var files = GetFileFromDB(accountId);
+            if (!files.Any(a => string.IsNullOrEmpty(a.Value)))
+                return (from item in files where !string.IsNullOrEmpty(item.Key) select GetMedRecord(item, accountId))
+                    .ToList();
+
+            foreach (var file in files.Where(w=> string.IsNullOrEmpty(w.Value)))
             {
-                try
-                {
-                    docs.Add(getMedRecord(file, accountId));
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.ToString());
-                }
+                Log.Error($"Документ {file.Key} не имеет идентификатора uuid. Требуется пересоздать документ");
             }
 
-            return docs.Any() ? docs: null;
-
+            return null;
         }
-
-
-        private IDocBase SelectDocType(FileData fd, int accountId)
+        
+        private IDocBase SelectDocType(FileData fd, int accountId, string idMis = null)
         {
             switch (fd.DocType)
             {
@@ -70,7 +64,7 @@ namespace Emk.Services
                 case InternalDocType.DocControlCardDispensaryObservation:
                     return new DocControlCardDispensaryObservation(fd.FilePath, fd.CartNoteId, accountId);
                 case InternalDocType.DocConsultNote:
-                    return new DocConsultNote(fd.FilePath, fd.CartNoteId, accountId);
+                    return new DocConsultNote(fd.FilePath, fd.CartNoteId, accountId, idMis);
                 default:
                     return null;
             }
@@ -135,14 +129,6 @@ namespace Emk.Services
                     $"Неверный формат DocType. {s} не соответсвует формату InternalDocType.");
         }
 
-        private string checkCardNum(string s)
-        {
-            return int.TryParse(s, out var result)
-                ? s
-                : throw new Exception(
-                    $"Неверный формат CardNum. {s} не соответсвует числовому формату.");
-        }
-
         private int checkDoctorCode(string s)
         {
             return int.TryParse(s, out var result)
@@ -169,19 +155,19 @@ namespace Emk.Services
             }
         }
 
-        private string getFileFromDB(int accountId)
+        private Dictionary<string, string> GetFileFromDB(int accountId)
         {
             return _treatRepository.GetDocumentByAccountId(accountId);
         }
 
-        private MedRecord getMedRecord(string file, int accountId)
+        private MedRecord GetMedRecord(KeyValuePair<string, string> file, int accountId)
         {
-            if (!file.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
-                !file.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
-                !file.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
+            if (!file.Key.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
+                !file.Key.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
+                !file.Key.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
             {
 
-                var fd = ParseFile(file);
+                var fd = ParseFile(file.Key);
 
                 if (fd.FileDate.Date != _fileDate.Date)
                 {
@@ -189,8 +175,8 @@ namespace Emk.Services
                     return null;
                 }
 
-                Log.Info($"Обрабатываю файл: {file}");
-                var srv = SelectDocType(fd, accountId);
+                Log.Info($"Обрабатываю файл: {file.Key}");
+                var srv = SelectDocType(fd, accountId, file.Value);
                 if (srv == null)
                 {
                     Log.Warning("Неизвестный тип файла: " + fd.FilePath);
@@ -200,7 +186,7 @@ namespace Emk.Services
                 return srv.CreateDocument();
             }
 
-            Log.Warning($"Подписанный файл {file} не найден.");
+            Log.Warning($"Подписанный файл {file.Key} не найден.");
             return null;
         }
     }
