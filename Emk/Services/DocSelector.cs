@@ -19,6 +19,7 @@ namespace Emk.Services
         private EmkSettings _settings = Factory.LoadSettings().First();
         private string _patientDir;
         private TreatRepository _treatRepository = Factory.GetTreatRepository;
+        private EmkRepository _rep = Factory.GetEmkRepository;
 
         public DocSelector(Patient patient, DateTime fileDate, string patientDir)
         {
@@ -42,6 +43,8 @@ namespace Emk.Services
             foreach (var file in files.Where(w=> string.IsNullOrEmpty(w.Value)))
             {
                 Log.Error($"Документ {file.Key} не имеет идентификатора uuid. Требуется пересоздать документ");
+                _rep.SaveCase(-1, DateTime.Now, "GetDocs", 0, accountId, null, 'S',
+                    $"Документ {file.Key} не имеет идентификатора uuid. Требуется пересоздать документ");
             }
 
             return null;
