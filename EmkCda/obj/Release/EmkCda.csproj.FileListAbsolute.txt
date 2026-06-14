@@ -15,3 +15,4 @@ D:\WorkTL\iemk_n3health\EmkCda\bin\Release\EmkCda.pdb
 D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.CoreCompileInputs.cache
 D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.dll
 D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.pdb
+D:\WorkTL\iemk_n3health\EmkCda\obj\Release\EmkCda.csproj.AssemblyReference.cache

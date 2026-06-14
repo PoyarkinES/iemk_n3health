@@ -43,3 +43,4 @@ D:\WorkTL\iemk_n3health\Emk\obj\Release\Emk.csproj.CoreCompileInputs.cache
 D:\WorkTL\iemk_n3health\Emk\obj\Release\Emk.csproj.CopyComplete
 D:\WorkTL\iemk_n3health\Emk\obj\Release\Emk.dll
 D:\WorkTL\iemk_n3health\Emk\obj\Release\Emk.pdb
+D:\WorkTL\iemk_n3health\Emk\obj\Release\Emk.csproj.AssemblyReference.cache
