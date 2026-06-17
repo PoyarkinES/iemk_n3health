@@ -98,6 +98,12 @@ namespace Emk.Repository
             ExecuteNonQuery(sql);
         }
 
+        public void SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
+        {
+            var sql = $"INSERT INTO ruegisz_log VALUES({smo}, {upload_time}, {upload_meth}, {patient_id}, {account_id}, {response_text}, {is_success}, {error_text} )";
+            ExecuteNonQuery(sql);
+        }
+
         private DoctorEmk GetDepartmentHead(int memberId, string idLpu = null)
         {
             var param = new List<SqlParameter>
@@ -191,12 +197,6 @@ namespace Emk.Repository
         private string GetPayTypeMap(IDataReader reader)
         {
             return reader.Get<string>("pay_metod");
-        }
-
-        public void SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
-        {
-            var sql = $"INSERT INTO ruegisz_log VALUES({smo}, {upload_time}, {upload_meth}, {patient_id}, {account_id}, {response_text}, {is_success}, {error_text} )";
-            Connection.ExecuteNonQuery(sql);
         }
 
         private int setPaymentType(int? send_acc_to_pat_id, int? thp_type, int? scheme_id)

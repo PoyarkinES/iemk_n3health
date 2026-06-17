@@ -90,45 +90,19 @@ namespace Emk.Repository
 
         }
 
-        public IEnumerable<string> GetCheckDocumentAccess(int accId, out string dir)
+        public List<string> GetCheckDocumentAccess(int accId)
         {
-            var tmpdir = String.Empty;
-
-            string CheckDocumentAccess(IDataReader reader)
-            {
-                try
-                {
-                    var practicId = reader.Get<int>("practice_id");
-                    var filePath =
-                        $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(reader.Get<string>("efiles_path"))}\\{reader.Get<string>("efiles_name")}";
-                    tmpdir =
-                        $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(reader.Get<string>("efiles_path"))}";
-                    return !File.Exists(filePath) ? $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа." : String.Empty;
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.Message);
-                    return e.Message;
-                }
-            }
-
             var param = new List<SqlParameter>
             {
                 new SqlParameter(parameterName: "account_id", value: accId),
             };
 
-            var data = Query(Resources.CheckDocumentEsignByFlag, CheckDocumentAccess, param.ToArray());
-            dir = tmpdir;
+            var data = Query(Resources.CheckDocumentEsignByFlag, (IDataReader reader) => CheckDocumentAccess(reader, accId), param.ToArray());
             return data;
         }
 
-        public string GetDocumentByAccountId(int accountId)
+        public Tuple<string, string> GetDocumentByAccountId(int accountId)
         {
-            string CheckDocumentEsignMap(IDataReader reader)
-            {
-                return reader.Get<string>("efiles_name");
-            }
-
             var param = new List<SqlParameter>
             {
                 new SqlParameter(parameterName: "account_id", value: accountId),
@@ -136,6 +110,30 @@ namespace Emk.Repository
 
             var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).FirstOrDefault();
             return data;
+        }
+
+        private string CheckDocumentAccess(IDataReader reader, int accId)
+        {
+            try
+            {
+                var practicId = reader.Get<int>("practice_id");
+                var filePath =
+                    $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(reader.Get<string>("efiles_path"))}\\{reader.Get<string>("efiles_name")}";
+
+                return !File.Exists(filePath)
+                    ? $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа."
+                    : String.Empty;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return e.Message;
+            }
+        }
+
+        private Tuple<string, string> CheckDocumentEsignMap(IDataReader reader)
+        {
+            return new (reader.Get<string>("efiles_name"), reader.Get<string>("uuid"));
         }
 
         private string GetFileDirectory(int practicId)

@@ -44,7 +44,7 @@ namespace Emk.Repository
             }
         }
 
-        public IEnumerable<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args)
+        public List<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace Emk.Repository
             }
         }
 
-        public IEnumerable<T> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType)
+        public List<T> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType)
         {
             try
             {

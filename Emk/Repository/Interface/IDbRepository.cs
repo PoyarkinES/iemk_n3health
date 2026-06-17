@@ -9,9 +9,9 @@ namespace Emk.Repository.Interface
     {
         T Scalar<T>(string commandText, params object[] args);
 
-        IEnumerable<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args);
+        List<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args);
 
-        IEnumerable<T> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType);
+        List<T> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType);
 
         int ExecuteNonQuery(string commandText, params object[] args);
     }

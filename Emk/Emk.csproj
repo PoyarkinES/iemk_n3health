@@ -101,7 +101,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Repository\DbHelper.cs" />
-    <Compile Include="Repository\DbReaderConvertExtensions.cs" />
     <Compile Include="Repository\DbRepository.cs" />
     <Compile Include="Repository\DoctorRepository.cs" />
     <Compile Include="Repository\EmkRepository.cs" />
