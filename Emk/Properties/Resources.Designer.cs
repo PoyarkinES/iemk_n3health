@@ -19,7 +19,7 @@ namespace Emk.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -299,6 +299,28 @@ namespace Emk.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT DISTINCT 
+        ///    phf.hf_plan_series series, 
+        ///    phf.hf_member_code number, 
+        ///    hfp.hf_plan_name name, 
+        ///    phf.patient_id, 
+        ///    hfp.hf_plan_code, 
+        ///    t.account_id,
+        ///    hfp.scheme_id
+        ///FROM treat t
+        ///    JOIN account_payment_plan app ON t.account_id = app.patient_account_id
+        ///    JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
+        ///    JOIN patients_hf phf ON phf.patient_id = t.patient_id AND hfp.hf_plan_id = phf.hf_plan_id
+        ///    JOIN third_parties tp ON tp.third_party_id = hfp.hf_id
+        ///WHERE t.ref_ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetPolisy {
+            get {
+                return ResourceManager.GetString("GetPolisy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT p.item, n.code, n.name 
         ///FROM procedures p 
         ///    left join n3h_dict n on p.n3h_code = n.code 
@@ -312,6 +334,18 @@ namespace Emk.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select p.snils
+        ///from patients p 
+        ///where p.patient_id = @patientId
+        /// .
+        /// </summary>
+        internal static string GetSnils {
+            get {
+                return ResourceManager.GetString("GetSnils", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select @errorStatus, @errorMessage, @licenseNumber from dba.cd_GetLicenseData(&apos;EGISZ&apos;,1).
         /// </summary>
         internal static string IsLicenseValid {
@@ -319,19 +353,6 @@ namespace Emk.Properties {
                 return ResourceManager.GetString("IsLicenseValid", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WITH p_value AS (
-        ///    SELECT *
-        ///    FROM (
-        ///        SELECT Param_Code, param_value
-        ///        FROM APOC_Parameters_Values apv JOIN APOC_Parameters ap 
-        ///        WHERE Param_Code IN (&apos;ACTIVATE_N3H&apos;,&apos;N3H_EMK_URL&apos;,&apos;N3H_PAT_URL&apos;,&apos;N3H_DATA_ON&apos;,&apos;N3H_REFR_TIME&apos;,&apos;N3H_TR_MODE&apos;,&apos;N3H_BY_DAYS&apos;,&apos;N3H_PER_FROM&apos;,&apos;N3H_PER_TO&apos;)
-        ///    ) up
-        ///    PIVOT 
-        ///    ( MIN([param_value]) 
-        ///     for Param_Code in (&apos;ACTIVATE_N3H&apos;,&apos;N3H_EMK_URL&apos;,&apos;N3H_PAT_URL&apos;,&apos;N3H_DATA_ON&apos;,&apos;N3H_REFR_TIME&apos;,&apos;N3H_TR_MODE&apos;,&apos;N3H_BY_DAYS&apos;,&apos;N3H_PER_FROM&apos;,&apos;N3H_PER_TO&apos; [rest of string was truncated]&quot;;.
-        /// </summary>
         
         /// <summary>
         ///   Looks up a localized string similar to WITH p_value AS (

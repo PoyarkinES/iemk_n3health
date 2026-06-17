@@ -62,6 +62,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Factory.cs" />
+    <Compile Include="Models\DocumentsDto.cs" />
     <Compile Include="Repository\Dto\DoctorEmkDto.cs" />
     <Compile Include="Repository\Interface\IDoctorRepository.cs" />
     <Compile Include="Repository\Interface\ILicenseRepository.cs" />
@@ -320,6 +321,9 @@
   <ItemGroup>
     <None Include="Resources\CheckDocumentEsignByFlag.sql" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\GetPolisy.sql" />
+    <Content Include="Resources\GetSnils.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

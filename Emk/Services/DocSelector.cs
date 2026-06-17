@@ -35,13 +35,13 @@ namespace Emk.Services
             Log.Info($"Получаю файлы из директории - {_patientDir}");
 
             var files = GetFileFromDB(accountId);
-            if (!files.Any(a => string.IsNullOrEmpty(a.Value)))
-                return (from item in files where !string.IsNullOrEmpty(item.Key) select GetMedRecord(item, accountId))
+            if (!files.Any(a => string.IsNullOrEmpty(a.uuid)))
+                return (from item in files where !string.IsNullOrEmpty(item.efiles_name) select GetMedRecord(item, accountId))
                     .ToList();
 
-            foreach (var file in files.Where(w=> string.IsNullOrEmpty(w.Value)))
+            foreach (var file in files.Where(w=> string.IsNullOrEmpty(w.uuid)))
             {
-                Log.Error($"Документ {file.Key} не имеет идентификатора uuid. Требуется пересоздать документ");
+                Log.Error($"Документ {file.efiles_name} не имеет идентификатора uuid. Требуется пересоздать документ");
             }
 
             return null;
@@ -155,19 +155,19 @@ namespace Emk.Services
             }
         }
 
-        private Dictionary<string, string> GetFileFromDB(int accountId)
+        private List<DocumentsDto> GetFileFromDB(int accountId)
         {
             return _treatRepository.GetDocumentByAccountId(accountId);
         }
 
-        private MedRecord GetMedRecord(KeyValuePair<string, string> file, int accountId)
+        private MedRecord GetMedRecord(DocumentsDto file, int accountId)
         {
-            if (!file.Key.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
-                !file.Key.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
-                !file.Key.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
+            if (!file.efiles_name.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
+                !file.efiles_name.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
+                !file.efiles_name.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
             {
 
-                var fd = ParseFile(file.Key);
+                var fd = ParseFile(file.efiles_name);
 
                 if (fd.FileDate.Date != _fileDate.Date)
                 {
@@ -175,8 +175,8 @@ namespace Emk.Services
                     return null;
                 }
 
-                Log.Info($"Обрабатываю файл: {file.Key}");
-                var srv = SelectDocType(fd, accountId, file.Value);
+                Log.Info($"Обрабатываю файл: {file.efiles_name}");
+                var srv = SelectDocType(fd, accountId, file.uuid);
                 if (srv == null)
                 {
                     Log.Warning("Неизвестный тип файла: " + fd.FilePath);
@@ -186,7 +186,7 @@ namespace Emk.Services
                 return srv.CreateDocument();
             }
 
-            Log.Warning($"Подписанный файл {file.Key} не найден.");
+            Log.Warning($"Подписанный файл {file.efiles_name} не найден.");
             return null;
         }
     }

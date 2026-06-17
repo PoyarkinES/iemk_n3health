@@ -149,7 +149,7 @@
     <value>..\Resources\GetDocumentByAccountId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetFileDirectory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GetFileDirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+    <value>..\Resources\GetFileDirectory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;koi8-r</value>
   </data>
   <data name="GetInsuranseCompanies" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GetInsuranseCompanies.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -178,8 +178,14 @@
   <data name="GetPayType" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GetPayType.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="GetPolisy" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetPolisy.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetProcedureDescriptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GetProcedureDescriptions.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GetSnils" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GetSnils.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="IsLicenseValid" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IsLicenseValid.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>

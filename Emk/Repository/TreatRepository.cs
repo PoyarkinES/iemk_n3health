@@ -101,14 +101,14 @@ namespace Emk.Repository
             return data;
         }
 
-        public Tuple<string, string> GetDocumentByAccountId(int accountId)
+        public List<DocumentsDto> GetDocumentByAccountId(int accountId)
         {
             var param = new List<SqlParameter>
             {
                 new SqlParameter(parameterName: "account_id", value: accountId),
             };
 
-            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).FirstOrDefault();
+            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray());
             return data;
         }
 
@@ -131,9 +131,18 @@ namespace Emk.Repository
             }
         }
 
-        private Tuple<string, string> CheckDocumentEsignMap(IDataReader reader)
+        private DocumentsDto CheckDocumentEsignMap(IDataReader reader)
         {
-            return new (reader.Get<string>("efiles_name"), reader.Get<string>("uuid"));
+            return new DocumentsDto { 
+                efiles_name = reader.Get<string>("efiles_name"), 
+                uuid = reader.Get<string>("uuid") 
+            };
+        }
+
+        public int? CheckPatientConsentTransPersData(int patientId)
+        {
+            var result = Scalar<int?>($"SELECT COUNT() FROM patients WHERE patient_id = {patientId} AND consent_transf_pers_data = 'N'");
+            return result;
         }
 
         private string GetFileDirectory(int practicId)
