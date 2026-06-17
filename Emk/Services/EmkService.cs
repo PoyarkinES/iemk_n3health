@@ -46,11 +46,7 @@ namespace Emk.Services
             autoUpd = s.AutoUpdate;
 		}
 
-
         public int UpdateCase(PatientAccount treat, string dir = null) => AddCase(treat, true, dir);
-        
-
-
 
         public int AddCase(PatientAccount treat, bool updateOnly = false, string path = null)
         {

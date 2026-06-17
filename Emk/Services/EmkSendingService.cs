@@ -71,8 +71,7 @@ namespace Emk.Services
             //Проверка наличия или отсутствия документов для случаев лечения
             // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
             // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
-            string dir;
-            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId, out dir).ToList();
+            var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(accountId).ToList();
             if (checkdocaccess.Any(a=> a != String.Empty))
             {
                 foreach (var item in checkdocaccess.Where(w => w != String.Empty))
@@ -146,7 +145,7 @@ namespace Emk.Services
                 // если в EsignFiles нет записей по номеру счета i.AccountId, то эти случаи отправляем без проверки файлов
                 // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
                 string dir;
-                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId, out dir).ToList();
+                var checkdocaccess = Factory.GetTreatRepository.GetCheckDocumentAccess(i.AccountId).ToList();
                 if (checkdocaccess.Any(a => a != String.Empty))
                 {
                     foreach (var item in checkdocaccess.Where(w => w != String.Empty))
@@ -176,7 +175,7 @@ namespace Emk.Services
 
                 var result = pix.AddPatient(i) ? 0 : -1;
                 if (result == 0)
-                    result = emk.AddCase(i, false, dir);
+                    result = emk.AddCase(i, false);
                 else
                     Log.Warning($"Случай:{i.AccountId} будет пропущен.");
                 if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
