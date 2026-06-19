@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
 using Emk.Repository;
@@ -15,38 +16,28 @@ namespace Emk.Services
     public class DocSelector
     {
         private DateTime _fileDate;
-        private Patient _patient;
-        private EmkSettings _settings = Factory.LoadSettings().First();
-        private string _patientDir;
+        private PatientAccount _pa;
         private TreatRepository _treatRepository = Factory.GetTreatRepository;
 
-        public DocSelector(Patient patient, DateTime fileDate, string patientDir)
+        public DocSelector(PatientAccount pa)
         {
-            _fileDate = fileDate;
-            _patient = patient;
-            _patientDir = patientDir;
+            _fileDate = pa.TreatDate;
+            _pa = pa;
         }
 
-        public List<MedRecord> GetDocs(int accountId)
+        public async Task<List<MedRecord>> GetDocs(int accountId)
         {
-            if (!Directory.Exists(_patientDir))
-                return null;
+            Log.Info($"Получаю файлы");
 
-            Log.Info($"Получаю файлы из директории - {_patientDir}");
-
-            var files = GetFileFromDB(accountId);
-            if (!files.Any(a => string.IsNullOrEmpty(a.uuid)))
-                return (from item in files where !string.IsNullOrEmpty(item.efiles_name) select GetMedRecord(item, accountId))
-                    .ToList();
-
+            var files = await GetFileFromDB(accountId);
             foreach (var file in files.Where(w=> string.IsNullOrEmpty(w.uuid)))
             {
                 Log.Error($"Документ {file.efiles_name} не имеет идентификатора uuid. Требуется пересоздать документ");
             }
 
-            return null;
+            return [.. files.Where(w => !string.IsNullOrEmpty(w.uuid) && !string.IsNullOrEmpty(w.efiles_name)).Select(s => GetMedRecord(s, accountId).ConfigureAwait(false).GetAwaiter().GetResult())];
         }
-        
+
         private IDocBase SelectDocType(FileData fd, int accountId, string idMis = null)
         {
             switch (fd.DocType)
@@ -71,12 +62,13 @@ namespace Emk.Services
 
         }
 
-        private FileData ParseFile(string filePath)
+        private async Task<FileData> ParseFile(string filePath)
         {
             try
             {
+                var filedir = await _treatRepository.GetFileDirectoryAsync(_pa.PracticeId);
                 FileData fd = new FileData();
-                fd.FilePath = _patientDir + "\\" + filePath;
+                fd.FilePath = filedir + "\\" + filePath;
                 if (!fd.FileExists)
                     throw new FileNotFoundException("Файл не найден", filePath);
 
@@ -155,19 +147,19 @@ namespace Emk.Services
             }
         }
 
-        private List<DocumentsDto> GetFileFromDB(int accountId)
+        private async Task<List<DocumentsDto>> GetFileFromDB(int accountId)
         {
-            return _treatRepository.GetDocumentByAccountId(accountId);
+            return await _treatRepository.GetDocumentByAccountIdAsync(accountId);
         }
 
-        private MedRecord GetMedRecord(DocumentsDto file, int accountId)
+        private async Task<MedRecord> GetMedRecord(DocumentsDto file, int accountId)
         {
             if (!file.efiles_name.EndsWith("sgn", StringComparison.InvariantCultureIgnoreCase) &&
                 !file.efiles_name.EndsWith("db", StringComparison.InvariantCultureIgnoreCase) &&
                 !file.efiles_name.EndsWith("pdf", StringComparison.InvariantCultureIgnoreCase))
             {
 
-                var fd = ParseFile(file.efiles_name);
+                var fd = await ParseFile(file.efiles_name);
 
                 if (fd.FileDate.Date != _fileDate.Date)
                 {

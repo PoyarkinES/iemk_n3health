@@ -4,30 +4,25 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Emk.Models;
 using Emk.Properties;
 
 namespace Emk.Repository
 {
-    public class SettingsRepository : DbRepository
+    public class SettingsRepository(string connectionString) : DbRepository(connectionString)
     {
-
-        public SettingsRepository(string connectionString) : base(connectionString)
+        public async Task<IEnumerable<EmkSettings>> LoadSettings()
         {
+            return await Query(Resources.Sql_Parameters, EmkSettingsMap);
         }
 
-        public IEnumerable<EmkSettings> LoadSettings()
-        {
-            var data = Query(Resources.Sql_Parameters, EmkSettingsMap);
-            return data;
-        }
-
-        private IEnumerable<EmkSettings> GenerateSettings(IEnumerable<EmkSettings> list)
+        private async Task<IEnumerable<EmkSettings>> GenerateSettings(IEnumerable<EmkSettings> list)
         {
             var result = new List<EmkSettings>();
             foreach (var item in list)
             {
-                item.PatientDirectory = GetPatientsPath(item.PracticeId);
+                item.PatientDirectory = await GetPatientsPath(item.PracticeId);
                 result.Add(item);
             }
 
@@ -53,19 +48,14 @@ namespace Emk.Repository
             };
         }
 
-        private string GetPatientsPath(int practicId)
+        private async Task<string> GetPatientsPath(int practicId)
         {
-            string CheckDocumentEsignMap(IDataReader reader)
-            {
-                return reader.Get<string>("path_ext_docs");
-            }
-
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "practicId", value: practicId),
+                new(parameterName: "practicId", value: practicId),
             };
 
-            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).First();
+            var data = (await Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, [.. param])).First();
             return string.IsNullOrEmpty(data) ? null : data;
         }
 
@@ -74,6 +64,11 @@ namespace Emk.Repository
             return TimeSpan.TryParse(value.Length > 7 ? value.Substring(0, 7) : value, out var n3HRefrTime)
                 ? n3HRefrTime
                 : TimeSpan.Zero;
+        }
+
+        private string CheckDocumentEsignMap(IDataReader reader)
+        {
+            return reader.Get<string>("path_ext_docs");
         }
 
         private EmkSettings FillSettings(EmkSettings e, DbSettings s)

@@ -1,1 +1,1 @@
-SELECT efiles_name FROM esign_files WHERE account_id = @account_id
+SELECT efiles_name, uuid FROM esign_files WHERE account_id = @account_id

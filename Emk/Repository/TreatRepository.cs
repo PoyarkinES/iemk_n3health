@@ -1,128 +1,121 @@
 ﻿using Emk.Models;
+using Emk.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using Emk.Properties;
-using Emk.Repository;
-using Newtonsoft.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Emk.Repository
 {
-    public class TreatRepository : DbRepository
+    public class TreatRepository(string connectionString) : DbRepository(connectionString)
     {
-        public TreatRepository(string connectionString) : base(connectionString)
-        {
-        }
-
-        public IEnumerable<PatientTreat> GetPatientsTreats(DateTime sinceDate, DateTime toDate)
+        public async Task<IEnumerable<PatientTreat>> GetPatientsTreatsAsync(DateTime sinceDate, DateTime toDate)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "since", value: sinceDate),
-                new SqlParameter(parameterName: "to", value: toDate)
+                new(parameterName: "since", value: sinceDate),
+                new(parameterName: "to", value: toDate)
             };
-            var data = Query(Resources.GetPatientsTreatsByPeriod, PatientTreatMap, param.ToArray());
+            var data = await Query(Resources.GetPatientsTreatsByPeriod, patientTreatMap, [.. param]).ConfigureAwait(false);
             return data;
         }
 
-        public PatientAccount GetPatientAccountById(int accountId)
+        public async Task<PatientAccount> GetPatientAccountByIdAsync(int accountId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "account_id", value: accountId),
+                new(parameterName: "account_id", value: accountId),
             };
-            var data = Query(Resources.GetPatientAccountById, PatientAccountMap, param.ToArray()).FirstOrDefault();
-            return data;
+            var data = await Query(Resources.GetPatientAccountById, PatientAccountMap, [.. param]).ConfigureAwait(false);
+            return data.FirstOrDefault();
         }
 
-
-        public IEnumerable<PatientAccount> GetPatientAccounts(DateTime sinceDate, DateTime toDate)
+        public async Task<List<PatientAccount>> GetPatientAccountsAsync(DateTime sinceDate, DateTime toDate)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "since", value: sinceDate),
+                new(parameterName: "since", value: sinceDate),
             };
 
             if (toDate == DateTime.MinValue)
                 param.Add(new SqlParameter(parameterName: "to", value: toDate));
 
-            var data = Query(
+            var data = await Query(
                 toDate == DateTime.MinValue ? Resources.GetPatientAccountsByDate : Resources.GetPatientAccountsByPeriod,
-                PatientAccountMap, param.ToArray());
+                PatientAccountMap, [.. param]).ConfigureAwait(false);
             return data;
         }
 
-        public IEnumerable<string> GetCheckPracticId(int paccount)
+        public async Task<IEnumerable<string>> GetCheckPracticIdAsync(int paccount)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "account_id", value: paccount),
+                new(parameterName: "account_id", value: paccount),
             };
 
-            var data = Query(Resources.GetCheckPracticId, GetCheckPracticIdMap, param.ToArray());
+            var data = await Query(Resources.GetCheckPracticId, GetCheckPracticIdMap, [.. param]).ConfigureAwait(false);
             return data;
         }
 
-        public IEnumerable<string> GetCheckDocumentEsign(int paccount)
-        {
-            string CheckDocumentEsignMap(IDataReader reader)
-            {
-                var acc_cnt = reader.Get<int>("acc_cnt");
-
-                if (acc_cnt == 1)
-                    return $"Электронный документ, прикрепленный к случаю '{paccount}', был передан ранее, случай не отправлен.";
-
-                return String.Empty;
-            }
-
-            var param = new List<SqlParameter>
-            {
-                new SqlParameter(parameterName: "account_id", value: paccount),
-            };
-
-            var data = Query(Resources.CheckDocumentEsignByFlag, CheckDocumentEsignMap, param.ToArray()).ToList();
-            data.AddRange(Query(Resources.CheckDocumentEsignByDate, CheckDocumentEsignMap, param.ToArray()));
-            return data;
-
-        }
-
-        public List<string> GetCheckDocumentAccess(int accId)
+        public async Task<IEnumerable<string>> GetCheckDocumentEsignAsync(int paccount)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "account_id", value: accId),
+                new(parameterName: "account_id", value: paccount),
             };
 
-            var data = Query(Resources.CheckDocumentEsignByFlag, (IDataReader reader) => CheckDocumentAccess(reader, accId), param.ToArray());
+            var data = await Query(Resources.CheckDocumentEsignByFlag, (IDataReader reader) => checkDocumentEsignMap(reader, paccount), [.. param]).ConfigureAwait(false);
+            data.AddRange(await Query(Resources.CheckDocumentEsignByDate, (IDataReader reader) => checkDocumentEsignMap(reader, paccount), [.. param]).ConfigureAwait(false));
             return data;
         }
 
-        public List<DocumentsDto> GetDocumentByAccountId(int accountId)
+        public async Task<List<string>> CheckDocumentAccessAsync(int accId)
+        {
+            var param = new List<SqlParameter>
+            {
+                new(parameterName: "account_id", value: accId),
+            };
+
+            var data = await Query(Resources.CheckDocumentAccess, (IDataReader reader) => checkDocumentAccessAsync(reader, accId).GetAwaiter().GetResult(), [.. param]);
+            return data;
+        }
+
+        public async Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId)
         {
             var param = new List<SqlParameter>
             {
                 new SqlParameter(parameterName: "account_id", value: accountId),
             };
 
-            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray());
+            var data = await Query(Resources.CheckDocumentAccess, getDocumentByAccountIdMap, param.ToArray());
             return data;
         }
 
-        private string CheckDocumentAccess(IDataReader reader, int accId)
+        public async Task<int> CheckPatientConsentTransPersDataAsync(int patientId)
+        {
+            var result = await Scalar<int>($"SELECT COUNT() FROM patients WHERE patient_id = {patientId} AND consent_transf_pers_data = 'N'");
+            return result;
+        }
+
+        public async Task<string> GetFileDirectoryAsync(int practicId)
+        {
+            return await Scalar<string>($"select dba.sf_get_param_value('PATH_EXT_DOCS',{practicId})");
+        }
+
+        private async Task<string> checkDocumentAccessAsync(IDataReader reader, int accId)
         {
             try
             {
                 var practicId = reader.Get<int>("practice_id");
-                var filePath =
-                    $"{checkCorrectFileName(GetFileDirectory(practicId))}\\{checkCorrectFileName(reader.Get<string>("efiles_path"))}\\{reader.Get<string>("efiles_name")}";
+                var filePath = await getFullFilePathAsync(practicId, reader.Get<string>("efiles_path"), reader.Get<string>("efiles_name"));
 
                 return !File.Exists(filePath)
                     ? $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа."
-                    : String.Empty;
+                    : string.Empty;
             }
             catch (Exception e)
             {
@@ -131,34 +124,30 @@ namespace Emk.Repository
             }
         }
 
-        private DocumentsDto CheckDocumentEsignMap(IDataReader reader)
+        private string checkDocumentEsignMap(IDataReader reader, int paccount)
+        {
+            return reader.Get<int>("acc_cnt") == 1 
+                ? $"Электронный документ, прикрепленный к случаю '{paccount}', был передан ранее, случай не отправлен."
+                : string.Empty;
+        }
+
+        private DocumentsDto getDocumentByAccountIdMap(IDataReader reader)
         {
             return new DocumentsDto { 
                 efiles_name = reader.Get<string>("efiles_name"), 
-                uuid = reader.Get<string>("uuid") 
+                uuid = reader.Get<string>("uuid"),
+                account_id = reader.Get<int>("account_id"),
+                date_approved = reader.Get<DateTime>("date_approved"),
+                date_created = reader.Get<DateTime>("date_created"),
+                date_sent = reader.Get<DateTime>("date_sent"),
+                efiles_path = reader.Get<string>("efiles_path"),
+                esign_files_id = reader.Get<int>("esign_files_id"),
+                is_sign_cmn = reader.Get<int>("is_sign_cmn"),
+                is_sign_pr = reader.Get<int>("is_sign_pr"),
+                patient_id = reader.Get<int>("patient_id"),
+                practice_id = reader.Get<short>("practice_id"),
+                provider_id = reader.Get<int>("provider_id")
             };
-        }
-
-        public int? CheckPatientConsentTransPersData(int patientId)
-        {
-            var result = Scalar<int?>($"SELECT COUNT() FROM patients WHERE patient_id = {patientId} AND consent_transf_pers_data = 'N'");
-            return result;
-        }
-
-        private string GetFileDirectory(int practicId)
-        {
-            string CheckDocumentEsignMap(IDataReader reader)
-            {
-                return reader.Get<string>("path_ext_docs");
-            }
-
-            var param = new List<SqlParameter>
-            {
-                new SqlParameter(parameterName: "practicId", value: practicId),
-            };
-
-            var data = Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, param.ToArray()).First();
-            return string.IsNullOrEmpty(data) ? null : data;
         }
 
         private string checkCorrectFileName(string filename)
@@ -166,7 +155,12 @@ namespace Emk.Repository
             return filename[filename.Length - 1] == '\\' ? filename.Substring(0, filename.Length - 1) : filename;
         }
 
-        private PatientTreat PatientTreatMap(IDataReader reader)
+        private async Task<string> getFullFilePathAsync(int practicId, string filepath, string filename)
+        {
+            return $"{checkCorrectFileName(await GetFileDirectoryAsync(practicId))}\\{checkCorrectFileName(filepath)}\\{filename}";
+        }
+
+        private PatientTreat patientTreatMap(IDataReader reader)
         {
             return new PatientTreat()
             {

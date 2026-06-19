@@ -1,3 +1,7 @@
-SELECT COUNT(esf.account_id) AS acc_cnt 
-FROM esign_files esf
-WHERE esf.account_id = @paccount AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0)
+SELECT pa.id, pa.send_acc_to_pat_id ,tp.thp_type , hfp.scheme_id 
+FROM patients_accounts pa 
+    LEFT JOIN third_parties tp 
+    LEFT JOIN account_payment_plan app ON pa.id = app.patient_account_id 
+    LEFT JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
+WHERE pa.ref_status IS NULL AND pa.id = @accountId 
+ORDER BY id DESC

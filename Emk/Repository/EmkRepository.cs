@@ -7,111 +7,92 @@ using System.Globalization;
 using System.Linq;
 using Emk.Properties;
 using Emk.Services;
+using System.Threading.Tasks;
 
 namespace Emk.Repository
 {
-    public class EmkRepository : DbRepository
+    public class EmkRepository(string connectionString) : DbRepository(connectionString)
     {
-        public EmkRepository(string connectionString) : base(connectionString)
-        {
-        }
-
-        public DoctorEmk GetDoctorByMemberId(int memberId)
+        public async Task<DoctorEmk> GetDoctorByMemberId(int memberId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "member_id", value: memberId),
+                new(parameterName: "member_id", value: memberId),
             };
-            var data = Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, param.ToArray()).First();
-            data.DepartmentHead = GetDepartmentHead(data.MemberId);
-            return data;
+            return (await Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, [.. param])).First();
         }
 
-
-        public virtual DoctorEmk GetDoctorOfPatientTreat(int accountId)
+        public async virtual Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "accountId", value: accountId),
+                new(parameterName: "accountId", value: accountId),
             };
-            var data = Query(Resources.GetDoctorOfPatientTreat, GetDoctorOfPatientTreatMap, param.ToArray()).First();
-            data.DepartmentHead = GetDepartmentHead(data.MemberId);
-            return data;
+            return (await Query(Resources.GetDoctorOfPatientTreat, GetDoctorOfPatientTreatMap, [.. param])).First();
         }
 
-        public CartNote GetCartNote(int noteId)
+        public async Task<CartNote> GetCartNote(int noteId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "noteId", value: noteId),
+                new(parameterName: "noteId", value: noteId),
             };
-            var data = Query(Resources.GetCartNote, GetCartNoteMap, param.ToArray()).First();
-            return data;
+            return (await Query(Resources.GetCartNote, GetCartNoteMap, [.. param])).First();
         }
 
-        public DiagnosisEmk GetPatientDiagnosis(int patientId, DateTime treatDate)
+        public async Task<DiagnosisEmk> GetPatientDiagnosis(int patientId, DateTime treatDate)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "patient_id", value: patientId),
-                new SqlParameter(parameterName: "treat_date", value: treatDate)
+                new(parameterName: "patient_id", value: patientId),
+                new(parameterName: "treat_date", value: treatDate)
             };
-            var data = Query(Resources.GetPatientDiagnosis, GetPatientDiagnosisMap, param.ToArray()).First();
-            return data;
+            return (await Query(Resources.GetPatientDiagnosis, GetPatientDiagnosisMap, [.. param])).First();
         }
 
-        public IEnumerable<ProcedureDescriptionEmk> GetProcedureDescriptions(int patientId, DateTime procedureDate,
+        public async Task<IEnumerable<ProcedureDescriptionEmk>> GetProcedureDescriptions(int patientId, DateTime procedureDate,
             int? accountId = null)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "patientId", value: patientId),
-                new SqlParameter(parameterName: "accountId", value: accountId),
-                new SqlParameter(parameterName: "procedureDate", value: procedureDate)
+                new(parameterName: "patientId", value: patientId),
+                new(parameterName: "accountId", value: accountId),
+                new(parameterName: "procedureDate", value: procedureDate)
             };
-            var data = Query(Resources.GetProcedureDescriptions, GetProcedureDescriptionsMap, param.ToArray());
-            return data;
+            return await Query(Resources.GetProcedureDescriptions, GetProcedureDescriptionsMap, [.. param]);
         }
 
-        public PayType GetPayType(int accountId)
+        public async Task<PayType> GetPayType(int accountId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "accountId", value: accountId)
+                new(parameterName: "accountId", value: accountId)
             };
-            var data = Query(Resources.GetPayType, GetPayTypeMap, param.ToArray()).First();
+            var data = (await Query(Resources.GetPayType, GetPayTypeMap, [.. param])).First();
 
-            return data switch
-            {
-                "бюджет" => PayType.Budget,
-                "омс" => PayType.OMS,
-                "дмс" => PayType.DMS,
-                "собственные средства" => PayType.Own,
-                _ => PayType.Unknown
-            };
+            return (await Query(Resources.GetPayType, GetPayTypeMap, [.. param])).First();
         }
 
-        public void UpdateEsignFiles(PatientAccount pa)
+        public async Task UpdateEsignFiles(PatientAccount pa)
         {
             var sql =
                 $"Update esign_files set date_sent = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' where account_id = {pa.AccountId}";
-            ExecuteNonQuery(sql);
+            await ExecuteNonQuery(sql);
         }
 
-        public void SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
+        public async Task SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
         {
             var sql = $"INSERT INTO ruegisz_log VALUES({smo}, {upload_time}, {upload_meth}, {patient_id}, {account_id}, {response_text}, {is_success}, {error_text} )";
-            ExecuteNonQuery(sql);
+            await ExecuteNonQuery(sql);
         }
 
-        private DoctorEmk GetDepartmentHead(int memberId, string idLpu = null)
+        private async Task<DoctorEmk> GetDepartmentHead(int memberId, string idLpu = null)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "member_id", value: memberId),
+                new(parameterName: "member_id", value: memberId),
             };
-            var data = Query(Resources.GetDepartmentHead, GetDepartmentHeadMap, param.ToArray()).First();
-            if (idLpu != null) data.IdLpu = idLpu;
+            var data = (await Query(Resources.GetDepartmentHead, (IDataReader reader) => GetDepartmentHeadMap(reader, idLpu), [.. param])).First();
             return data;
         }
 
@@ -126,7 +107,8 @@ namespace Emk.Repository
                 MemberId = reader.Get<int>("member_id"),
                 Position = reader.Get<int>("Code"),
                 Snils = reader.Get<string>("snils"),
-                SexStr = reader.Get<string>("provider_no_1_id")
+                SexStr = reader.Get<string>("provider_no_1_id"),
+                DepartmentHead = GetDepartmentHead(reader.Get<int>("member_id")).GetAwaiter().GetResult(),
             };
         }
 
@@ -146,11 +128,10 @@ namespace Emk.Repository
             };
         }
 
-        private DoctorEmk GetDepartmentHeadMap(IDataReader reader)
+        private DoctorEmk GetDepartmentHeadMap(IDataReader reader, string idLpu = null)
         {
             return new DoctorEmk
             {
-                //doc.MemberId = (int)r[0];
                 MemberId = reader.Get<int>("member_id"),
                 Surname = reader.Get<string>("surname"),
                 Name = reader.Get<string>("firstname"),
@@ -158,7 +139,8 @@ namespace Emk.Repository
                 BirthDay = reader.Get<DateTime>("birthdate"),
                 Position = reader.Get<int>("Code"),
                 Snils = reader.Get<string>("snils"),
-                SexStr = reader.Get<string>("provider_no_1_id")
+                SexStr = reader.Get<string>("provider_no_1_id"),
+                IdLpu = idLpu
             };
 
         }
@@ -194,9 +176,13 @@ namespace Emk.Repository
             };
         }
 
-        private string GetPayTypeMap(IDataReader reader)
+        private PayType GetPayTypeMap(IDataReader reader)
         {
-            return reader.Get<string>("pay_metod");
+            return (PayType)setPaymentType(
+                reader.Get<int?>("send_acc_to_pat_id"), 
+                reader.Get<int?>("thp_type"),
+                reader.Get<int?>("scheme_id")
+            );
         }
 
         private int setPaymentType(int? send_acc_to_pat_id, int? thp_type, int? scheme_id)

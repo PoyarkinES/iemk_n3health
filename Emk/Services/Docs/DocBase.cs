@@ -54,7 +54,7 @@ namespace Emk.Services.Docs
             if (CartNote == null)
                 throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
 
-            return EmkRep.GetDoctorOfPatientTreat(AccountId);
+            return EmkRep.GetDoctorOfPatientTreat(AccountId).GetAwaiter().GetResult();
         }
 
         protected virtual Patient GetPatient()
@@ -62,7 +62,7 @@ namespace Emk.Services.Docs
             if (CartNote == null)
                 throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить пациента.");
 
-            return PatRep.GetPatient(CartNote.PatientId);
+            return PatRep.GetPatient(CartNote.PatientId).GetAwaiter().GetResult();
         }
 
         protected virtual FileData ParseFile(string filePath)
@@ -103,7 +103,7 @@ namespace Emk.Services.Docs
 
         private void LoadCartNote()
         {
-            CartNote = EmkRep.GetCartNote(CartNoteId);
+            CartNote = EmkRep.GetCartNote(CartNoteId).GetAwaiter().GetResult();
         }
 
         private DateTime checkDate(string s)
@@ -128,14 +128,6 @@ namespace Emk.Services.Docs
                 ? result
                 : throw new Exception(
                     $"Неверный формат DocType. {s} не соответсвует формату InternalDocType.");
-        }
-
-        private string checkCardNum(string s)
-        {
-            return int.TryParse(s, out var result)
-                ? s
-                : throw new Exception(
-                    $"Неверный формат CardNum. {s} не соответсвует числовому формату.");
         }
 
         private int checkDoctorCode(string s)

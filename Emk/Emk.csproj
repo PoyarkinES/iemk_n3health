@@ -322,6 +322,7 @@
     <None Include="Resources\CheckDocumentEsignByFlag.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\CheckDocumentAccess.sql" />
     <Content Include="Resources\GetPolisy.sql" />
     <Content Include="Resources\GetSnils.sql" />
   </ItemGroup>

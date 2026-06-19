@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace Emk.Repository.Interface
 {
     public interface IDbRepository
     {
-        T Scalar<T>(string commandText, params object[] args);
+        Task<T> Scalar<T>(string commandText, params SqlParameter[] args);
 
-        List<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args);
+        Task<List<T>> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args);
 
-        List<T> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType);
+        Task<List<T>> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType);
 
-        int ExecuteNonQuery(string commandText, params object[] args);
+        Task<int> ExecuteNonQuery(string commandText, params object[] args);
     }
 }

@@ -91,14 +91,14 @@ namespace Emk.Services.Docs
         {
             if (_fd?.PatientCartNum == null)
                 return null;
-            return PatRep.GetPatient(_fd.PatientCartNum);
+            return PatRep.GetPatient(_fd.PatientCartNum).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected override DoctorEmk GetDoctor()
         {
             if (_patient == null)
                 return null;
-            return EmkRep.GetDoctorOfPatientTreat(AccountId);
+            return EmkRep.GetDoctorOfPatientTreat(AccountId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private void SetPatientAndDoctor()

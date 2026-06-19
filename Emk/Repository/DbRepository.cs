@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Threading.Tasks;
 using Emk.Repository.Interface;
 
 namespace Emk.Repository
@@ -16,7 +17,7 @@ namespace Emk.Repository
             m_ConnectionString = connectionString;
         }
 
-        public T Scalar<T>(string commandText, params object[] args)
+        public async Task<T> Scalar<T>(string commandText, params SqlParameter[] args)
         {
             try
             {
@@ -32,7 +33,7 @@ namespace Emk.Repository
                 }
 
                 connection.Open();
-                var result = (T) Convert.ChangeType(command.ExecuteScalar(), typeof(T));
+                var result = (T) Convert.ChangeType(await command.ExecuteScalarAsync(), typeof(T));
                 connection.Close();
 
                 return result;
@@ -44,7 +45,7 @@ namespace Emk.Repository
             }
         }
 
-        public List<T> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args)
+        public async Task<List<T>> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args)
         {
             try
             {
@@ -62,13 +63,11 @@ namespace Emk.Repository
                 }
 
                 connection.Open();
-                using var reader = command.ExecuteReader();
+                using var reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
                     result.Add(map(reader));
                 }
-                connection.Close();
-                connection.Dispose();
 
                 return result;
             }
@@ -79,7 +78,7 @@ namespace Emk.Repository
             }
         }
 
-        public List<T> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType)
+        public async Task<List<T>> Query<T>(string commandText, Func<IDataReader, T> map, object @object, CommandType commandType)
         {
             try
             {
@@ -99,7 +98,7 @@ namespace Emk.Repository
                 }
 
                 connection.Open();
-                using var reader = command.ExecuteReader();
+                using var reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
                     result.Add(map(reader));
@@ -116,7 +115,7 @@ namespace Emk.Repository
             }
         }
 
-        public int ExecuteNonQuery(string commandText, params object[] args)
+        public async Task<int> ExecuteNonQuery(string commandText, params object[] args)
         {
             try
             {
@@ -134,7 +133,7 @@ namespace Emk.Repository
                 }
 
                 connection.Open();
-                result = command.ExecuteNonQuery();
+                result = await command.ExecuteNonQueryAsync();
                 connection.Close();
                 connection.Dispose();
 

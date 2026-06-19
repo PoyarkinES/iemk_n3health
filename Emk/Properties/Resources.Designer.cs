@@ -61,6 +61,28 @@ namespace Emk.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT ef.account_id, 
+        ///    ef.date_approved, 
+        ///    ef.date_created, 
+        ///    ef.date_sent, 
+        ///    ef.efiles_name, 
+        ///    ef.efiles_path, 
+        ///    ef.esign_files_id, 
+        ///    ef.is_sign_cmn, 
+        ///    ef.is_sign_pr, 
+        ///    ef.patient_id, 
+        ///    ef.practice_id, 
+        ///    ef.provider_id, 
+        ///    ef.uuid
+        ///FROM esign_files ef WHERE account_id = @accId.
+        /// </summary>
+        internal static string CheckDocumentAccess {
+            get {
+                return ResourceManager.GetString("CheckDocumentAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
         ///FROM esign_files esf 
         ///WHERE esf.account_id = @account_id AND esf.date_sent IS NOT NULL.
@@ -160,7 +182,7 @@ namespace Emk.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT efiles_name FROM esign_files WHERE account_id = @account_id.
+        ///   Looks up a localized string similar to SELECT efiles_name, uuid FROM esign_files WHERE account_id = @account_id.
         /// </summary>
         internal static string GetDocumentByAccountId {
             get {
@@ -288,9 +310,13 @@ namespace Emk.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT COUNT(esf.account_id) AS acc_cnt 
-        ///FROM esign_files esf
-        ///WHERE esf.account_id = @paccount AND (esf.is_sign_pr = 0 OR esf.is_sign_cmn = 0).
+        ///   Looks up a localized string similar to SELECT pa.id, pa.send_acc_to_pat_id ,tp.thp_type , hfp.scheme_id 
+        ///FROM patients_accounts pa 
+        ///    LEFT JOIN third_parties tp 
+        ///    LEFT JOIN account_payment_plan app ON pa.id = app.patient_account_id 
+        ///    LEFT JOIN hf_plans hfp ON app.hf_plan_id = hfp.hf_plan_id
+        ///WHERE pa.ref_status IS NULL AND pa.id = @accountId 
+        ///ORDER BY id DESC.
         /// </summary>
         internal static string GetPayType {
             get {

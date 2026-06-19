@@ -28,7 +28,7 @@ namespace Emk
 		{
 			if (force || _settings == null)
             {
-                _settings = new SettingsRepository(_conStr).LoadSettings().ToList();
+                _settings = new SettingsRepository(_conStr).LoadSettings().GetAwaiter().GetResult().ToList();
             }
             return _settings;
 		}

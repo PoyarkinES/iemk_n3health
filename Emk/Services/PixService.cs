@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.Threading.Tasks;
 
 namespace Emk.Services
 {
@@ -26,13 +27,13 @@ namespace Emk.Services
 			idLPU = s.IdLPU.ToString();
 		}
 
-        public bool AddOrUpdatePatient(PatientAccount pa)
+        public async Task<bool> AddOrUpdatePatient(PatientAccount pa)
         {
-            return GetPatient(pa.PatientId) == null ? AddPatient(pa) : UpdatePatient(pa);
+            return GetPatient(pa.PatientId) == null ? await AddPatient(pa) : await UpdatePatient(pa);
         }
 
 
-		public bool AddPatient(PatientAccount pa)
+		public async Task<bool> AddPatient(PatientAccount pa)
 		{
 
 			try {
@@ -41,7 +42,7 @@ namespace Emk.Services
                 var client = new PixServiceClient(binding, endpointAddress);
 
                 var setResult = SetPatient(pa);
-                if (string.IsNullOrEmpty(setResult))
+                if (string.IsNullOrEmpty(await setResult))
                 {
                     Log.Info(
                         $"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
@@ -70,7 +71,7 @@ namespace Emk.Services
             return false;
         }
 
-		public bool UpdatePatient(PatientAccount pa)
+		public async Task<bool> UpdatePatient(PatientAccount pa)
 		{
 			try {
 				BasicHttpBinding binding = new BasicHttpBinding();
@@ -78,7 +79,7 @@ namespace Emk.Services
 				PixServiceClient client = new PixServiceClient(binding, endpointAddress);
 
                 var setResult = SetPatient(pa);
-                if (string.IsNullOrEmpty(setResult))
+                if (string.IsNullOrEmpty(await setResult))
                 {
                     client.UpdatePatient(guid, idLPU, _patient1);
                     client.Close();
@@ -104,9 +105,9 @@ namespace Emk.Services
             return false;
         }
 
-		private string SetPatient(PatientAccount pa)
+		private async Task<string> SetPatient(PatientAccount pa)
 		{
-			var patient = Factory.GetPatientRepository.GetPatient(pa.PatientId);
+			var patient = await Factory.GetPatientRepository.GetPatient(pa.PatientId);
             _patient1 = new PatientDto
             {
                 FamilyName = patient.LastName,
@@ -123,13 +124,13 @@ namespace Emk.Services
             }
 
             var documents = new List<DocumentDto>();
-            var snils = Factory.GetPatientRepository.GetSnils(pa.PatientId);
+            var snils = await Factory.GetPatientRepository.GetSnils(pa.PatientId);
             if (snils == null)
             {
                 throw new Exception("Для пациента не указан СНИЛС");
             }
             documents.Add(snils);
-            var policy = Factory.GetPatientRepository.GetPolicy(pa.AccountId);
+            var policy = await Factory.GetPatientRepository.GetPolicy(pa.AccountId);
             if (policy != null)
                 documents.Add(policy);
 

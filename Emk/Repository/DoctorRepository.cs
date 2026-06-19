@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Emk.Models;
 using Emk.Properties;
 using Emk.Repository.Dto;
@@ -7,16 +8,11 @@ using Emk.Repository.Interface;
 
 namespace Emk.Repository
 {
-    public class DoctorRepository : DbRepository, IDoctorRepository
+    public class DoctorRepository(string connectionString) : DbRepository(connectionString), IDoctorRepository
 	{
-        public DoctorRepository(string connectionString) : base(connectionString)
+        public async Task<IEnumerable<Doctor>> GetDoctors()
         {
-        }
-
-        public IEnumerable<Doctor> GetDoctors()
-        {
-
-            var data = Query(Resources.GetDoctors_Scropt, DoctorMap);
+            var data = await Query(Resources.GetDoctors_Scropt, DoctorMap);
             return data;
 		}
 

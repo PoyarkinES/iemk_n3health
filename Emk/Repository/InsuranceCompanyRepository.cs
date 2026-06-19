@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Emk.Properties;
 using Emk.Repository.Dto;
 
 namespace Emk.Repository
 {
-    public class InsuranceCompanyRepository : DbRepository
+    public class InsuranceCompanyRepository(string connectionString) : DbRepository(connectionString)
     {
-        public IEnumerable<InsuranceCompanyDto> GetInsuranseCompanies()
+        public async Task<IEnumerable<InsuranceCompanyDto>> GetInsuranseCompanies()
         {
-            var data = Query(Resources.GetInsuranseCompanies, InsuranceCompanyMap);
-            return data;
+            return await Query(Resources.GetInsuranseCompanies, InsuranceCompanyMap);
         }
 
         private InsuranceCompanyDto InsuranceCompanyMap(IDataReader reader)
@@ -20,10 +20,6 @@ namespace Emk.Repository
                 code = reader.Get<string>(nameof(InsuranceCompanyDto.code)),
                 name = reader.Get<string>(nameof(InsuranceCompanyDto.name))
             };
-        }
-
-        public InsuranceCompanyRepository(string connectionString) : base(connectionString)
-        {
         }
     }
 }

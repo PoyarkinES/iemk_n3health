@@ -1,7 +1,9 @@
-﻿namespace Emk.Repository.Interface
+﻿using System.Threading.Tasks;
+
+namespace Emk.Repository.Interface
 {
     public interface ILicenseRepository: IDbRepository
     {
-        bool IsLicenseValid();
+        Task<bool> IsLicenseValid();
     }
 }

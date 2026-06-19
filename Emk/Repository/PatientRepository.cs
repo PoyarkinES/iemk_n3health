@@ -6,51 +6,48 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Emk.Repository
 {
-    public class PatientRepository : DbRepository
+    public class PatientRepository(string connectionString) : DbRepository(connectionString)
     {
-        public PatientRepository(string connectionString) : base(connectionString)
-        {
-        }
-
-        public Patient GetPatient(int patientId)
+        public async Task<Patient> GetPatient(int patientId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "patientId", value: patientId),
+                new(parameterName: "patientId", value: patientId),
             };
-            var data = Query(Resources.GetPatientById, PatientMap).FirstOrDefault();
-            return data;
+            var data = await Query(Resources.GetPatientById, PatientMap, [.. param]);
+            return data.FirstOrDefault();
         }
 
-        public Patient GetPatient(string patientCartNum)
+        public async Task<Patient> GetPatient(string patientCartNum)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "patientCartNum", value: patientCartNum),
+                new(parameterName: "patientCartNum", value: patientCartNum),
             };
-            var data = Query(Resources.GetPatientByCartNum, PatientMap).FirstOrDefault();
-            return data;
+            var data = await Query(Resources.GetPatientByCartNum, PatientMap, [.. param]);
+            return data.FirstOrDefault();
         }
 
-        public DocumentDto GetSnils(int patientId)
+        public async Task<DocumentDto> GetSnils(int patientId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "patientId", value: patientId),
+                new(parameterName: "patientId", value: patientId),
             };
-            return Query(Resources.GetSnils, SnilsMap, param.ToArray()).FirstOrDefault();
+            return (await Query(Resources.GetSnils, SnilsMap, [.. param])).FirstOrDefault();
         }
 
-        public DocumentDto GetPolicy(int accId)
+        public async Task<DocumentDto> GetPolicy(int accId)
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter(parameterName: "accId", value: accId),
+                new(parameterName: "accId", value: accId),
             };
-            return Query(Resources.GetPolisy, PolisyMap, param.ToArray()).FirstOrDefault();
+            return (await Query(Resources.GetPolisy, PolisyMap, [.. param])).FirstOrDefault();
         }
 
         private Patient PatientMap(IDataReader reader)

@@ -84,12 +84,12 @@ namespace Emk.Services.Docs
 
         protected override Patient GetPatient()
         {
-            return PatRep.GetPatient(_fd.PatientCartNum);
+            return PatRep.GetPatient(_fd.PatientCartNum).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected override DoctorEmk GetDoctor()
         {
-            return EmkRep.GetDoctorOfPatientTreat(AccountId);
+            return EmkRep.GetDoctorOfPatientTreat(AccountId).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private void SetPatientAndDoctor()

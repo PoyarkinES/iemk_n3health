@@ -1,18 +1,14 @@
 ﻿using Emk.Properties;
 using Emk.Repository.Interface;
+using System.Threading.Tasks;
 
 namespace Emk.Repository
 {
-    public class LicenseRepository : DbRepository, ILicenseRepository
+    public class LicenseRepository(string connectionString) : DbRepository(connectionString), ILicenseRepository
     {
-        public bool IsLicenseValid()
+        public async Task<bool> IsLicenseValid()
         {
-            var data = Scalar<bool>(Resources.IsLicenseValid);
-            return data;
-        }
-
-        public LicenseRepository(string connectionString) : base(connectionString)
-        {
+            return await Scalar<bool>(Resources.IsLicenseValid);
         }
     }
 }

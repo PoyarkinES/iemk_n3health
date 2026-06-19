@@ -1,10 +1,11 @@
 ﻿using Emk.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Emk.Repository.Interface
 {
     public interface IDoctorRepository
     {
-        IEnumerable<Doctor> GetDoctors();
+        Task<IEnumerable<Doctor>> GetDoctors();
     }
 }

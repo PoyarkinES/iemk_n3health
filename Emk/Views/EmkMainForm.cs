@@ -93,8 +93,8 @@ namespace Emk.Views
             btnUpdatePeriod.Text = "Идет отправка...";
             try
             {
-                var pats = Factory.GetTreatRepository.GetPatientAccounts(form.PeriodBegin, form.PeriodEnd);
-                foreach (var item in pats)
+                var pats = Factory.GetTreatRepository.GetPatientAccountsAsync(form.PeriodBegin, form.PeriodEnd);
+                foreach (var item in await pats)
                 {
                     await Task.Factory.StartNew(() => new EmkSendingService().Update(item.AccountId));
                 }

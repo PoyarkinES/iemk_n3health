@@ -32,7 +32,7 @@ namespace Emk.Services.Files
 			_smo = new SmoSettings
 			{
 				Default = new DefaultData(),
-				Doctors = Factory.GetDoctorRepository.GetDoctors().ToList()
+				Doctors = Factory.GetDoctorRepository.GetDoctors().GetAwaiter().GetResult().ToList()
 			};
 			XmlSerializer xml = new XmlSerializer(typeof(SmoSettings));
             using (FileStream fs = new FileStream(_smoPath, FileMode.OpenOrCreate)) {
@@ -69,7 +69,7 @@ namespace Emk.Services.Files
 
         public List<Doctor> LoadDoctorsFromDb()
         {
-            var dbDocs = Factory.GetDoctorRepository.GetDoctors().ToList();
+            var dbDocs = Factory.GetDoctorRepository.GetDoctors().GetAwaiter().GetResult().ToList();
             var diffs = dbDocs.Except(_smo.Doctors, new DoctorComparer()).ToList();
             if (diffs.Any()) {
                 UpdateDoctors(diffs);
