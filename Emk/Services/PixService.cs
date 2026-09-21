@@ -15,6 +15,8 @@ namespace Emk.Services
 		private string Url;
 		private string guid;
 		private string idLPU;
+        private string unknownPatientFirstName;
+        private string unknownPatientGivenName;
 		private PatientDto _patient1;
         private List<EmkSettings> _settings;
 
@@ -24,6 +26,8 @@ namespace Emk.Services
             Url = s.PixUrl;
 			guid = s.Guid.ToString();
 			idLPU = s.IdLPU.ToString();
+            unknownPatientFirstName = s.UnknownPatientFirstName;
+            unknownPatientGivenName = s.UnknownPatientGivenName;
 			var conn = Factory.GetDbConnection();
 			if (conn.State != ConnectionState.Open)
 				conn.Open();
@@ -109,34 +113,46 @@ namespace Emk.Services
 
 		private string SetPatient(PatientAccount pa)
 		{
-			var patient = Factory.GetPatientRepository.GetPatient(pa.PatientId);
-            _patient1 = new PatientDto
+            if (Factory.GetTreatRepository.CheckPatientConsentTransPersData(pa.PatientId) > 0)
             {
-                FamilyName = patient.LastName,
-                GivenName = patient.FirstName,
-                MiddleName = patient.MiddleName,
-                IdPatientMIS = patient.CartNum,
-                BirthDate = patient.DateOfBirth,
-                Sex = (byte) patient.SexInt,
-            };
+                var patient = Factory.GetPatientRepository.GetPatient(pa.PatientId);
+                _patient1 = new PatientDto
+                {
+                    FamilyName = patient.LastName,
+                    GivenName = patient.FirstName,
+                    MiddleName = patient.MiddleName,
+                    IdPatientMIS = patient.CartNum,
+                    BirthDate = patient.DateOfBirth,
+                    Sex = (byte)patient.SexInt,
+                };
 
-            if (patient.SexInt == 0)
+                if (patient.SexInt == 0)
+                {
+                    throw new Exception("Для пациента не указан ПОЛ");
+                }
+
+                var documents = new List<DocumentDto>();
+                var snils = Factory.GetPatientRepository.GetSnils(pa.PatientId);
+                if (snils == null)
+                {
+                    throw new Exception("Для пациента не указан СНИЛС");
+                }
+                documents.Add(snils);
+                var policy = Factory.GetPatientRepository.GetPolicy(pa.AccountId);
+                if (policy != null)
+                    documents.Add(policy);
+
+                _patient1.Documents = documents.ToArray();
+            }
+            else
             {
-                throw new Exception("Для пациента не указан ПОЛ");
+                _patient1 = new PatientDto
+                {
+                    FamilyName = unknownPatientFirstName,
+                    GivenName = unknownPatientGivenName
+                };
             }
 
-            var documents = new List<DocumentDto>();
-            var snils = Factory.GetPatientRepository.GetSnils(pa.PatientId);
-            if (snils == null)
-            {
-                throw new Exception("Для пациента не указан СНИЛС");
-            }
-            documents.Add(snils);
-            var policy = Factory.GetPatientRepository.GetPolicy(pa.AccountId);
-            if (policy != null)
-                documents.Add(policy);
-
-            _patient1.Documents = documents.ToArray();
             return null;
         }
 

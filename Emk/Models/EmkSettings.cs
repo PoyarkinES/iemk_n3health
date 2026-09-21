@@ -20,6 +20,8 @@ namespace Emk.Models
         public bool Enabled { get; set; }
         public int AutoUpdate { get; set; }
         public short IsNewMiddleName { get; set; }
+        public string UnknownPatientFirstName { get; set; }
+        public string UnknownPatientGivenName { get; set; }
 
 		public override string ToString()
 		{

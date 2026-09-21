@@ -159,12 +159,12 @@ namespace Emk.Services
                     continue;
                 }
 
-                if (Factory.GetTreatRepository.CheckPatientConsentTransPersData(i.PatientId) > 0)
-                {
-                    Log.Info(
-                        $"Пациент с идентификатором:{i.PatientId} и № карты {i.PatientsCartNum} не дал согласие на передачу персоналных данных. № счета:{i.AccountId} исключен из пакета данных на передачу в EmkService.");
-                    continue;
-                }
+                //if (Factory.GetTreatRepository.CheckPatientConsentTransPersData(i.PatientId) > 0)
+                //{
+                //    Log.Info(
+                //        $"Пациент с идентификатором:{i.PatientId} и № карты {i.PatientsCartNum} не дал согласие на передачу персоналных данных. № счета:{i.AccountId} исключен из пакета данных на передачу в EmkService.");
+                //    continue;
+                //}
 
                 var pix = new PixService(set);
                 var emk = new EmkService(set);

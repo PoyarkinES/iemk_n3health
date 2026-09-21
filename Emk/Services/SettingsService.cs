@@ -43,6 +43,8 @@ namespace Emk.Services
                 //sw.WriteLine("IntervalTo=" + settings.IntervalTo);
                 sw.WriteLine("AutoUpdate=" + settings.AutoUpdate);
                 sw.WriteLine("IsNewMiddleName=" + settings.IsNewMiddleName);
+                sw.WriteLine("UnknownPatientFirstName=" + settings.UnknownPatientFirstName);
+                sw.WriteLine("UnknownPatientGivenName=" + settings.UnknownPatientGivenName);
 			}
 		}
 
@@ -65,6 +67,8 @@ namespace Emk.Services
                 //sw.WriteLine("IntervalTo=");
                 sw.WriteLine("AutoUpdate=");
                 sw.WriteLine("IsNewMiddleName=");
+                sw.WriteLine("UnknownPatientFirstName=");
+                sw.WriteLine("UnknownPatientGivenName=");
 			}
 
 		}
@@ -148,6 +152,12 @@ namespace Emk.Services
                 case "IsNewMiddleName":
                     short.TryParse(value, out var isNewMiddleName);
                     s.IsNewMiddleName = isNewMiddleName;
+                    break;
+                case "UnknownPatientFirstName":
+                    s.UnknownPatientFirstName = value;
+                    break;
+				case "UnknownPatientGivenName":
+                    s.UnknownPatientGivenName = value;
                     break;
             }
 			return s;
