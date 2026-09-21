@@ -13,17 +13,11 @@ using Microsoft.SqlServer.Server;
 
 namespace Emk.Services
 {
-    public class DocSelector
+    public class DocSelector(PatientAccount pa)
     {
-        private DateTime _fileDate;
-        private PatientAccount _pa;
-        private TreatRepository _treatRepository = Factory.GetTreatRepository;
-
-        public DocSelector(PatientAccount pa)
-        {
-            _fileDate = pa.TreatDate;
-            _pa = pa;
-        }
+        private readonly DateTime _fileDate = pa.TreatDate;
+        private readonly PatientAccount _pa = pa;
+        private readonly TreatRepository _treatRepository = Factory.GetTreatRepository;
 
         public async Task<List<MedRecord>> GetDocs(int accountId)
         {
