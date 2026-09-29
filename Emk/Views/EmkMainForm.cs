@@ -107,5 +107,31 @@ namespace Emk.Views
             btnUpdatePeriod.Text = "Обновить за период";
             btnUpdatePeriod.Enabled = true;
         }
+
+        private async void brnSendPeriod_Click(object sender, EventArgs e)
+        {
+            var form = new PeriodForm();
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            btnSend.Enabled = false;
+            btnSend.Text = "Идет отправка...";
+            try
+            {
+                var pats = Factory.GetTreatRepository.GetPatientAccounts(form.PeriodBegin, form.PeriodEnd);
+                foreach (var item in pats)
+                {
+                    await Task.Factory.StartNew(() => new EmkSendingService().Run(item.AccountId));
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Log.Error(ex.ToString());
+            }
+            btnSend.Text = "Отправить данные";
+            btnSend.Enabled = true;
+        }
     }
 }

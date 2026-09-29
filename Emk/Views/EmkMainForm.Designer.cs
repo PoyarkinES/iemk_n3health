@@ -33,6 +33,7 @@
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnSendByAccount = new System.Windows.Forms.Button();
             this.btnUpdatePeriod = new System.Windows.Forms.Button();
+            this.brnSendPeriod = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSend
@@ -48,7 +49,7 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(13, 301);
+            this.btnSettings.Location = new System.Drawing.Point(13, 374);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(4);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(241, 65);
@@ -59,7 +60,7 @@
             // 
             // btnSmoSettings
             // 
-            this.btnSmoSettings.Location = new System.Drawing.Point(13, 393);
+            this.btnSmoSettings.Location = new System.Drawing.Point(13, 466);
             this.btnSmoSettings.Margin = new System.Windows.Forms.Padding(4);
             this.btnSmoSettings.Name = "btnSmoSettings";
             this.btnSmoSettings.Size = new System.Drawing.Size(241, 65);
@@ -70,7 +71,7 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(13, 159);
+            this.btnUpdate.Location = new System.Drawing.Point(13, 232);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(241, 65);
@@ -92,7 +93,7 @@
             // 
             // btnUpdatePeriod
             // 
-            this.btnUpdatePeriod.Location = new System.Drawing.Point(13, 228);
+            this.btnUpdatePeriod.Location = new System.Drawing.Point(13, 301);
             this.btnUpdatePeriod.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdatePeriod.Name = "btnUpdatePeriod";
             this.btnUpdatePeriod.Size = new System.Drawing.Size(241, 65);
@@ -101,11 +102,23 @@
             this.btnUpdatePeriod.UseVisualStyleBackColor = true;
             this.btnUpdatePeriod.Click += new System.EventHandler(this.btnUpdatePeriod_Click);
             // 
+            // brnSendPeriod
+            // 
+            this.brnSendPeriod.Location = new System.Drawing.Point(13, 159);
+            this.brnSendPeriod.Margin = new System.Windows.Forms.Padding(4);
+            this.brnSendPeriod.Name = "brnSendPeriod";
+            this.brnSendPeriod.Size = new System.Drawing.Size(241, 65);
+            this.brnSendPeriod.TabIndex = 6;
+            this.brnSendPeriod.Text = "Отправить данные за период";
+            this.brnSendPeriod.UseVisualStyleBackColor = true;
+            this.brnSendPeriod.Click += new System.EventHandler(this.brnSendPeriod_Click);
+            // 
             // EmkMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(267, 299);
+            this.ClientSize = new System.Drawing.Size(267, 580);
+            this.Controls.Add(this.brnSendPeriod);
             this.Controls.Add(this.btnUpdatePeriod);
             this.Controls.Add(this.btnSendByAccount);
             this.Controls.Add(this.btnUpdate);
@@ -130,5 +143,6 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnSendByAccount;
         private System.Windows.Forms.Button btnUpdatePeriod;
+        private System.Windows.Forms.Button brnSendPeriod;
     }
 }
