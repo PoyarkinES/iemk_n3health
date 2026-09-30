@@ -33,6 +33,21 @@ namespace Emk.Services
             Send(p);
         }
 
+        public void Run(DateTime sinceDate, DateTime toDate)
+        {
+            if(!IsLicenseValid()) return;
+
+            Log.Info("Начинаю отправку данных по пациентам...");
+            var p = GetPatientsAndTreatDates(sinceDate, toDate)?.ToList();
+            if (p == null || p.Count == 0)
+            {
+                Log.Info("Записей лечения не найдено.");
+                return;
+            }
+
+            Send(p);
+        }
+
         public void Update(int accountId)
         {
             if (!IsLicenseValid()) return;
@@ -275,6 +290,21 @@ namespace Emk.Services
             result.Add(pats);
             //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
             Log.Info($"Получено {pats}");
+            return AddPostfixForDiagnose(result);
+        }
+
+        private IEnumerable<PatientAccount> GetPatientsAndTreatDates(DateTime sinceDate, DateTime toDate)
+        {
+#if DEBUG
+            //foreach (var setting in _settings) {
+            //    setting.DateInterval = 0;
+            //}
+#endif
+            Log.Info($"Получаю пациентов и лечение за период с {sinceDate} по {toDate}");
+            var pats = Factory.GetTreatRepository.GetPatientAccounts(sinceDate, toDate);
+            var result = new List<PatientAccount>();
+            result.AddRange(pats);
+            Log.Info($"Получено {pats.Count}"); 
             return AddPostfixForDiagnose(result);
         }
 
