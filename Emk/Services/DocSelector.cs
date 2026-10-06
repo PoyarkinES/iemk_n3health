@@ -95,14 +95,14 @@ namespace Emk.Services
 
         private async Task<FileData> ParseFile(string filePath)
         {
+            var filedir = await GetFileDirectoryAsync();
+            FileData fd = new FileData();
+            fd.FilePath = filedir + "\\" + filePath;
+            if (!fd.FileExists)
+                throw new FileNotFoundException("Файл не найден", filePath);
+
             try
             {
-                var filedir = await GetFileDirectoryAsync();
-                FileData fd = new FileData();
-                fd.FilePath = filedir + "\\" + filePath;
-                if (!fd.FileExists)
-                    throw new FileNotFoundException("Файл не найден", filePath);
-
                 string[] data = Path.GetFileName(filePath).Split('_');
 
                 if (data.Length < 7)
@@ -115,15 +115,16 @@ namespace Emk.Services
                 fd.DoctorId = checkDoctorCode(data[4]);
                 checkFIO(data.Skip(5).ToArray(), out string error, out bool check);
 
-                if (!check) throw new Exception(error);
+                if (!check)
+                    throw new FormatException(error);
 
                 return fd;
             }
-            catch (Exception e)
+            catch (FormatException e)
             {
                 throw new FormatException(
                     $"Неверное наименование файла ({Path.GetFileName(filePath)}). " +
-                    $"Ожидается формат (<yyyyMMdd>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml)." +
+                    $"Ожидается формат (<yyyyMMdd>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml). " +
                     e.Message, e);
             }
         }
@@ -133,14 +134,14 @@ namespace Emk.Services
             return (DateTime.TryParseExact(s, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None,
                 out var result))
                 ? result
-                : throw new Exception($"Неверный формат даты. {s} не соответствует формату <yyyyMMdd>.");
+                : throw new FormatException($"Неверный формат даты. {s} не соответствует формату <yyyyMMdd>.");
         }
 
         private int checkCartNoteId(string s)
         {
             return int.TryParse(s, out var result)
                 ? result
-                : throw new Exception(
+                : throw new FormatException(
                     $"Неверный формат CartNoteId. {s} не соответсвует числовому формату.");
         }
 
@@ -148,7 +149,7 @@ namespace Emk.Services
         {
             return Enum.TryParse<InternalDocType>(s, out var result)
                 ? result
-                : throw new Exception(
+                : throw new FormatException(
                     $"Неверный формат DocType. {s} не соответсвует формату InternalDocType.");
         }
 
@@ -156,7 +157,7 @@ namespace Emk.Services
         {
             return int.TryParse(s, out var result)
                 ? result
-                : throw new Exception(
+                : throw new FormatException(
                     $"Неверный формат DoctorCode. {s} не соответсвует числовому формату.");
         }
 
