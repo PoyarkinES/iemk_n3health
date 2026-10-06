@@ -17,11 +17,16 @@ namespace Emk.Services
 		private string guid;
 		private string idLPU;
 		private PatientDto _patient1;
-        private List<EmkSettings> _settings;
+        private readonly IPixServiceDependencies _dependencies;
 
         public PixService(EmkSettings s)
-		{
+            : this(s, new FactoryPixServiceDependencies())
+        {
+        }
 
+        public PixService(EmkSettings s, IPixServiceDependencies dependencies)
+		{
+            _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
             Url = s.PixUrl;
 			guid = s.Guid.ToString();
 			idLPU = s.IdLPU.ToString();
@@ -107,7 +112,7 @@ namespace Emk.Services
 
 		private async Task<string> SetPatient(PatientAccount pa)
 		{
-			var patient = await Factory.GetPatientRepository.GetPatient(pa.PatientId);
+			var patient = await _dependencies.GetPatient(pa.PatientId);
             _patient1 = new PatientDto
             {
                 FamilyName = patient.LastName,
@@ -124,13 +129,13 @@ namespace Emk.Services
             }
 
             var documents = new List<DocumentDto>();
-            var snils = await Factory.GetPatientRepository.GetSnils(pa.PatientId);
+            var snils = await _dependencies.GetSnils(pa.PatientId);
             if (snils == null)
             {
                 throw new Exception("Для пациента не указан СНИЛС");
             }
             documents.Add(snils);
-            var policy = await Factory.GetPatientRepository.GetPolicy(pa.AccountId);
+            var policy = await _dependencies.GetPolicy(pa.AccountId);
             if (policy != null)
                 documents.Add(policy);
 

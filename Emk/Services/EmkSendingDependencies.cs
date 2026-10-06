@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Emk.EmkSvc;
 using Emk.Models;
+using Emk.PixSvc;
+using Emk.Repository;
+using Emk.Services.Files;
 
 namespace Emk.Services
 {
@@ -35,6 +39,26 @@ namespace Emk.Services
     {
         IPixSendingClient CreatePixClient(EmkSettings settings);
         IEmkCaseSendingClient CreateEmkClient(EmkSettings settings);
+    }
+
+    public interface IEmkServiceDependencies
+    {
+        Task<DoctorEmk> GetDoctorByMemberId(int memberId);
+        Task<Patient> GetPatient(int patientId);
+        Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account);
+        DefaultData LoadDefaults();
+        Task<PayType> GetPayType(int accountId);
+        Task<IEnumerable<ProcedureDescriptionEmk>> GetProcedureDescriptions(
+            int patientId, DateTime procedureDate, int? accountId);
+        Task SaveCase(int smo, DateTime uploadTime, string uploadMethod, int patientId,
+            int accountId, string responseText, char isSuccess, string errorText);
+    }
+
+    public interface IPixServiceDependencies
+    {
+        Task<Patient> GetPatient(int patientId);
+        Task<DocumentDto> GetSnils(int patientId);
+        Task<DocumentDto> GetPolicy(int accountId);
     }
 
     internal sealed class FactoryEmkSendingRepository : IEmkSendingRepository
@@ -70,5 +94,49 @@ namespace Emk.Services
         public IPixSendingClient CreatePixClient(EmkSettings settings) => new PixService(settings);
 
         public IEmkCaseSendingClient CreateEmkClient(EmkSettings settings) => new EmkService(settings);
+    }
+
+    internal sealed class FactoryEmkServiceDependencies : IEmkServiceDependencies
+    {
+        private readonly EmkRepository _emkRepository = Factory.GetEmkRepository;
+        private readonly PatientRepository _patientRepository = Factory.GetPatientRepository;
+        private readonly IDoctorFileService _doctorFileService = Factory.GetSmoService;
+
+        public Task<DoctorEmk> GetDoctorByMemberId(int memberId) =>
+            _emkRepository.GetDoctorByMemberId(memberId);
+
+        public Task<Patient> GetPatient(int patientId) =>
+            _patientRepository.GetPatient(patientId);
+
+        public Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account) =>
+            new DocSelector(account).GetDocs(account.AccountId);
+
+        public DefaultData LoadDefaults() => _doctorFileService.LoadDefaults();
+
+        public Task<PayType> GetPayType(int accountId) =>
+            _emkRepository.GetPayType(accountId);
+
+        public Task<IEnumerable<ProcedureDescriptionEmk>> GetProcedureDescriptions(
+            int patientId, DateTime procedureDate, int? accountId) =>
+            _emkRepository.GetProcedureDescriptions(patientId, procedureDate, accountId);
+
+        public Task SaveCase(int smo, DateTime uploadTime, string uploadMethod, int patientId,
+            int accountId, string responseText, char isSuccess, string errorText) =>
+            _emkRepository.SaveCase(smo, uploadTime, uploadMethod, patientId, accountId,
+                responseText, isSuccess, errorText);
+    }
+
+    internal sealed class FactoryPixServiceDependencies : IPixServiceDependencies
+    {
+        private readonly PatientRepository _patientRepository = Factory.GetPatientRepository;
+
+        public Task<Patient> GetPatient(int patientId) =>
+            _patientRepository.GetPatient(patientId);
+
+        public Task<DocumentDto> GetSnils(int patientId) =>
+            _patientRepository.GetSnils(patientId);
+
+        public Task<DocumentDto> GetPolicy(int accountId) =>
+            _patientRepository.GetPolicy(accountId);
     }
 }

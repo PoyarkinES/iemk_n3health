@@ -1,7 +1,5 @@
 ﻿using Emk.EmkSvc;
 using Emk.Models;
-using Emk.Repository;
-using Emk.Services.Files;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,8 +16,7 @@ namespace Emk.Services
 {
 	public class EmkService : IEmkCaseSendingClient
 	{
-		private EmkRepository _rep;
-
+        private readonly IEmkServiceDependencies _dependencies;
 
 		string Url;
 		string guid;
@@ -29,17 +26,20 @@ namespace Emk.Services
 		string MName = "";
 		string path = "";
 		string patientsBaseDir;
-		IDoctorFileService _smoSrv;
         private int autoUpd = 0;
 
 		public EmkService(EmkSettings s)
+            : this(s, new FactoryEmkServiceDependencies())
+        {
+        }
+
+        public EmkService(EmkSettings s, IEmkServiceDependencies dependencies)
 		{
+            _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
 			Url = s.EmkUrl;
 			guid = s.Guid.ToString();
 			IdLPU = s.IdLPU.ToString();
 			patientsBaseDir = s.PatientDirectory;
-			_smoSrv = Factory.GetSmoService;
-			_rep = Factory.GetEmkRepository;
             autoUpd = s.AutoUpdate;
 		}
 
@@ -62,7 +62,7 @@ namespace Emk.Services
                 }
 
 				var doctor = await getDoctor(treat);
-                var patient = await Factory.GetPatientRepository.GetPatient(treat.PatientId);
+                var patient = await _dependencies.GetPatient(treat.PatientId);
 				var medDocuments = await getMedDocuments(treat, doctor, patient);
 
 				if (medDocuments == null || !medDocuments.Any())
@@ -79,20 +79,20 @@ namespace Emk.Services
                     client.UpdateCase(guid, case1);
                     client.Close();
                     Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} обновлен.");
-                    await _rep.SaveCase(-1, DateTime.Now, "upd", treat.PatientId, treat.AccountId, null, 'S', null);
+                    await SaveCase(updateOnly, treat, null, null);
                     return 0;
                 }
 
                 client.AddCase(guid, case1);
                 client.Close();
                 Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
-                await _rep.SaveCase(-1, DateTime.Now, "add", treat.PatientId, treat.AccountId, null, 'S', null);
+                await SaveCase(updateOnly, treat, null, null);
 
 				return 0;
             }
             catch (FaultException<RequestFault[]> ex) {
                 getFullError(ex.Detail);
-                await _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, null, 'S', getError(ex.Detail));
+                await SaveCase(updateOnly, treat, null, getError(ex.Detail));
 				return -1;
             }
             catch (FaultException<RequestFault> ex) {
@@ -100,29 +100,31 @@ namespace Emk.Services
                 getFullError(ex.Detail.Errors);
 				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
                     await UpdateCase(treat, path);
-                await _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, null, 'S', getError(ex.Detail.Errors));
+                await SaveCase(updateOnly, treat, null, getError(ex.Detail.Errors));
 				return -1;
             }
             catch (FaultException<RequestWarning> ex) {
                 Log.Warning(ex.Detail.WarningCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n");
-                await _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, getWarning(ex.Detail.Warnings), 'S', null);
+                await SaveCase(updateOnly, treat, getWarning(ex.Detail.Warnings), null);
                 return -1;
             }
             catch (FaultException<RequestWarning[]> ex) {
 
                 getWarning(ex.Detail);
-                await _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, getWarning(ex.Detail), 'S', null);
+                await SaveCase(updateOnly, treat, getWarning(ex.Detail), null);
 				return -1;
             }
             catch (Exception ex) {
                 Log.Warning($"Случай медицинского обслуживания для пациента {treat.PatientId} от {treat.TreatDate:dd.MM.yyyy} не отправлен.");
                 Log.Error(ex.ToString());
-                await _rep.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId, treat.AccountId, null, 'S', ex.Message);
+                await SaveCase(updateOnly, treat, null, ex.Message);
                 return -1;
             }
         }
 
-
+        private Task SaveCase(bool updateOnly, PatientAccount treat, string responseText, string errorText) =>
+            _dependencies.SaveCase(-1, DateTime.Now, updateOnly ? "upd" : "add", treat.PatientId,
+                treat.AccountId, responseText, 'S', errorText);
 
         private bool IsValid(object obj)
         {
@@ -201,7 +203,7 @@ namespace Emk.Services
 
 		private async Task<MedicalStaff> getDoctor(PatientAccount treat)
 		{
-            var doc = await _rep.GetDoctorByMemberId(treat.ProviderId);
+            var doc = await _dependencies.GetDoctorByMemberId(treat.ProviderId);
             doc.Speciality = treat.Code;
             doc.AccountId = treat.AccountId;
 
@@ -212,7 +214,7 @@ namespace Emk.Services
 
 		private async Task<CaseAmb> GetCaseAmb(PatientAccount treat, MedicalStaff doctor, Patient patient, IEnumerable<MedRecord> medDocuments)
 		{
-            var def = _smoSrv.LoadDefaults();
+            var def = _dependencies.LoadDefaults();
             var diag = new DiagnosisEmk()
             {
                 DiagnosisCode = treat.DiagnoseCode,
@@ -230,7 +232,7 @@ namespace Emk.Services
 
             case1.IdCaseAidType = 3;
             case1.IdCaseType = 2;
-            case1.IdPaymentType = (byte)(await _rep.GetPayType(treat.AccountId));
+            case1.IdPaymentType = (byte)(await _dependencies.GetPayType(treat.AccountId));
             case1.IdCasePurpose = Convert.ToByte(def.VisitPurpose);
 
             case1.Confidentiality = Convert.ToByte(def.ConfidentialityLevel);
@@ -260,7 +262,7 @@ namespace Emk.Services
                         Doctor = doctor,
                         IdVisitPlace = Convert.ToByte(def.VisitPlace),
                         IdVisitPurpose = Convert.ToByte(def.VisitPurpose),
-                        IdPaymentType = (byte)await _rep.GetPayType(treat.AccountId)
+                        IdPaymentType = (byte)await _dependencies.GetPayType(treat.AccountId)
             }
                 ];
 
@@ -323,16 +325,14 @@ namespace Emk.Services
             if (!Directory.Exists(dir))
                 dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
 
-            var medDocuments = await new DocSelector(treat).GetDocs(treat.AccountId);
-
-            return medDocuments;
+            return await _dependencies.GetMedicalDocuments(treat);
         }
 
         private async Task<List<MedRecord>> getProcedures(PatientAccount treat)
         {
             var medRecords = new List<MedRecord>();
 
-            foreach (var d in await _rep.GetProcedureDescriptions(treat.PatientId, treat.TreatDate, treat.AccountId))
+            foreach (var d in await _dependencies.GetProcedureDescriptions(treat.PatientId, treat.TreatDate, treat.AccountId))
             {
                 if (string.IsNullOrEmpty(d.Description))
                     continue;
