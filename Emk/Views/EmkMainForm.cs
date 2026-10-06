@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emk.Services;
 
@@ -15,15 +14,18 @@ namespace Emk.Views
             btnSend.Text = "Идет отправка...";
 			try
 			{
-				await Task.Factory.StartNew(() => new EmkSendingService().Run());
+				await new EmkSendingService().Run();
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				Log.Error(ex.ToString());
 			}
+			finally
+			{
             btnSend.Text = "Отправить данные";
             btnSend.Enabled = true;
+			}
 		}
 
 		private void btnSettings_Click(object sender, EventArgs e) => new EmkSettingsForm().ShowDialog();
@@ -52,14 +54,16 @@ namespace Emk.Views
             btnUpdate.Enabled = false;
             btnUpdate.Text = "Идет отправка...";
             try {
-                await Task.Factory.StartNew(() => new EmkSendingService().Update(form.AccountId));
+                await new EmkSendingService().Update(form.AccountId);
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Log.Error(ex.ToString());
             }
-            btnUpdate.Text = "Обновить по номеру счета";
-            btnUpdate.Enabled = true;
+            finally {
+                btnUpdate.Text = "Обновить по номеру счета";
+                btnUpdate.Enabled = true;
+            }
         }
 
         private async void btnSendByAccount_Click(object sender, EventArgs e)
@@ -72,15 +76,18 @@ namespace Emk.Views
             btnSendByAccount.Text = "Идет отправка...";
             try
             {
-                await Task.Factory.StartNew(() => new EmkSendingService().Run(form.AccountId));
+                await new EmkSendingService().Run(form.AccountId);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Log.Error(ex.ToString());
             }
-            btnSendByAccount.Text = @"Отправить данные по номеру счета";
-            btnSendByAccount.Enabled = true;
+            finally
+            {
+                btnSendByAccount.Text = @"Отправить данные по номеру счета";
+                btnSendByAccount.Enabled = true;
+            }
         }
 
         private async void btnUpdatePeriod_Click(object sender, EventArgs e)
@@ -93,10 +100,10 @@ namespace Emk.Views
             btnUpdatePeriod.Text = "Идет отправка...";
             try
             {
-                var pats = Factory.GetTreatRepository.GetPatientAccountsAsync(form.PeriodBegin, form.PeriodEnd);
-                foreach (var item in await pats)
+                var pats = await Factory.GetTreatRepository.GetPatientAccountsAsync(form.PeriodBegin, form.PeriodEnd);
+                foreach (var item in pats)
                 {
-                    await Task.Factory.StartNew(() => new EmkSendingService().Update(item.AccountId));
+                    await new EmkSendingService().Update(item.AccountId);
                 }
             }
             catch (Exception ex)
@@ -104,8 +111,11 @@ namespace Emk.Views
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Log.Error(ex.ToString());
             }
-            btnUpdatePeriod.Text = "Обновить за период";
-            btnUpdatePeriod.Enabled = true;
+            finally
+            {
+                btnUpdatePeriod.Text = "Обновить за период";
+                btnUpdatePeriod.Enabled = true;
+            }
         }
     }
 }

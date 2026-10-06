@@ -89,7 +89,7 @@ namespace Emk.Services
                     result = await emk.AddCase(i, false);
                 else
                     Log.Warning($"Случай:{i.AccountId} будет пропущен.");
-                if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(i);
+                if (result == 0) await Factory.GetEmkRepository.UpdateEsignFiles(i);
 
             }
         }

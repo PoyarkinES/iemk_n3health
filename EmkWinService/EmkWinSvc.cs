@@ -5,13 +5,14 @@ using System;
 using System.Linq;
 using System.ServiceProcess;
 using System.Timers;
+using Interlocked = System.Threading.Interlocked;
 
 namespace EmkWinService
 {
 	public partial class EmkWinSvc : ServiceBase
 	{
 		private Timer _timer;
-		private bool _isRunning = false;
+		private int _isRunning;
 		private EmkSettings _settings;
 		private DateTime _lastStart;
 		public EmkWinSvc()
@@ -22,16 +23,26 @@ namespace EmkWinService
 			_lastStart = DateTime.MinValue;
 		}
 
-		private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+		private async void _timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			if(!ShouldStart())
+			if (!ShouldStart() || Interlocked.Exchange(ref _isRunning, 1) != 0)
 				return;
-			_lastStart = DateTime.Now;
-            Log.Info("Отправка данных запущена");
-			var s = new EmkSendingService(true);
-            _isRunning = true;
-            s.Run();
-			_isRunning = false;
+
+			try
+			{
+				_lastStart = DateTime.Now;
+				Log.Info("Отправка данных запущена");
+				var sendingService = new EmkSendingService(true);
+				await sendingService.Run().ConfigureAwait(false);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex.ToString());
+			}
+			finally
+			{
+				Interlocked.Exchange(ref _isRunning, 0);
+			}
 		}
 
         protected override void OnStart(string[] args)
@@ -61,8 +72,6 @@ namespace EmkWinService
 		{
             try
             {
-                if (_isRunning)
-                    return false;
                 if (_settings.UpdateTime == TimeSpan.Zero)
                 {
                     Log.Error($"Не удалось распознать значение времени {_settings.UpdateTime}");
