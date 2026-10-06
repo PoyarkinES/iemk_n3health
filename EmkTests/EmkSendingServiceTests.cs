@@ -191,7 +191,8 @@ namespace EmkTests
         public async Task DocSelector_LoadsDocumentsFromInjectedRepository()
         {
             var repository = new StubDocSelectorRepository();
-            var selector = new DocSelector(CreatePatientAccount(), repository);
+            var selector = new DocSelector(
+                CreatePatientAccount(), repository, new StubDocumentInitializationDependencies());
 
             var documents = await selector.GetDocs(123);
 
