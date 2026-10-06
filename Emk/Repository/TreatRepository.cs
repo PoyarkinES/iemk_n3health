@@ -80,8 +80,11 @@ namespace Emk.Repository
                 Parameter("account_id", accId),
             };
 
-            var data = await Query(Resources.CheckDocumentAccess, (IDataReader reader) => checkDocumentAccessAsync(reader, accId).GetAwaiter().GetResult(), [.. param]);
-            return data;
+            var documents = await Query(Resources.CheckDocumentAccess, getDocumentByAccountIdMap, [.. param]);
+            var results = new List<string>(documents.Count);
+            foreach (var document in documents)
+                results.Add(await CheckDocumentAccessAsync(document, accId));
+            return results;
         }
 
         public async Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId)
@@ -111,12 +114,12 @@ namespace Emk.Repository
                 Parameter("practicId", practicId));
         }
 
-        private async Task<string> checkDocumentAccessAsync(IDataReader reader, int accId)
+        private async Task<string> CheckDocumentAccessAsync(DocumentsDto document, int accId)
         {
             try
             {
-                var practicId = reader.Get<int>("practice_id");
-                var filePath = await getFullFilePathAsync(practicId, reader.Get<string>("efiles_path"), reader.Get<string>("efiles_name"));
+                var filePath = await getFullFilePathAsync(
+                    document.practice_id, document.efiles_path, document.efiles_name);
 
                 return !File.Exists(filePath)
                     ? $"Электронный документ {filePath}, для случая '{accId}', не найден или отсутствуют права доступа."

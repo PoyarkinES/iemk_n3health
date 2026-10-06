@@ -29,7 +29,14 @@ namespace Emk.Services
                 Log.Error($"Документ {file.efiles_name} не имеет идентификатора uuid. Требуется пересоздать документ");
             }
 
-            return [.. files.Where(w => !string.IsNullOrEmpty(w.uuid) && !string.IsNullOrEmpty(w.efiles_name)).Select(s => GetMedRecord(s, accountId).ConfigureAwait(false).GetAwaiter().GetResult())];
+            var documents = new List<MedRecord>();
+            foreach (var file in files.Where(w =>
+                         !string.IsNullOrEmpty(w.uuid) && !string.IsNullOrEmpty(w.efiles_name)))
+            {
+                documents.Add(await GetMedRecord(file, accountId));
+            }
+
+            return documents;
         }
 
         private IDocBase SelectDocType(FileData fd, int accountId, string idMis = null)
