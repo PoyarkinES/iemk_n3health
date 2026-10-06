@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Odbc;
-using System.Linq;
 using System.Threading.Tasks;
 using Emk.Models;
 using Emk.Properties;
@@ -15,18 +13,6 @@ namespace Emk.Repository
         public async Task<IEnumerable<EmkSettings>> LoadSettings()
         {
             return await Query(Resources.Sql_Parameters, EmkSettingsMap);
-        }
-
-        private async Task<IEnumerable<EmkSettings>> GenerateSettings(IEnumerable<EmkSettings> list)
-        {
-            var result = new List<EmkSettings>();
-            foreach (var item in list)
-            {
-                item.PatientDirectory = await GetPatientsPath(item.PracticeId);
-                result.Add(item);
-            }
-
-            return result;
         }
 
         private EmkSettings EmkSettingsMap(IDataReader reader)
@@ -48,27 +34,11 @@ namespace Emk.Repository
             };
         }
 
-        private async Task<string> GetPatientsPath(int practicId)
-        {
-            var param = new List<OdbcParameter>
-            {
-                Parameter("practicId", practicId),
-            };
-
-            var data = (await Query(Resources.GetFileDirectory, CheckDocumentEsignMap, [.. param])).First();
-            return string.IsNullOrEmpty(data) ? null : data;
-        }
-
         private TimeSpan GetTimeSpan(string value)
         {
             return TimeSpan.TryParse(value.Length > 7 ? value.Substring(0, 7) : value, out var n3HRefrTime)
                 ? n3HRefrTime
                 : TimeSpan.Zero;
-        }
-
-        private string CheckDocumentEsignMap(IDataReader reader)
-        {
-            return reader.Get<string>("path_ext_docs");
         }
 
         private EmkSettings FillSettings(EmkSettings e, DbSettings s)
