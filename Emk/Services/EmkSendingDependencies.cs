@@ -135,6 +135,46 @@ namespace Emk.Services
         public void CloseSafely() => WcfClientLifecycle.Close(_client);
     }
 
+    public interface IEmkWcfClient
+    {
+        Task AddCaseAsync(string guid, CaseBase caseData);
+        Task UpdateCaseAsync(string guid, CaseBase caseData);
+        void CloseSafely();
+    }
+
+    public interface IEmkWcfClientFactory
+    {
+        IEmkWcfClient Create(string serviceUrl);
+    }
+
+    internal sealed class FactoryEmkWcfClientFactory : IEmkWcfClientFactory
+    {
+        public IEmkWcfClient Create(string serviceUrl)
+        {
+            var binding = new BasicHttpBinding();
+            var endpointAddress = new EndpointAddress(new Uri(serviceUrl));
+            return new EmkWcfClientAdapter(new EmkServiceClient(binding, endpointAddress));
+        }
+    }
+
+    internal sealed class EmkWcfClientAdapter : IEmkWcfClient
+    {
+        private readonly EmkServiceClient _client;
+
+        public EmkWcfClientAdapter(EmkServiceClient client)
+        {
+            _client = client;
+        }
+
+        public Task AddCaseAsync(string guid, CaseBase caseData) =>
+            _client.AddCaseAsync(guid, caseData);
+
+        public Task UpdateCaseAsync(string guid, CaseBase caseData) =>
+            _client.UpdateCaseAsync(guid, caseData);
+
+        public void CloseSafely() => WcfClientLifecycle.Close(_client);
+    }
+
     public interface IEmkCaseSendingClient
     {
         Task<int> AddCase(PatientAccount account, bool updateOnly);
