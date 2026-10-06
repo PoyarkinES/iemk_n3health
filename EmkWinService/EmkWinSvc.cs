@@ -45,12 +45,12 @@ namespace EmkWinService
 			}
 		}
 
-        protected override void OnStart(string[] args)
+        protected override async void OnStart(string[] args)
         {
             try
             {
                 Log.Info("Запуск службы...");
-                _settings = Factory.LoadSettings().First();
+                _settings = (await Factory.LoadSettingsAsync()).First();
                 Log.Info(_settings.ToString());
                 _timer.AutoReset = true;
                 _timer.Start();

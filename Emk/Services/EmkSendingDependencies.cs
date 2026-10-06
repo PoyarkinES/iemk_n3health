@@ -12,7 +12,7 @@ namespace Emk.Services
 {
     public interface IEmkSendingRepository
     {
-        List<EmkSettings> LoadSettings(bool reload);
+        Task<List<EmkSettings>> LoadSettings(bool reload);
         Task<bool> IsLicenseValid();
         Task<List<PatientAccount>> GetPatientAccountsAsync(DateTime from, DateTime to);
         Task<PatientAccount> GetPatientAccountByIdAsync(int accountId);
@@ -63,7 +63,7 @@ namespace Emk.Services
 
     internal sealed class FactoryEmkSendingRepository : IEmkSendingRepository
     {
-        public List<EmkSettings> LoadSettings(bool reload) => Factory.LoadSettings(reload);
+        public Task<List<EmkSettings>> LoadSettings(bool reload) => Factory.LoadSettingsAsync(reload);
 
         public Task<bool> IsLicenseValid() => Factory.GetLicenseRepository.IsLicenseValid();
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emk.Models;
 using Emk.Repository;
@@ -13,6 +15,7 @@ namespace Emk
 	public static class Factory
 	{
 		private static List<EmkSettings> _settings;
+        private static readonly SemaphoreSlim SettingsLock = new SemaphoreSlim(1, 1);
 
         private static string ConnectionString
         {
@@ -33,13 +36,20 @@ namespace Emk
 		public static ISettingsService GetSettingsService => new SettingsService();
 		public static PatientRepository GetPatientRepository => new PatientRepository(ConnectionString);
         public static LicenseRepository GetLicenseRepository => new LicenseRepository(ConnectionString);
-		public static List<EmkSettings> LoadSettings(bool force = false)
+		public static async Task<List<EmkSettings>> LoadSettingsAsync(bool force = false)
 		{
-			if (force || _settings == null)
+            await SettingsLock.WaitAsync().ConfigureAwait(false);
+            try
             {
-                _settings = new SettingsRepository(ConnectionString).LoadSettings().GetAwaiter().GetResult().ToList();
+                if (force || _settings == null)
+                    _settings = (await new SettingsRepository(ConnectionString).LoadSettings().ConfigureAwait(false)).ToList();
+
+                return _settings;
             }
-            return _settings;
+            finally
+            {
+                SettingsLock.Release();
+            }
 		}
 	}
 

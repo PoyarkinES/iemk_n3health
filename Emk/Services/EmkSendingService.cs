@@ -8,9 +8,10 @@ namespace Emk.Services
 {
 	public class EmkSendingService
     {
-        private readonly List<EmkSettings> _settings;
+        private List<EmkSettings> _settings;
 		private readonly IEmkSendingRepository _repository;
 		private readonly IEmkSendingClientFactory _clientFactory;
+        private readonly bool _reloadSettings;
 
 		public EmkSendingService(bool reloadSettings = false)
 		    : this(new FactoryEmkSendingRepository(), new FactoryEmkSendingClientFactory(), reloadSettings)
@@ -24,11 +25,12 @@ namespace Emk.Services
 		{
 		    _repository = repository ?? throw new ArgumentNullException(nameof(repository));
 		    _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
-		    _settings = _repository.LoadSettings(reloadSettings);
+            _reloadSettings = reloadSettings;
         }
 
         public async Task Run(int? accountId = null)
 		{
+            await EnsureSettingsLoaded();
 		    if (!await IsLicenseValid()) return;
 
 			Log.Info("Начинаю отправку данных по пациентам...");
@@ -46,6 +48,7 @@ namespace Emk.Services
 
         public async Task Update(int accountId)
         {
+            await EnsureSettingsLoaded();
             if (!await IsLicenseValid()) return;
 
             Log.Info("Начинаю поиск СМО с номером счета " + accountId);
@@ -76,6 +79,12 @@ namespace Emk.Services
             await _clientFactory.CreatePixClient(set).UpdatePatient(smo);
             var result = await _clientFactory.CreateEmkClient(set).UpdateCase(smo);
             if (result == 0) await _repository.UpdateEsignFiles(smo);
+        }
+
+        private async Task EnsureSettingsLoaded()
+        {
+            if (_settings == null)
+                _settings = await _repository.LoadSettings(_reloadSettings);
         }
 
         private Task<PatientAccount> FindPatientAccount(int accountId) =>

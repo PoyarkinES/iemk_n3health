@@ -243,7 +243,7 @@ namespace EmkTests
             public int PatientConsentCount { get; set; }
             public List<int> MarkedAccountIds { get; } = new List<int>();
 
-            public List<EmkSettings> LoadSettings(bool reload) => Settings;
+            public Task<List<EmkSettings>> LoadSettings(bool reload) => Task.FromResult(Settings);
             public Task<bool> IsLicenseValid() => Task.FromResult(LicenseCheckResult);
 
             public Task<List<PatientAccount>> GetPatientAccountsAsync(DateTime from, DateTime to)
