@@ -19,7 +19,9 @@ namespace Emk.Repository
             {
                 Parameter("member_id", memberId),
             };
-            return (await Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, [.. param])).First();
+            var doctor = (await Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, [.. param])).First();
+            doctor.DepartmentHead = await GetDepartmentHead(doctor.MemberId);
+            return doctor;
         }
 
         public async virtual Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId)
@@ -117,7 +119,6 @@ namespace Emk.Repository
                 Position = reader.Get<int>("Code"),
                 Snils = reader.Get<string>("snils"),
                 SexStr = reader.Get<string>("provider_no_1_id"),
-                DepartmentHead = GetDepartmentHead(reader.Get<int>("member_id")).GetAwaiter().GetResult(),
             };
         }
 
