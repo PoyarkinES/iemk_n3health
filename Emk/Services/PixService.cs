@@ -34,7 +34,9 @@ namespace Emk.Services
 
         public async Task<bool> AddOrUpdatePatient(PatientAccount pa)
         {
-            return GetPatient(pa.PatientId) == null ? await AddPatient(pa) : await UpdatePatient(pa);
+            return await GetPatientAsync(pa.PatientId) == null
+                ? await AddPatient(pa)
+                : await UpdatePatient(pa);
         }
 
 
@@ -188,7 +190,7 @@ namespace Emk.Services
 		//	}
 		//}
 
-		public Patient GetPatient(int patientId)
+		public async Task<Patient> GetPatientAsync(int patientId)
 		{
             PixServiceClient client = null;
 			try {
@@ -202,9 +204,8 @@ namespace Emk.Services
 				SourceType idSource1 = SourceType.Reg;
 
                 
-                PatientDto[] patientResult = client.GetPatient(guid, idLPU, patient, idSource1);
-                 
-                
+                PatientDto[] patientResult = await client.GetPatientAsync(guid, idLPU, patient, idSource1);
+
 				if (patientResult.Length == 1) {
                     Patient p = new Patient
                     {
