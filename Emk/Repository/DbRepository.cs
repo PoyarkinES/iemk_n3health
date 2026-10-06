@@ -27,16 +27,17 @@ namespace Emk.Repository
                 using var command = connection.CreateCommand();
                 BindParameters(command, commandText, args);
 
-                connection.Open();
-                var result = (T) Convert.ChangeType(await command.ExecuteScalarAsync(), typeof(T));
-                connection.Close();
+                await connection.OpenAsync();
+                var result = await command.ExecuteScalarAsync();
+                if (result == null || result == DBNull.Value)
+                    return default;
 
-                return result;
+                return (T)Convert.ChangeType(result, typeof(T));
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
-                throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
+                throw new Exception("Ошибка при получении данных из БД.", e);
             }
         }
 
@@ -50,7 +51,7 @@ namespace Emk.Repository
                 using var command = connection.CreateCommand();
                 BindParameters(command, commandText, args);
 
-                connection.Open();
+                await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
@@ -62,7 +63,7 @@ namespace Emk.Repository
             catch (Exception e)
             {
                 Log.Error(e.ToString());
-                throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
+                throw new Exception("Ошибка при получении данных из БД.", e);
             }
         }
 
@@ -82,21 +83,18 @@ namespace Emk.Repository
                 }
                 BindParameters(command, commandText, parameters.ToArray());
 
-                connection.Open();
+                await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
                 while (reader.Read())
                 {
                     result.Add(map(reader));
                 }
-                connection.Close();
-                connection.Dispose();
-
                 return result;
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
-                throw new Exception($"MethodName: 'Query'. Ошибка при получении данных из БД" + e.ToString());
+                throw new Exception("Ошибка при получении данных из БД.", e);
             }
         }
 
@@ -104,23 +102,17 @@ namespace Emk.Repository
         {
             try
             {
-                var result = -1;
-
                 using var connection = new OdbcConnection(m_ConnectionString);
                 using var command = connection.CreateCommand();
                 BindParameters(command, commandText, args);
 
-                connection.Open();
-                result = await command.ExecuteNonQueryAsync();
-                connection.Close();
-                connection.Dispose();
-
-                return result;
+                await connection.OpenAsync();
+                return await command.ExecuteNonQueryAsync();
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
-                throw new Exception($"MethodName: 'ExecuteNonQuery'. Ошибка при получении данных из БД" + e.ToString());
+                throw new Exception("Ошибка при выполнении команды в БД.", e);
             }
         }
 
