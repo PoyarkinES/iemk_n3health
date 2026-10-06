@@ -76,7 +76,13 @@ namespace Emk.Services
 
             if(check.Any(a=> !a)) return;
 
-            await _clientFactory.CreatePixClient(set).UpdatePatient(smo);
+            var patientUpdated = await _clientFactory.CreatePixClient(set).UpdatePatient(smo);
+            if (!patientUpdated)
+            {
+                Log.Warning($"СМО {smo.AccountId} не обновлен в ЕМК, так как пациент не обновлен в PIX.");
+                return;
+            }
+
             var result = await _clientFactory.CreateEmkClient(set).UpdateCase(smo);
             if (result == 0) await _repository.UpdateEsignFiles(smo);
         }

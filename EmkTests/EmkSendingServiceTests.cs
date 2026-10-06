@@ -180,6 +180,20 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task Update_DoesNotCallEmkOrMarkDocumentsWhenPixUpdateFails()
+        {
+            var repository = CreateRepositoryWithCase();
+            var clients = new StubSendingClientFactory();
+            clients.Pix.UpdatePatientResult = false;
+
+            await CreateService(repository, clients).Update(123);
+
+            Assert.AreEqual(1, clients.Pix.UpdatePatientCalls);
+            Assert.AreEqual(0, clients.Emk.UpdateCaseCalls);
+            Assert.AreEqual(0, repository.MarkedAccountIds.Count);
+        }
+
+        [TestMethod]
         public async Task Update_DoesNotMarkDocumentsWhenEmkUpdateFails()
         {
             var repository = CreateRepositoryWithCase();
@@ -837,6 +851,7 @@ namespace EmkTests
         private sealed class StubPixSendingClient : IPixSendingClient
         {
             public bool AddPatientResult { get; set; } = true;
+            public bool UpdatePatientResult { get; set; } = true;
             public int AddPatientCalls { get; private set; }
             public int UpdatePatientCalls { get; private set; }
             public int LastAccountId { get; private set; }
@@ -852,7 +867,7 @@ namespace EmkTests
             {
                 UpdatePatientCalls++;
                 LastAccountId = account.AccountId;
-                return Task.FromResult(true);
+                return Task.FromResult(UpdatePatientResult);
             }
         }
 
