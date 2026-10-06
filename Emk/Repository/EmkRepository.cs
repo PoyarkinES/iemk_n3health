@@ -19,8 +19,12 @@ namespace Emk.Repository
             {
                 Parameter("member_id", memberId),
             };
-            var doctor = (await Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, [.. param])).First();
-            doctor.DepartmentHead = await GetDepartmentHead(doctor.MemberId);
+            var doctorTask = Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, [.. param]);
+            var departmentHeadTask = GetDepartmentHead(memberId);
+            await Task.WhenAll(doctorTask, departmentHeadTask).ConfigureAwait(false);
+
+            var doctor = (await doctorTask.ConfigureAwait(false)).First();
+            doctor.DepartmentHead = await departmentHeadTask.ConfigureAwait(false);
             return doctor;
         }
 
