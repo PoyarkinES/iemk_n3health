@@ -55,9 +55,14 @@ namespace Emk.Services
                     Log.Warning($"AccountId: {treat.AccountId} дата случая: {treat.TreatDate} отличается от даты подписания документа: {treat.EsfDate}.");
                 }
 
-				var doctor = await getDoctor(treat);
-                var patient = await _dependencies.GetPatient(treat.PatientId);
-                var medDocuments = await getMedDocuments(treat);
+                var doctorTask = getDoctor(treat);
+                var patientTask = _dependencies.GetPatient(treat.PatientId);
+                var medicalDocumentsTask = getMedDocuments(treat);
+                await Task.WhenAll(doctorTask, patientTask, medicalDocumentsTask);
+
+                var doctor = await doctorTask;
+                var patient = await patientTask;
+                var medDocuments = await medicalDocumentsTask;
 
 				if (medDocuments == null || !medDocuments.Any())
                 {
@@ -233,7 +238,13 @@ namespace Emk.Services
 
             medicalCase.IdCaseAidType = 3;
             medicalCase.IdCaseType = 2;
-            medicalCase.IdPaymentType = (byte)(await _dependencies.GetPayType(treat.AccountId));
+            var paymentTypeTask = _dependencies.GetPayType(treat.AccountId);
+            var procedureDescriptionsTask = _dependencies.GetProcedureDescriptions(
+                treat.PatientId, treat.TreatDate, treat.AccountId);
+            await Task.WhenAll(paymentTypeTask, procedureDescriptionsTask);
+            var paymentType = await paymentTypeTask;
+            var procedureDescriptions = await procedureDescriptionsTask;
+            medicalCase.IdPaymentType = (byte)paymentType;
             medicalCase.IdCasePurpose = Convert.ToByte(def.VisitPurpose);
 
             medicalCase.Confidentiality = Convert.ToByte(def.ConfidentialityLevel);
@@ -263,12 +274,12 @@ namespace Emk.Services
                         Doctor = doctor,
                         IdVisitPlace = Convert.ToByte(def.VisitPlace),
                         IdVisitPurpose = Convert.ToByte(def.VisitPurpose),
-                        IdPaymentType = (byte)await _dependencies.GetPayType(treat.AccountId)
+                        IdPaymentType = (byte)paymentType
             }
                 ];
 
             medicalCase.MedRecords = medDocuments.ToArray();
-            medicalCase.Steps[0].MedRecords = [.. (await getProcedures(treat, doctor))];
+            medicalCase.Steps[0].MedRecords = [.. GetProcedures(treat, doctor, procedureDescriptions)];
 
             // Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.
             medicalCase.AdmissionCondition = 1;
@@ -307,11 +318,14 @@ namespace Emk.Services
             return _dependencies.GetMedicalDocuments(treat);
         }
 
-        private async Task<List<MedRecord>> getProcedures(PatientAccount treat, MedicalStaff doctor)
+        private static List<MedRecord> GetProcedures(
+            PatientAccount treat,
+            MedicalStaff doctor,
+            IEnumerable<ProcedureDescriptionEmk> descriptions)
         {
             var medRecords = new List<MedRecord>();
 
-            foreach (var d in await _dependencies.GetProcedureDescriptions(treat.PatientId, treat.TreatDate, treat.AccountId))
+            foreach (var d in descriptions)
             {
                 if (string.IsNullOrEmpty(d.Description))
                     continue;
