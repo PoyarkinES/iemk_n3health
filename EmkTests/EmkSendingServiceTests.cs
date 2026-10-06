@@ -179,6 +179,20 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task Run_AllowsCaseWhenSignatureCheckReturnsOnlyEmptyMessages()
+        {
+            var repository = CreateRepositoryWithCase();
+            repository.EsignCheckMessages = new[] { string.Empty };
+            var clients = new StubSendingClientFactory();
+
+            await CreateService(repository, clients).Run(123);
+
+            Assert.AreEqual(1, clients.Pix.AddPatientCalls);
+            Assert.AreEqual(1, clients.Emk.AddCaseCalls);
+            CollectionAssert.AreEqual(new[] { 123 }, repository.MarkedAccountIds.ToArray());
+        }
+
+        [TestMethod]
         public async Task Update_UpdatesPatientAndCaseThenMarksDocumentsAfterSuccess()
         {
             var repository = CreateRepositoryWithCase();
