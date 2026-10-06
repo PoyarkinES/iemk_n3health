@@ -52,7 +52,7 @@ namespace Emk.Services
                     Log.Info(
                         $"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
 
-                    client.AddPatient(guid, idLPU, _patient1);
+                    await client.AddPatientAsync(guid, idLPU, _patient1);
                     client.Close();
                     Log.Info($"PIX Пациент добавлен.");
                     return true;
@@ -86,7 +86,7 @@ namespace Emk.Services
                 var setResult = SetPatient(pa);
                 if (string.IsNullOrEmpty(await setResult))
                 {
-                    client.UpdatePatient(guid, idLPU, _patient1);
+                    await client.UpdatePatientAsync(guid, idLPU, _patient1);
                     client.Close();
                     Log.Info($"PIX Пациент обновлен.");
                     return true;
