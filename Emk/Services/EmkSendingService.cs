@@ -32,6 +32,7 @@ namespace Emk.Services
 		{
             await EnsureSettingsLoaded();
 		    if (!await IsLicenseValid()) return;
+            if (!HasSettings()) return;
 
 			Log.Info("Начинаю отправку данных по пациентам...");
             var p = accountId == null
@@ -50,6 +51,7 @@ namespace Emk.Services
         {
             await EnsureSettingsLoaded();
             if (!await IsLicenseValid()) return;
+            if (!HasSettings()) return;
 
             Log.Info("Начинаю поиск СМО с номером счета " + accountId);
             var smo = await FindPatientAccount(accountId);
@@ -91,6 +93,15 @@ namespace Emk.Services
         {
             if (_settings == null)
                 _settings = await _repository.LoadSettings(_reloadSettings);
+        }
+
+        private bool HasSettings()
+        {
+            if (_settings != null && _settings.Count > 0)
+                return true;
+
+            Log.Warning("Не найдены настройки отправки EMK.");
+            return false;
         }
 
         private Task<PatientAccount> FindPatientAccount(int accountId) =>

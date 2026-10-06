@@ -91,6 +91,18 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task Run_DoesNotQueryCasesWhenSettingsAreEmpty()
+        {
+            var repository = new StubSendingRepository();
+            var clients = new StubSendingClientFactory();
+
+            await CreateService(repository, clients).Run();
+
+            Assert.AreEqual(0, repository.PatientAccountQueries);
+            Assert.AreEqual(0, clients.Pix.AddPatientCalls);
+        }
+
+        [TestMethod]
         public async Task Run_ByAccount_DoesNotCreateClientsWhenAccountIsMissing()
         {
             var repository = CreateRepositoryWithSettings();
@@ -163,6 +175,18 @@ namespace EmkTests
             Assert.AreEqual(123, clients.Pix.LastAccountId);
             Assert.AreEqual(123, clients.Emk.LastAccountId);
             CollectionAssert.AreEqual(new[] { 123 }, repository.MarkedAccountIds.ToArray());
+        }
+
+        [TestMethod]
+        public async Task Update_DoesNotQueryAccountWhenSettingsAreEmpty()
+        {
+            var repository = new StubSendingRepository();
+            var clients = new StubSendingClientFactory();
+
+            await CreateService(repository, clients).Update(123);
+
+            Assert.IsNull(repository.RequestedAccountId);
+            Assert.AreEqual(0, clients.Pix.UpdatePatientCalls);
         }
 
         [TestMethod]
