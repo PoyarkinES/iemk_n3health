@@ -340,6 +340,37 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DoctorFileService_SavesDoctorsAndDefaultsAsynchronously()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var path = Path.Combine(directory, "SmoSettings.xml");
+
+            try
+            {
+                var service = new DoctorFileService(new StubDoctorRepository(), path);
+                await service.InitializeAsync();
+                await service.SaveDoctorsToFileAsync(new List<Doctor>
+                {
+                    new Doctor { MemberId = 31 }
+                });
+                await service.SaveDefaultsAsync(new DefaultData { VisitPurpose = 11 });
+
+                var reloadedService = new DoctorFileService(new StubDoctorRepository(), path);
+                await reloadedService.InitializeAsync();
+
+                Assert.AreEqual(31, reloadedService.LoadDoctorsFromFile().Single().MemberId);
+                Assert.AreEqual(11, reloadedService.LoadDefaults().VisitPurpose);
+                Assert.IsFalse(File.Exists(path + ".tmp"));
+                Assert.IsFalse(File.Exists(path + ".bak"));
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task PixService_GetPatientAsyncUsesInjectedWcfClient()
         {
             var clientFactory = new StubPixWcfClientFactory();

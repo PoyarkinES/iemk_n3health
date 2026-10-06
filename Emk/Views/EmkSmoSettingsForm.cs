@@ -100,11 +100,11 @@ namespace Emk.Views
 
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
-			_srv.SaveDoctorsToFile(_doctors);
 			ModifyDefaults();
-			_srv.SaveDefaults(_def);
+			await _srv.SaveDoctorsToFileAsync(_doctors);
+			await _srv.SaveDefaultsAsync(_def);
 			MessageBox.Show("Данные сохранены");
 		}
 

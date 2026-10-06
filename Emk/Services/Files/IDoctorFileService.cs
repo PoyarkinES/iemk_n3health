@@ -10,7 +10,7 @@ namespace Emk.Services.Files
         DefaultData LoadDefaults();
         List<Doctor> LoadDoctorsFromFile();
         Task<List<Doctor>> LoadDoctorsFromDbAsync();
-        void SaveDefaults(DefaultData d);
-        void SaveDoctorsToFile(List<Doctor> d);
+        Task SaveDefaultsAsync(DefaultData d);
+        Task SaveDoctorsToFileAsync(List<Doctor> doctors);
     }
 }

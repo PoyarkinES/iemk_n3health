@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Emk.Repository.Interface;
@@ -17,6 +18,8 @@ namespace Emk.Services.Files
         private readonly string _smoPath;
         private readonly IDoctorRepository _doctorRepository;
         private readonly System.Threading.SemaphoreSlim _initializationLock =
+            new System.Threading.SemaphoreSlim(1, 1);
+        private readonly System.Threading.SemaphoreSlim _saveLock =
             new System.Threading.SemaphoreSlim(1, 1);
         private bool _initialized;
 
@@ -104,18 +107,16 @@ namespace Emk.Services.Files
             return _smo.Default;
         }
 
-        public void SaveDoctorsToFile(List<Doctor> d)
+        public Task SaveDoctorsToFileAsync(List<Doctor> doctors)
         {
             Log.Info("Сохраняю список врачей в файл");
-            _smo.Doctors = d;
-            SaveData();
+            return SaveDataAsync(settings => settings.Doctors = doctors);
         }
 
-        public void SaveDefaults(DefaultData d)
+        public Task SaveDefaultsAsync(DefaultData defaults)
         {
             Log.Info("Сохраняю параметры врача по умолчанию.");
-            _smo.Default = d;
-            SaveData();
+            return SaveDataAsync(settings => settings.Default = defaults);
         }
 
         public async Task<List<Doctor>> LoadDoctorsFromDbAsync()
@@ -133,25 +134,54 @@ namespace Emk.Services.Files
             return _smo.Doctors;
         }
 
-        private void SaveData()
+        private async Task SaveDataAsync(Action<SmoSettings> update)
         {
-            string bak = Path.Combine(Path.GetDirectoryName(_smoPath), "SmoSettings.xml.bak");
-            File.Move(_smoPath, bak);
+            await InitializeAsync().ConfigureAwait(false);
+            await _saveLock.WaitAsync().ConfigureAwait(false);
+            var temporaryPath = _smoPath + ".tmp";
             try {
-                XmlSerializer xml = new XmlSerializer(typeof(SmoSettings));
-                using (FileStream fs = new FileStream(_smoPath, FileMode.OpenOrCreate)) {
-                    xml.Serialize(fs, _smo);
+                update(_smo);
+                string contents;
+                using (var writer = new Utf8StringWriter())
+                {
+                    new XmlSerializer(typeof(SmoSettings)).Serialize(writer, _smo);
+                    contents = writer.ToString();
+                }
+
+                var backupPath = _smoPath + ".bak";
+                using (var stream = new FileStream(
+                    temporaryPath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, useAsync: true))
+                using (var writer = new StreamWriter(stream))
+                    await writer.WriteAsync(contents).ConfigureAwait(false);
+
+                if (File.Exists(_smoPath))
+                {
+                    if (File.Exists(backupPath))
+                        File.Delete(backupPath);
+                    File.Replace(temporaryPath, _smoPath, backupPath);
+                    File.Delete(backupPath);
+                }
+                else
+                {
+                    File.Move(temporaryPath, _smoPath);
                 }
             }
-            catch(Exception e) {
-                if (File.Exists(_smoPath))
-                    File.Delete(_smoPath);
-                File.Move(bak, _smoPath);
-            }
             finally {
-                if (File.Exists(bak))
-                    File.Delete(bak);
+                try
+                {
+                    if (File.Exists(temporaryPath))
+                        File.Delete(temporaryPath);
+                }
+                finally
+                {
+                    _saveLock.Release();
+                }
             }
+        }
+
+        private sealed class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
         }
     }
 }
