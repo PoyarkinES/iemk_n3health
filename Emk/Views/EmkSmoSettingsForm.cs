@@ -17,8 +17,12 @@ namespace Emk.Views
 		{
 			InitializeComponent();
 			_srv = Factory.GetSmoService;
-			LoadDefaults();
-			LoadD4w();
+			Load += async (sender, e) =>
+			{
+				await _srv.InitializeAsync();
+				LoadDefaults();
+				LoadD4w();
+			};
 
 		}
 
@@ -104,9 +108,9 @@ namespace Emk.Views
 			MessageBox.Show("Данные сохранены");
 		}
 
-        private void btnUpdate_Click(object sender, EventArgs e)
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            LoadD4w(_srv.LoadDoctorsFromDb());
+            LoadD4w(await _srv.LoadDoctorsFromDbAsync());
             MessageBox.Show("Данные обновлены", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
