@@ -206,7 +206,7 @@ namespace Emk.Services
                 }
 
                 await srv.InitializeAsync(_documentDependencies);
-                return srv.CreateDocument();
+                return await srv.CreateDocumentAsync();
             }
 
             Log.Warning($"Подписанный файл {file.efiles_name} не найден.");

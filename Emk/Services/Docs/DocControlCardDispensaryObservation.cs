@@ -15,7 +15,7 @@ namespace Emk.Services.Docs
 
         protected override int DocCode => 153;
         protected override string NsType { get; }
-        public override MedRecord CreateDocument()
+        public override Task<MedRecord> CreateDocumentAsync()
         {
             throw new NotImplementedException();
         }

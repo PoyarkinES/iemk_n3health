@@ -19,7 +19,7 @@ namespace Emk.Services.Docs
     public interface IDocBase
     {
         Task InitializeAsync(IDocumentInitializationDependencies dependencies);
-        MedRecord CreateDocument();
+        Task<MedRecord> CreateDocumentAsync();
     }
 
     public abstract class DocBase : IDocBase
@@ -63,7 +63,53 @@ namespace Emk.Services.Docs
             DocPatient = await InitializationDependencies.GetPatient(CartNote.PatientId);
         }
 
-        public abstract MedRecord CreateDocument();
+        public abstract Task<MedRecord> CreateDocumentAsync();
+
+        protected async Task<MedDocumentDtoDocumentAttachment[]> CreateAttachmentsAsync(
+            string mimeType, DoctorEmk doctor)
+        {
+            Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
+            var data = await ReadFileAsync(FilePath);
+            var personalSignPath = FilePath + ".sgn";
+            var organizationSignPath = FilePath + "2.sgn";
+            var personalSign = File.Exists(personalSignPath)
+                ? await ReadFileAsync(personalSignPath)
+                : null;
+            var organizationSign = File.Exists(organizationSignPath)
+                ? await ReadFileAsync(organizationSignPath)
+                : null;
+
+            return new[]
+            {
+                new MedDocumentDtoDocumentAttachment
+                {
+                    Data = data,
+                    MimeType = mimeType,
+                    OrganizationSign = organizationSign,
+                    PersonalSigns = personalSign == null
+                        ? null
+                        : new[]
+                        {
+                            new MedDocumentDtoPersonalSign
+                            {
+                                Doctor = doctor.ToMedicalStaff(),
+                                Sign = personalSign
+                            }
+                        }
+                }
+            };
+        }
+
+        private static async Task<byte[]> ReadFileAsync(string path)
+        {
+            using (var source = new FileStream(
+                path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
+            using (var destination = new MemoryStream())
+            {
+                await source.CopyToAsync(destination);
+                return destination.ToArray();
+            }
+        }
 
         protected abstract int DocType { get; set; }
 

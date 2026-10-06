@@ -2,6 +2,7 @@
 using System.Diagnostics.PerformanceData;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
 
@@ -17,7 +18,7 @@ namespace Emk.Services.Docs.Referrals
         }
         protected override int DocCode => 31;
         protected override string NsType => "1";
-        public override MedRecord CreateDocument()
+        public override async Task<MedRecord> CreateDocumentAsync()
         {
             try
             {
@@ -27,7 +28,7 @@ namespace Emk.Services.Docs.Referrals
                 _doc.IdSourceLpu = _doctor.IdLpu;
                 _doc.IdTargetLpu = _doctor.IdLpu;
                 _doc.ReferralInfo = FillInfo();
-                _doc.Attachments = AddAttachments();
+                _doc.Attachments = await CreateAttachmentsAsync("text/xml", _doctor);
                 _doc.IdDocumentMis = CartNote.Id.ToString();
                 _doc.CreationDate = CartNote.DateAdded;
                 _doc.Header = "Header";
@@ -42,46 +43,6 @@ namespace Emk.Services.Docs.Referrals
         }
 
         protected override int DocType { get; set; }
-
-        private MedDocumentDtoDocumentAttachment[] AddAttachments()
-        {
-            try
-            {
-                Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
-                var data = File.ReadAllBytes(FilePath);
-                var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
-                var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
-
-                byte[] dsgn = null, osgn = null;
-                if (File.Exists(sgn1))
-                    dsgn = File.ReadAllBytes(sgn1);
-                if (File.Exists(sgn2))
-                    osgn = File.ReadAllBytes(sgn2);
-                return new[]
-                {
-                    new MedDocumentDtoDocumentAttachment
-                    {
-                        Data = data, //Encoding.UTF8.GetBytes(s),
-                        MimeType = "text/xml",
-                        OrganizationSign = osgn,
-                        PersonalSigns = dsgn == null
-                            ? null
-                            : new[]
-                            {
-                                new MedDocumentDtoPersonalSign
-                                {
-                                    Doctor = _doctor.ToMedicalStaff(),
-                                    Sign = dsgn
-                                }
-                            }
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
 
         private ReferralInfo FillInfo()
         {
