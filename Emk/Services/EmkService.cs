@@ -191,29 +191,35 @@ namespace Emk.Services
             }
         }
 
-        private string getError(RequestFault[] rError)
+        private string getError(RequestFault[] errors)
         {
-			foreach (var e in rError)
+            foreach (var error in errors)
             {
-                if (e.Errors.Length == 0)
+                if (error.Errors.Length == 0)
                 {
-                    return $"{e.ErrorCode} : {e.PropertyName} {e.Message} ";
+                    return $"{error.ErrorCode} : {error.PropertyName} {error.Message} ";
                 }
-                getError(e.Errors);
+
+                var nestedError = getError(error.Errors);
+                if (nestedError != null)
+                    return nestedError;
             }
 
             return null;
         }
         
-        private string getWarning(RequestWarning[] rWarning)
+        private string getWarning(RequestWarning[] warnings)
         {
-            foreach (RequestWarning e in rWarning)
+            foreach (var warning in warnings)
             {
-                if (e.Warnings.Length == 0)
+                if (warning.Warnings.Length == 0)
                 {
-                    return $"{e.WarningCode} : {e.PropertyName} {e.Message} ";
+                    return $"{warning.WarningCode} : {warning.PropertyName} {warning.Message} ";
                 }
-                getWarning(e.Warnings);
+
+                var nestedWarning = getWarning(warning.Warnings);
+                if (nestedWarning != null)
+                    return nestedWarning;
             }
 
             return null;
