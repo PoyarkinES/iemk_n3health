@@ -14,9 +14,11 @@ namespace Emk.Services.Files
     public class DoctorFileService : IDoctorFileService
     {
         private SmoSettings _smo;
-        private string _smoPath;
-        private bool _needsInitialLoad;
+        private readonly string _smoPath;
         private readonly IDoctorRepository _doctorRepository;
+        private readonly System.Threading.SemaphoreSlim _initializationLock =
+            new System.Threading.SemaphoreSlim(1, 1);
+        private bool _initialized;
 
         public DoctorFileService()
             : this(Factory.GetDoctorRepository)
@@ -24,39 +26,62 @@ namespace Emk.Services.Files
         }
 
         public DoctorFileService(IDoctorRepository doctorRepository)
+            : this(doctorRepository,
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SmoSettings.xml"))
+        {
+        }
+
+        public DoctorFileService(IDoctorRepository doctorRepository, string settingsPath)
         {
             _doctorRepository = doctorRepository ?? throw new ArgumentNullException(nameof(doctorRepository));
-            Log.Info("Загружаю данные из файла SmoSettings.xml...");
-            _smoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SmoSettings.xml");
-            _needsInitialLoad = !File.Exists(_smoPath);
-            if (_needsInitialLoad)
-            {
-                _smo = new SmoSettings
-                {
-                    Default = new DefaultData(),
-                    Doctors = new List<Doctor>()
-                };
-                return;
-            }
-
-            using (FileStream fs = new FileStream(_smoPath, FileMode.Open, FileAccess.Read)) {
-                XmlSerializer xml = new XmlSerializer(typeof(SmoSettings));
-                _smo = (SmoSettings)xml.Deserialize(fs);
-            }
-            _smo.Doctors ??= new List<Doctor>();
-            _smo.Default ??= new DefaultData();
+            _smoPath = settingsPath ?? throw new ArgumentNullException(nameof(settingsPath));
         }
 
         public async Task InitializeAsync()
         {
-            if (!_needsInitialLoad)
-                return;
+            await _initializationLock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                if (_initialized)
+                    return;
 
-            Log.Warning("SmoSettings.xml не найден, создаю файл по умолчанию...");
-            _smo.Doctors = (await _doctorRepository.GetDoctors()).ToList();
-            SaveNewData();
-            _needsInitialLoad = false;
-            Log.Info("SmoSettings.xml сформирован.");
+                Log.Info("Загружаю данные из файла SmoSettings.xml...");
+                if (File.Exists(_smoPath))
+                {
+                    string contents;
+                    using (var stream = new FileStream(
+                        _smoPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true))
+                    using (var reader = new StreamReader(stream))
+                    {
+                        contents = await reader.ReadToEndAsync().ConfigureAwait(false);
+                    }
+
+                    using (var reader = new StringReader(contents))
+                    {
+                        var serializer = new XmlSerializer(typeof(SmoSettings));
+                        _smo = (SmoSettings)serializer.Deserialize(reader);
+                    }
+                    _smo.Doctors ??= new List<Doctor>();
+                    _smo.Default ??= new DefaultData();
+                }
+                else
+                {
+                    Log.Warning("SmoSettings.xml не найден, создаю файл по умолчанию...");
+                    _smo = new SmoSettings
+                    {
+                        Default = new DefaultData(),
+                        Doctors = (await _doctorRepository.GetDoctors().ConfigureAwait(false)).ToList()
+                    };
+                    SaveNewData();
+                    Log.Info("SmoSettings.xml сформирован.");
+                }
+
+                _initialized = true;
+            }
+            finally
+            {
+                _initializationLock.Release();
+            }
         }
 
         private void SaveNewData()
