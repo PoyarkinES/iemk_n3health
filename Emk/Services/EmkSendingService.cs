@@ -218,10 +218,12 @@ namespace Emk.Services
         // если подписи нет, случай пропускаем и не добавляем в выгрузку "continue"
         private async Task<bool> checkDocumentEsignAsync(int accountId)
         {
-            var result = await _repository.GetCheckDocumentEsignAsync(accountId).ConfigureAwait(false);
-            if(result.Any())
+            var messages = (await _repository.GetCheckDocumentEsignAsync(accountId).ConfigureAwait(false))
+                .Where(message => !string.IsNullOrEmpty(message))
+                .ToList();
+            if (messages.Count > 0)
             {
-                foreach (var item in result.Where(w => w != String.Empty))
+                foreach (var item in messages)
                 {
                     Log.Info(item);
                 }
