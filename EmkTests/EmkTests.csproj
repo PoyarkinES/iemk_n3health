@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="CDATests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmkSendingServiceTests.cs" />
@@ -61,6 +64,8 @@
     <Compile Include="Application\UpdatePatientDataUseCaseTests.cs" />
     <Compile Include="Application\ValidateSendingRulesUseCaseTests.cs" />
     <Compile Include="Infrastructure\InfrastructureMapperTests.cs" />
+    <Compile Include="EmkWinServiceTests.cs" />
+    <Compile Include="EndToEndTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -85,6 +90,10 @@
     <ProjectReference Include="..\Emk\Emk.csproj">
       <Project>{438c08c4-5cee-428f-8e1e-9a5814143f6e}</Project>
       <Name>Emk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EmkWinService\EmkWinService.csproj">
+      <Project>{F9FFDE46-4067-4C94-8F61-52CC732BE9D7}</Project>
+      <Name>EmkWinService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

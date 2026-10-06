@@ -40,6 +40,7 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,6 +53,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Forms\AccountIdForm.cs" />
+    <Compile Include="Forms\AccountFinderForm.cs" />
+    <Compile Include="Forms\EmkMainForm.cs" />
+    <Compile Include="Forms\EmkSettingsForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -85,6 +94,18 @@
     <ProjectReference Include="..\Emk\Emk.csproj">
       <Project>{438c08c4-5cee-428f-8e1e-9a5814143f6e}</Project>
       <Name>Emk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emk.Application\Emk.Application.csproj">
+      <Project>{C4D5E6F7-1A2B-4C3D-8E9F-0A1B2C3D4E60}</Project>
+      <Name>Emk.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emk.Infrastructure\Emk.Infrastructure.csproj">
+      <Project>{A7B2DA2A-1D5C-4B7E-94EA-1AEB0A9C9928}</Project>
+      <Name>Emk.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emk.Domain\Emk.Domain.csproj">
+      <Project>{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}</Project>
+      <Name>Emk.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

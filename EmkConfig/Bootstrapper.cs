@@ -1,15 +1,14 @@
 using System;
 using System.Configuration;
-using System.ServiceProcess;
+using Emk.Application.Services;
 using Emk.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Emk.Application.Services;
 
-namespace EmkWinService
+namespace EmkConfig
 {
-    static class Program
+    public static class Bootstrapper
     {
-        static void Main()
+        public static ServiceProvider BuildServiceProvider()
         {
             var connection = ConfigurationManager.ConnectionStrings["EmkDb"];
             if (connection == null)
@@ -19,17 +18,8 @@ namespace EmkWinService
             services.AddInfrastructure(connection.ConnectionString);
             ApplicationServiceExtensions.AddApplication((service, implementation) =>
                 services.AddScoped(service, implementation));
-            services.AddScoped<ServiceRunner>();
-            services.AddScoped<EmkWinSvc>();
 
-            using (var provider = services.BuildServiceProvider())
-            using (var scope = provider.CreateScope())
-            {
-                ServiceBase.Run(new ServiceBase[]
-                {
-                    scope.ServiceProvider.GetRequiredService<EmkWinSvc>()
-                });
-            }
+            return services.BuildServiceProvider();
         }
     }
 }

@@ -33,10 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="EmkWinSvc.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -55,23 +56,27 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
     <None Include="..\EmkService\EmkDb.config">
       <Link>EmkDb.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EmkConfig\EmkConfig.csproj">
-      <Project>{f3db18a4-60e1-4b7c-9605-5a7fe8930305}</Project>
-      <Name>EmkConfig</Name>
+    <ProjectReference Include="..\Emk.Application\Emk.Application.csproj">
+      <Project>{C4D5E6F7-1A2B-4C3D-8E9F-0A1B2C3D4E60}</Project>
+      <Name>Emk.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Emk\Emk.csproj">
-      <Project>{438c08c4-5cee-428f-8e1e-9a5814143f6e}</Project>
-      <Name>Emk</Name>
+    <ProjectReference Include="..\Emk.Infrastructure\Emk.Infrastructure.csproj">
+      <Project>{A7B2DA2A-1D5C-4B7E-94EA-1AEB0A9C9928}</Project>
+      <Name>Emk.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emk.Domain\Emk.Domain.csproj">
+      <Project>{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}</Project>
+      <Name>Emk.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

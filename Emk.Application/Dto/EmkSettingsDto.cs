@@ -1,4 +1,5 @@
 using System;
+using Emk.Domain.Enums;
 
 namespace Emk.Application.Dto
 {
@@ -10,6 +11,7 @@ namespace Emk.Application.Dto
         public string EmkUrl { get; set; }
         public Guid IdLpu { get; set; }
         public int DateInterval { get; set; }
+        public SendingType SendingType { get; set; }
         public DateTime IntervalFrom { get; set; }
         public DateTime IntervalTo { get; set; }
     }
