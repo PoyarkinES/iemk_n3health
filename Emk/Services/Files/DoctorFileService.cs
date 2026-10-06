@@ -75,7 +75,7 @@ namespace Emk.Services.Files
                         Default = new DefaultData(),
                         Doctors = (await _doctorRepository.GetDoctors().ConfigureAwait(false)).ToList()
                     };
-                    SaveNewData();
+                    await WriteSettingsAsync().ConfigureAwait(false);
                     Log.Info("SmoSettings.xml сформирован.");
                 }
 
@@ -84,14 +84,6 @@ namespace Emk.Services.Files
             finally
             {
                 _initializationLock.Release();
-            }
-        }
-
-        private void SaveNewData()
-        {
-            XmlSerializer xml = new XmlSerializer(typeof(SmoSettings));
-            using (FileStream fs = new FileStream(_smoPath, FileMode.Create, FileAccess.Write)) {
-                xml.Serialize(fs, _smo);
             }
         }
 
@@ -137,10 +129,15 @@ namespace Emk.Services.Files
         private async Task SaveDataAsync(Action<SmoSettings> update)
         {
             await InitializeAsync().ConfigureAwait(false);
+            await WriteSettingsAsync(update).ConfigureAwait(false);
+        }
+
+        private async Task WriteSettingsAsync(Action<SmoSettings> update = null)
+        {
             await _saveLock.WaitAsync().ConfigureAwait(false);
             var temporaryPath = _smoPath + ".tmp";
             try {
-                update(_smo);
+                update?.Invoke(_smo);
                 string contents;
                 using (var writer = new Utf8StringWriter())
                 {
