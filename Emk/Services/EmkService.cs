@@ -65,7 +65,7 @@ namespace Emk.Services
                 var patient = await Factory.GetPatientRepository.GetPatient(treat.PatientId);
 				var medDocuments = await getMedDocuments(treat, doctor, patient);
 
-				if (medDocuments == null && !medDocuments.Any())
+				if (medDocuments == null || !medDocuments.Any())
                 {
                     Log.Info($"Документы не найдены для {treat.AccountId}.");
                     throw new Exception($"Документы не найдены для {treat.AccountId}.");
