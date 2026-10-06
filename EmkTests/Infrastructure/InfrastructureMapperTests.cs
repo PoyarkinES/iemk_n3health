@@ -33,6 +33,19 @@ namespace EmkTests.Infrastructure
         }
 
         [TestMethod]
+        public void PixServiceMapper_AnonymousPatientOmitsPersonalDetails()
+        {
+            var patient = PixServiceMapper.ToAnonymousServiceDto("Anonymous surname", "Anonymous name");
+
+            Assert.AreEqual("Anonymous surname", patient.FamilyName);
+            Assert.AreEqual("Anonymous name", patient.GivenName);
+            Assert.IsNull(patient.IdPatientMIS);
+            Assert.IsNull(patient.MiddleName);
+            Assert.IsNull(patient.Documents);
+            Assert.AreEqual((byte)0, patient.Sex);
+        }
+
+        [TestMethod]
         public void EmkServiceMapper_MapsAvailableTreatmentFields()
         {
             var treatment = new PatientTreatDto

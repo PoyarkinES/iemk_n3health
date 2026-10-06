@@ -49,6 +49,18 @@ namespace Emk.Infrastructure.ExternalServices.Mappers
             return ToServiceDto(patient);
         }
 
+        public static WcfPatient ToAnonymousServiceDto(string firstName, string givenName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(givenName))
+                throw new ArgumentException("Anonymous patient names must both be configured.");
+
+            return new WcfPatient
+            {
+                FamilyName = firstName,
+                GivenName = givenName
+            };
+        }
+
         private static byte MapSex(string sex)
         {
             if (string.Equals(sex, "M", StringComparison.OrdinalIgnoreCase) || sex == "М")

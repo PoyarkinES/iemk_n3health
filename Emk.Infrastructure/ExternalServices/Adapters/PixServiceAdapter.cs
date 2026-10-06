@@ -46,16 +46,27 @@ namespace Emk.Infrastructure.ExternalServices.Adapters
             if (account == null)
                 throw new ArgumentNullException(nameof(account));
 
-            var patient = await _patients.GetByIdAsync(account.PatientId).ConfigureAwait(false);
-            if (patient == null)
-                throw new ExternalServiceException("The patient could not be loaded for the PIX request.",
-                    new InvalidOperationException("Patient " + account.PatientId + " was not found."));
+            var hasConsent = await _patients.CheckConsentToShareAsync(account.PatientId).ConfigureAwait(false);
+            Emk.PixSvc.PatientDto wcfPatient;
+            if (hasConsent)
+            {
+                var patient = await _patients.GetByIdAsync(account.PatientId).ConfigureAwait(false);
+                if (patient == null)
+                    throw new ExternalServiceException("The patient could not be loaded for the PIX request.",
+                        new InvalidOperationException("Patient " + account.PatientId + " was not found."));
+
+                wcfPatient = PixServiceMapper.ToServiceDto(account, patient);
+            }
+            else
+            {
+                wcfPatient = PixServiceMapper.ToAnonymousServiceDto(
+                    _settings.UnknownPatientFirstName, _settings.UnknownPatientGivenName);
+            }
 
             PixServiceClient client = null;
             try
             {
                 client = _clientFactory(_settings.PixUrl);
-                var wcfPatient = PixServiceMapper.ToServiceDto(account, patient);
                 var guid = _settings.Guid.ToString();
                 var lpu = _settings.IdLPU.ToString();
                 if (update)

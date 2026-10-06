@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Emk.Application.Dto;
 using Emk.Application.UseCases.Sending;
 using Emk.Application.UseCases.Validation;
+using Emk.Domain.ValueObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmkTests.Application
@@ -36,7 +37,10 @@ namespace EmkTests.Application
         }
 
         private static SendPatientDataRequest Period() =>
-            new SendPatientDataRequest { StartDate = Day.AddDays(-1), EndDate = Day.AddDays(1) };
+            new SendPatientDataRequest
+            {
+                Period = new TreatmentPeriod(Day.AddDays(-1), Day.AddDays(1))
+            };
 
         [TestMethod]
         public async Task Send_SingleTreat_Succeeds()
@@ -48,6 +52,40 @@ namespace EmkTests.Application
             CollectionAssert.AreEqual(new[] { 10 }, _pix.Added);
             CollectionAssert.AreEqual(new[] { 10 }, _emkClient.Added);
             CollectionAssert.AreEqual(new[] { 10 }, _treats.UpdatedEsignAccounts);
+        }
+
+        [TestMethod]
+        public async Task Send_TreatmentPeriod_UsesExactRequestBounds()
+        {
+            var start = Day.AddDays(-1);
+            var end = Day.AddDays(1);
+
+            var response = await _useCase.ExecuteAsync(SendPatientDataRequest.ForPeriod(start, end));
+
+            Assert.IsTrue(response.Success);
+            Assert.AreEqual(start, _treats.RequestedStart);
+            Assert.AreEqual(end, _treats.RequestedEnd);
+        }
+
+        [TestMethod]
+        public async Task Send_SameDayPeriod_RemainsSupported()
+        {
+            var response = await _useCase.ExecuteAsync(SendPatientDataRequest.ForPeriod(Day, Day));
+
+            Assert.IsTrue(response.Success);
+            Assert.AreEqual(Day, _treats.RequestedStart);
+            Assert.AreEqual(Day, _treats.RequestedEnd);
+        }
+
+        [TestMethod]
+        public async Task Send_ReversedPeriod_IsRejectedBeforeQuery()
+        {
+            var response = await _useCase.ExecuteAsync(
+                SendPatientDataRequest.ForPeriod(Day.AddDays(1), Day));
+
+            Assert.IsFalse(response.Success);
+            Assert.IsNull(_treats.RequestedStart);
+            Assert.IsNull(_treats.RequestedEnd);
         }
 
         [TestMethod]

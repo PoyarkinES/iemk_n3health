@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Emk.Application.Dto;
 using Emk.Application.UseCases.Validation;
 using Emk.Domain.DomainExceptions;
+using Emk.Domain.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmkTests.Application
@@ -14,6 +15,7 @@ namespace EmkTests.Application
         private InMemoryTreatRepository _treats;
         private InMemoryEmkRepository _emk;
         private InMemorySettingsRepository _settings;
+        private EmkSettings _emkSettings;
         private ValidateSendingRulesUseCase _useCase;
 
         [TestInitialize]
@@ -24,8 +26,10 @@ namespace EmkTests.Application
             _treats = new InMemoryTreatRepository();
             _emk = new InMemoryEmkRepository();
             _settings = new InMemorySettingsRepository();
+            _emkSettings = new EmkSettings();
             _treats.Treats.Add(new PatientTreatDto { TreatId = 5, AccountId = 10, PatientId = 7, PracticeId = 1 });
-            _useCase = new ValidateSendingRulesUseCase(_license, _treats, _patients, _emk, _settings, new InMemoryLogger());
+            _useCase = new ValidateSendingRulesUseCase(
+                _license, _treats, _patients, _emk, _settings, new InMemoryLogger(), _emkSettings);
         }
 
         [TestMethod]
@@ -52,6 +56,31 @@ namespace EmkTests.Application
         public async Task Validate_NoConsent_ReturnsConsentError()
         {
             _patients.Consent = false;
+
+            var response = await _useCase.ExecuteAsync(new ValidateSendingRulesRequest { AccountId = 10 });
+
+            Assert.IsFalse(response.IsValid);
+            CollectionAssert.Contains(response.Errors, new PatientConsentMissingException().Message);
+        }
+
+        [TestMethod]
+        public async Task Validate_NoConsent_AllowsConfiguredAnonymousPatient()
+        {
+            _patients.Consent = false;
+            _emkSettings.UnknownPatientFirstName = "Anonymous surname";
+            _emkSettings.UnknownPatientGivenName = "Anonymous name";
+
+            var response = await _useCase.ExecuteAsync(new ValidateSendingRulesRequest { AccountId = 10 });
+
+            Assert.IsTrue(response.IsValid);
+            Assert.AreEqual(0, response.Errors.Count);
+        }
+
+        [TestMethod]
+        public async Task Validate_NoConsent_RequiresBothAnonymousNames()
+        {
+            _patients.Consent = false;
+            _emkSettings.UnknownPatientFirstName = "Anonymous surname";
 
             var response = await _useCase.ExecuteAsync(new ValidateSendingRulesRequest { AccountId = 10 });
 

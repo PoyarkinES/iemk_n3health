@@ -20,7 +20,9 @@ namespace Emk.Infrastructure.Configuration
             {
                 DbConnectionString = connectionString.ConnectionString,
                 AutoUpdate = int.Parse(ConfigurationManager.AppSettings["AutoUpdate"]),
-                IsNewMiddleName = short.Parse(ConfigurationManager.AppSettings["IsNewMiddleName"])
+                IsNewMiddleName = short.Parse(ConfigurationManager.AppSettings["IsNewMiddleName"]),
+                UnknownPatientFirstName = ConfigurationManager.AppSettings["UnknownPatientFirstName"],
+                UnknownPatientGivenName = ConfigurationManager.AppSettings["UnknownPatientGivenName"]
             };
         }
 
@@ -44,6 +46,8 @@ namespace Emk.Infrastructure.Configuration
 
             SetAppSetting(configuration, "AutoUpdate", settings.AutoUpdate.ToString());
             SetAppSetting(configuration, "IsNewMiddleName", settings.IsNewMiddleName.ToString());
+            SetAppSetting(configuration, "UnknownPatientFirstName", settings.UnknownPatientFirstName ?? string.Empty);
+            SetAppSetting(configuration, "UnknownPatientGivenName", settings.UnknownPatientGivenName ?? string.Empty);
             configuration.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("connectionStrings");
             ConfigurationManager.RefreshSection("appSettings");

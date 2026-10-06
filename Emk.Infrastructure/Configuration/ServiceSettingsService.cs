@@ -29,6 +29,9 @@ namespace Emk.Infrastructure.Configuration
             if (short.TryParse(ReadSetting("IsNewMiddleName"), out newMiddleName))
                 settings.IsNewMiddleName = newMiddleName;
 
+            settings.UnknownPatientFirstName = ReadSetting("UnknownPatientFirstName");
+            settings.UnknownPatientGivenName = ReadSetting("UnknownPatientGivenName");
+
             return settings;
         }
 
