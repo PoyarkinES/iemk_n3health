@@ -18,15 +18,25 @@ namespace Emk.Services
 		private string idLPU;
 		private PatientDto _patient1;
         private readonly IPixServiceDependencies _dependencies;
+        private readonly IPixWcfClientFactory _clientFactory;
 
         public PixService(EmkSettings s)
-            : this(s, new FactoryPixServiceDependencies())
+            : this(s, new FactoryPixServiceDependencies(), new FactoryPixWcfClientFactory())
         {
         }
 
         public PixService(EmkSettings s, IPixServiceDependencies dependencies)
+            : this(s, dependencies, new FactoryPixWcfClientFactory())
+        {
+        }
+
+        public PixService(
+            EmkSettings s,
+            IPixServiceDependencies dependencies,
+            IPixWcfClientFactory clientFactory)
 		{
             _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
+            _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
             Url = s.PixUrl;
 			guid = s.Guid.ToString();
 			idLPU = s.IdLPU.ToString();
@@ -50,14 +60,14 @@ namespace Emk.Services
                     Log.Info(
                         $"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
 
-                    var client = CreateClient();
+                    var client = _clientFactory.Create(Url);
                     try
                     {
                         await client.AddPatientAsync(guid, idLPU, _patient1);
                     }
                     finally
                     {
-                        WcfClientLifecycle.Close(client);
+                        client.CloseSafely();
                     }
 
                     Log.Info($"PIX Пациент добавлен.");
@@ -88,14 +98,14 @@ namespace Emk.Services
                 var setResult = SetPatient(pa);
                 if (string.IsNullOrEmpty(await setResult))
                 {
-                    var client = CreateClient();
+                    var client = _clientFactory.Create(Url);
                     try
                     {
                         await client.UpdatePatientAsync(guid, idLPU, _patient1);
                     }
                     finally
                     {
-                        WcfClientLifecycle.Close(client);
+                        client.CloseSafely();
                     }
 
                     Log.Info($"PIX Пациент обновлен.");
@@ -118,13 +128,6 @@ namespace Emk.Services
 			}
 
             return false;
-        }
-
-        private PixServiceClient CreateClient()
-        {
-            var binding = new BasicHttpBinding();
-            var endpointAddress = new EndpointAddress(new Uri(Url));
-            return new PixServiceClient(binding, endpointAddress);
         }
 
 		private async Task<string> SetPatient(PatientAccount pa)
@@ -192,9 +195,9 @@ namespace Emk.Services
 
 		public async Task<Patient> GetPatientAsync(int patientId)
 		{
-            PixServiceClient client = null;
+            IPixWcfClient client = null;
 			try {
-                client = CreateClient();
+                client = _clientFactory.Create(Url);
 
 				PatientDto patient = new PatientDto
 				{
@@ -235,7 +238,7 @@ namespace Emk.Services
             finally
             {
                 if (client != null)
-                    WcfClientLifecycle.Close(client);
+                    client.CloseSafely();
             }
             return null;
         }

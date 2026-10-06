@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Emk.Models;
+using Emk.PixSvc;
 using Emk.Services;
 using Emk.Services.Docs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -244,6 +245,28 @@ namespace EmkTests
             Assert.AreEqual(42, dependencies.RequestedPatientId);
         }
 
+        [TestMethod]
+        public async Task PixService_GetPatientAsyncUsesInjectedWcfClient()
+        {
+            var clientFactory = new StubPixWcfClientFactory();
+            var service = new PixService(
+                new EmkSettings
+                {
+                    PixUrl = "http://pix.test",
+                    Guid = Guid.NewGuid(),
+                    IdLPU = Guid.NewGuid()
+                },
+                new StubPixServiceDependencies(),
+                clientFactory);
+
+            var patient = await service.GetPatientAsync(42);
+
+            Assert.IsNotNull(patient);
+            Assert.AreEqual("card-42", patient.CartNum);
+            Assert.AreEqual(42, clientFactory.Client.RequestedPatientId);
+            Assert.IsTrue(clientFactory.Client.ClosedSafely);
+        }
+
         private static EmkSendingService CreateService(
             StubSendingRepository repository,
             StubSendingClientFactory clients) =>
@@ -378,6 +401,49 @@ namespace EmkTests
 
             public Task<Patient> GetPatient(string patientCartNum) =>
                 Task.FromResult(new Patient { CartNum = patientCartNum });
+        }
+
+        private sealed class StubPixServiceDependencies : IPixServiceDependencies
+        {
+            public Task<Patient> GetPatient(int patientId) =>
+                Task.FromResult(new Patient { Id = patientId });
+
+            public Task<DocumentDto> GetSnils(int patientId) =>
+                Task.FromResult<DocumentDto>(null);
+
+            public Task<DocumentDto> GetPolicy(int accountId) =>
+                Task.FromResult<DocumentDto>(null);
+        }
+
+        private sealed class StubPixWcfClientFactory : IPixWcfClientFactory
+        {
+            public StubPixWcfClient Client { get; } = new StubPixWcfClient();
+
+            public IPixWcfClient Create(string serviceUrl) => Client;
+        }
+
+        private sealed class StubPixWcfClient : IPixWcfClient
+        {
+            public int RequestedPatientId { get; private set; }
+            public bool ClosedSafely { get; private set; }
+
+            public Task AddPatientAsync(string guid, string idLpu, PatientDto patient) =>
+                Task.CompletedTask;
+
+            public Task UpdatePatientAsync(string guid, string idLpu, PatientDto patient) =>
+                Task.CompletedTask;
+
+            public Task<PatientDto[]> GetPatientAsync(
+                string guid, string idLpu, PatientDto patient, SourceType idSource)
+            {
+                RequestedPatientId = int.Parse(patient.IdPatientMIS);
+                return Task.FromResult(new[]
+                {
+                    new PatientDto { IdPatientMIS = "card-42" }
+                });
+            }
+
+            public void CloseSafely() => ClosedSafely = true;
         }
 
         private sealed class StubSendingClientFactory : IEmkSendingClientFactory
