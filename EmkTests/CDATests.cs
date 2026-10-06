@@ -29,6 +29,22 @@ namespace EmkTests
             var document = new XmlDocument();
             document.LoadXml(res);
             Assert.AreEqual("ClinicalDocument", document.DocumentElement.LocalName);
+            Assert.AreEqual(VimisNamespaces.Xmlns, document.DocumentElement.NamespaceURI);
+
+            var namespaces = new XmlNamespaceManager(document.NameTable);
+            namespaces.AddNamespace("cda", VimisNamespaces.Xmlns);
+            namespaces.AddNamespace("identity", VimisNamespaces.Identity);
+            namespaces.AddNamespace("xsi", VimisNamespaces.Xsi);
+            Assert.AreEqual("RU", document.SelectSingleNode("/cda:ClinicalDocument/cda:realmCode", namespaces)
+                .Attributes["code"].Value);
+            Assert.AreEqual("202101251600+0300",
+                document.SelectSingleNode("/cda:ClinicalDocument/cda:effectiveTime", namespaces)
+                    .Attributes["value"].Value);
+            var low = document.SelectSingleNode(
+                "//*[local-name()='identityDoc']/*[local-name()='effectiveTime']/*[local-name()='low']",
+                namespaces);
+            Assert.IsNotNull(low);
+            Assert.AreEqual("TS", low.Attributes["type", VimisNamespaces.Xsi].Value);
 
         }
 
@@ -53,6 +69,10 @@ namespace EmkTests
             d.SetId = new RootAttributes
                 { Root = "1.2.643.5.1.13.13.12.2.68.7055.100.1.1.50", Extension = "66787937899005" };
             d.VersionNumber = new ValueAttribute { Value = "1" };
+            d.RecordTarget.PatientRole.IdentityDoc.EffectiveTime = new EffectiveTime
+            {
+                Low = new ValueWithXsiAttribute { Type = "TS", Value = "202101251600+0300" }
+            };
 
 
             return d;
