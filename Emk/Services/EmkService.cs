@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.ServiceModel;
@@ -25,8 +24,6 @@ namespace Emk.Services
 		CaseAmb case1;
 		PersonWithIdentity patient1;
 		string MName = "";
-		string path = "";
-		string patientsBaseDir;
         private int autoUpd = 0;
 
 		public EmkService(EmkSettings s)
@@ -49,7 +46,6 @@ namespace Emk.Services
 			Url = s.EmkUrl;
 			guid = s.Guid.ToString();
 			IdLPU = s.IdLPU.ToString();
-			patientsBaseDir = s.PatientDirectory;
             autoUpd = s.AutoUpdate;
 		}
 
@@ -69,7 +65,7 @@ namespace Emk.Services
 
 				var doctor = await getDoctor(treat);
                 var patient = await _dependencies.GetPatient(treat.PatientId);
-				var medDocuments = await getMedDocuments(treat, doctor, patient);
+                var medDocuments = await getMedDocuments(treat);
 
 				if (medDocuments == null || !medDocuments.Any())
                 {
@@ -121,7 +117,7 @@ namespace Emk.Services
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
                 getFullError(ex.Detail.Errors);
 				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
-                    await UpdateCase(treat, path);
+                    await UpdateCase(treat);
                 await SaveCase(updateOnly, treat, null, getError(ex.Detail.Errors));
 				return -1;
             }
@@ -323,31 +319,9 @@ namespace Emk.Services
 			return true;
         }
 
-		private async Task<List<MedRecord>> getMedDocuments(PatientAccount treat, MedicalStaff doctor, Patient patient)
+		private Task<List<MedRecord>> getMedDocuments(PatientAccount treat)
         {
-            //var medDocuments = new List<MedRecord>
-            //    {
-            //        new ClinicMainDiagnosis
-            //        {
-            //            DiagnosisInfo = new DiagnosisInfo
-            //            {
-            //                IdDiseaseType = 1,
-            //                DiagnosedDate = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
-            //                    DateTimeKind.Local),
-            //                IdDiagnosisType = 1,
-            //                Comment = treat.DiagnoseName,
-            //                DiagnosisStage = 3,
-            //                MkbCode = treat.DiagnoseCode
-            //            },
-            //            Doctor = doctor
-            //        }
-            //    };
-
-            var dir = path;
-            if (!Directory.Exists(dir))
-                dir = $"{patientsBaseDir.TrimEnd('\\')}\\{patient.LastName} {patient.FirstName} {patient.MiddleName} [{patient.CartNum}]\\Дневниковые записи";
-
-            return await _dependencies.GetMedicalDocuments(treat);
+            return _dependencies.GetMedicalDocuments(treat);
         }
 
         private async Task<List<MedRecord>> getProcedures(PatientAccount treat)
