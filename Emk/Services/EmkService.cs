@@ -1,15 +1,10 @@
-﻿using Emk.EmkSvc;
+using Emk.EmkSvc;
 using Emk.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Security.Cryptography;
 using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Emk.Services
 {
@@ -18,13 +13,10 @@ namespace Emk.Services
         private readonly IEmkServiceDependencies _dependencies;
         private readonly IEmkWcfClientFactory _clientFactory;
 
-		string Url;
-		string guid;
-		string IdLPU;
-		CaseAmb case1;
-		PersonWithIdentity patient1;
-		string MName = "";
-        private int autoUpd = 0;
+		private readonly string _url;
+		private readonly string _guid;
+		private readonly string _idLpu;
+        private readonly int _autoUpdate;
 
 		public EmkService(EmkSettings s)
             : this(s, new FactoryEmkServiceDependencies(), new FactoryEmkWcfClientFactory())
@@ -43,13 +35,13 @@ namespace Emk.Services
 		{
             _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
             _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
-			Url = s.EmkUrl;
-			guid = s.Guid.ToString();
-			IdLPU = s.IdLPU.ToString();
-            autoUpd = s.AutoUpdate;
+			_url = s.EmkUrl;
+			_guid = s.Guid.ToString();
+			_idLpu = s.IdLPU.ToString();
+            _autoUpdate = s.AutoUpdate;
 		}
 
-        public async Task<int> UpdateCase(PatientAccount treat, string dir = null) => await AddCase(treat, true);
+        public Task<int> UpdateCase(PatientAccount treat, string dir = null) => AddCase(treat, true);
 
         public async Task<int> AddCase(PatientAccount treat, bool updateOnly = false)
         {
@@ -73,15 +65,15 @@ namespace Emk.Services
                     throw new Exception($"Документы не найдены для {treat.AccountId}.");
                 }
 
-                var case1 = await GetCaseAmb(treat, doctor, patient, medDocuments);              
-                Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено количество процедур СМО: {case1.Steps[0].MedRecords.Length}");
+                var medicalCase = await GetCaseAmb(treat, doctor, patient, medDocuments);
+                Log.Info($"Добавлено документов: {medDocuments.Count}, добавлено количество процедур СМО: {medicalCase.Steps[0].MedRecords.Length}");
 
                 if (updateOnly)
                 {
-                    var client = _clientFactory.Create(Url);
+                    var client = _clientFactory.Create(_url);
                     try
                     {
-                        await client.UpdateCaseAsync(guid, case1);
+                        await client.UpdateCaseAsync(_guid, medicalCase);
                     }
                     finally
                     {
@@ -93,10 +85,10 @@ namespace Emk.Services
                     return 0;
                 }
 
-                var addClient = _clientFactory.Create(Url);
+                var addClient = _clientFactory.Create(_url);
                 try
                 {
-                    await addClient.AddCaseAsync(guid, case1);
+                    await addClient.AddCaseAsync(_guid, medicalCase);
                 }
                 finally
                 {
@@ -116,7 +108,7 @@ namespace Emk.Services
             catch (FaultException<RequestFault> ex) {
                 var errDescription = ex.Detail.ErrorCode + ": " + ex.Detail.PropertyName + " " + ex.Detail.Message + "\r\n";
                 getFullError(ex.Detail.Errors);
-				if(ex.Detail.ErrorCode == 31 && autoUpd == 1)
+				if(ex.Detail.ErrorCode == 31 && _autoUpdate == 1)
                     await UpdateCase(treat);
                 await SaveCase(updateOnly, treat, null, getError(ex.Detail.Errors));
 				return -1;
@@ -163,21 +155,6 @@ namespace Emk.Services
             return true;
 
         }
-
-		private string getErrorString(RequestFault[] errors, RequestFault error = null)
-		{
-			var result = new StringBuilder();
-			foreach (var item in errors)
-            {
-                result.Append(Environment.NewLine);
-                result.Append($"\"{item.PropertyName}\": {{ {getErrorString(item.Errors, item)} }},");
-			}
-
-            if (error != null && errors.Length == 0)
-                result.Append($"\"ErrorCode\": {error.ErrorCode}, \"PropertyName\":\"{error.PropertyName}\", \"Message\":\"{error.Message}\" ");
-            
-            return result.ToString().Remove(result.ToString().Length -1, 1);
-		}
 
         private void getFullError(RequestFault[] rError)
         {
@@ -245,36 +222,36 @@ namespace Emk.Services
                 DiagnosisName = treat.DiagnoseName
             };
 
-            case1 = new CaseAmb();
-            case1.OpenDate = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
+            var medicalCase = new CaseAmb();
+            medicalCase.OpenDate = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 0, 1,
                 DateTimeKind.Local);
-            case1.CloseDate = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 1, 1,
+            medicalCase.CloseDate = new DateTime(treat.TreatDate.Year, treat.TreatDate.Month, treat.TreatDate.Day, 0, 0, 1, 1,
                 DateTimeKind.Local);
-            case1.HistoryNumber = patient.CartNum;
+            medicalCase.HistoryNumber = patient.CartNum;
 
-            case1.IdCaseMis = $"{patient.CartNum}-{treat.AccountId}{treat.SmoPostfix}";
+            medicalCase.IdCaseMis = $"{patient.CartNum}-{treat.AccountId}{treat.SmoPostfix}";
 
-            case1.IdCaseAidType = 3;
-            case1.IdCaseType = 2;
-            case1.IdPaymentType = (byte)(await _dependencies.GetPayType(treat.AccountId));
-            case1.IdCasePurpose = Convert.ToByte(def.VisitPurpose);
+            medicalCase.IdCaseAidType = 3;
+            medicalCase.IdCaseType = 2;
+            medicalCase.IdPaymentType = (byte)(await _dependencies.GetPayType(treat.AccountId));
+            medicalCase.IdCasePurpose = Convert.ToByte(def.VisitPurpose);
 
-            case1.Confidentiality = Convert.ToByte(def.ConfidentialityLevel);
-            case1.DoctorConfidentiality = Convert.ToByte(def.ConfidentialityDoctorLevel);
-            case1.CuratorConfidentiality = Convert.ToByte(def.ConfidentialityRepresentativeLevel);
-            case1.IdLpu = IdLPU;
-            case1.IdCaseResult = 1;
-            case1.Comment = diag.DiagnosisName;
+            medicalCase.Confidentiality = Convert.ToByte(def.ConfidentialityLevel);
+            medicalCase.DoctorConfidentiality = Convert.ToByte(def.ConfidentialityDoctorLevel);
+            medicalCase.CuratorConfidentiality = Convert.ToByte(def.ConfidentialityRepresentativeLevel);
+            medicalCase.IdLpu = _idLpu;
+            medicalCase.IdCaseResult = 1;
+            medicalCase.Comment = diag.DiagnosisName;
 
-            case1.IdPatientMis = patient.CartNum;
-            case1.DoctorInCharge = doctor;
-            case1.Authenticator = new Participant { Doctor = doctor, IdRole = 3 };
-            case1.Author = new Participant { Doctor = doctor, IdRole = 3 };
-            case1.LegalAuthenticator = new Participant { Doctor = doctor, IdRole = 3 };
-            case1.CaseVisitType = 1;    // 1 - Первичный
+            medicalCase.IdPatientMis = patient.CartNum;
+            medicalCase.DoctorInCharge = doctor;
+            medicalCase.Authenticator = new Participant { Doctor = doctor, IdRole = 3 };
+            medicalCase.Author = new Participant { Doctor = doctor, IdRole = 3 };
+            medicalCase.LegalAuthenticator = new Participant { Doctor = doctor, IdRole = 3 };
+            medicalCase.CaseVisitType = 1;    // 1 - Первичный
                                         // 2 - Повторный
-            Log.Info($"Создан СМО для пациентa с картой {patient.CartNum}, ИД случая: {case1.IdCaseMis}");
-            case1.Steps =
+            Log.Info($"Создан СМО для пациентa с картой {patient.CartNum}, ИД случая: {medicalCase.IdCaseMis}");
+            medicalCase.Steps =
             [
                      new StepAmb
                     {
@@ -290,16 +267,16 @@ namespace Emk.Services
             }
                 ];
 
-            case1.MedRecords = medDocuments.ToArray();
-            case1.Steps[0].MedRecords = [.. (await getProcedures(treat))];
+            medicalCase.MedRecords = medDocuments.ToArray();
+            medicalCase.Steps[0].MedRecords = [.. (await getProcedures(treat, doctor))];
 
             // Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.
-            case1.AdmissionCondition = 1;
+            medicalCase.AdmissionCondition = 1;
 
             // Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.
-            case1.IdAmbResult = 2;
+            medicalCase.IdAmbResult = 2;
 
-            return case1;
+            return medicalCase;
 		}
 
 		private bool checkTreat(PatientAccount treat)
@@ -330,7 +307,7 @@ namespace Emk.Services
             return _dependencies.GetMedicalDocuments(treat);
         }
 
-        private async Task<List<MedRecord>> getProcedures(PatientAccount treat)
+        private async Task<List<MedRecord>> getProcedures(PatientAccount treat, MedicalStaff doctor)
         {
             var medRecords = new List<MedRecord>();
 
@@ -346,7 +323,7 @@ namespace Emk.Services
                         DateTimeKind.Local),
                     IdServiceType = d.Description,
                     ServiceName = d.FullDescription,
-                    Performer = new Participant { IdRole = 3, Doctor = case1.DoctorInCharge }
+                    Performer = new Participant { IdRole = 3, Doctor = doctor }
                 });
             }
 
