@@ -80,19 +80,12 @@ namespace EmkWinService
                     return null;
                 }
 
-                return new SendPatientDataRequest
-                {
-                    StartDate = settings.IntervalFrom.Date,
-                    EndDate = settings.IntervalTo.Date
-                };
+                return SendPatientDataRequest.ForPeriod(settings.IntervalFrom.Date, settings.IntervalTo.Date);
             }
 
             var endDate = DateTime.Today;
-            return new SendPatientDataRequest
-            {
-                StartDate = endDate.AddDays(-Math.Max(settings.DateInterval, 0)),
-                EndDate = endDate
-            };
+            return SendPatientDataRequest.ForPeriod(
+                endDate.AddDays(-Math.Max(settings.DateInterval, 0)), endDate);
         }
     }
 }

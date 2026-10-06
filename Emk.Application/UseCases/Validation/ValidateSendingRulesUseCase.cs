@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Emk.Application.Dto;
 using Emk.Application.Ports;
 using Emk.Domain.DomainExceptions;
+using Emk.Domain.Entities;
 
 namespace Emk.Application.UseCases.Validation
 {
@@ -15,6 +16,7 @@ namespace Emk.Application.UseCases.Validation
         private readonly IEmkRepository _emkRepository;
         private readonly ISettingsRepository _settingsRepository;
         private readonly ILoggerService _logger;
+        private readonly EmkSettings _emkSettings;
 
         public ValidateSendingRulesUseCase(
             ILicenseRepository licenseRepository,
@@ -22,7 +24,8 @@ namespace Emk.Application.UseCases.Validation
             IPatientRepository patientRepository,
             IEmkRepository emkRepository,
             ISettingsRepository settingsRepository,
-            ILoggerService logger)
+            ILoggerService logger,
+            EmkSettings emkSettings = null)
         {
             _licenseRepository = licenseRepository ?? throw new ArgumentNullException(nameof(licenseRepository));
             _treatRepository = treatRepository ?? throw new ArgumentNullException(nameof(treatRepository));
@@ -30,6 +33,7 @@ namespace Emk.Application.UseCases.Validation
             _emkRepository = emkRepository ?? throw new ArgumentNullException(nameof(emkRepository));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _emkSettings = emkSettings ?? new EmkSettings();
         }
 
         public async Task<ValidateSendingRulesResponse> ExecuteAsync(ValidateSendingRulesRequest request)
@@ -94,7 +98,9 @@ namespace Emk.Application.UseCases.Validation
 
         private async Task CheckConsentAsync(PatientTreatDto treat)
         {
-            if (!await _patientRepository.CheckConsentToShareAsync(treat.PatientId))
+            if (!await _patientRepository.CheckConsentToShareAsync(treat.PatientId) &&
+                (string.IsNullOrWhiteSpace(_emkSettings.UnknownPatientFirstName) ||
+                 string.IsNullOrWhiteSpace(_emkSettings.UnknownPatientGivenName)))
                 throw new PatientConsentMissingException();
         }
 

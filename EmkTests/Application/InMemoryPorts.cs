@@ -25,9 +25,15 @@ namespace EmkTests.Application
     {
         public List<PatientTreatDto> Treats { get; } = new List<PatientTreatDto>();
         public List<int> UpdatedEsignAccounts { get; } = new List<int>();
+        public DateTime? RequestedStart { get; private set; }
+        public DateTime? RequestedEnd { get; private set; }
 
-        public Task<List<PatientTreatDto>> GetByPeriodAsync(DateTime start, DateTime end) =>
-            Task.FromResult(Treats.Where(t => t.TreatDate >= start && t.TreatDate <= end).ToList());
+        public Task<List<PatientTreatDto>> GetByPeriodAsync(DateTime start, DateTime end)
+        {
+            RequestedStart = start;
+            RequestedEnd = end;
+            return Task.FromResult(Treats.Where(t => t.TreatDate >= start && t.TreatDate <= end).ToList());
+        }
 
         public Task<List<PatientTreatDto>> GetByAccountIdAsync(int accountId) =>
             Task.FromResult(Treats.Where(t => t.AccountId == accountId).ToList());

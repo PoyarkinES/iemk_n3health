@@ -17,7 +17,9 @@ namespace EmkConfig.Forms
         private readonly ISettingsRepository _settingsRepository;
         private readonly ITreatRepository _treatRepository;
         private readonly ILoggerService _logger;
+        private readonly ISettingsService _applicationSettings;
         private readonly Button _sendButton;
+        private readonly Button _sendPeriodButton;
         private readonly Button _sendAccountButton;
         private readonly Button _updateButton;
         private readonly Button _updatePeriodButton;
@@ -30,20 +32,24 @@ namespace EmkConfig.Forms
             IUpdatePatientDataUseCase updateUseCase,
             ISettingsRepository settingsRepository,
             ITreatRepository treatRepository,
-            ILoggerService logger)
+            ILoggerService logger,
+            ISettingsService applicationSettings)
         {
             _sendUseCase = sendUseCase ?? throw new ArgumentNullException(nameof(sendUseCase));
             _updateUseCase = updateUseCase ?? throw new ArgumentNullException(nameof(updateUseCase));
             _settingsRepository = settingsRepository ?? throw new ArgumentNullException(nameof(settingsRepository));
             _treatRepository = treatRepository ?? throw new ArgumentNullException(nameof(treatRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _applicationSettings = applicationSettings ?? throw new ArgumentNullException(nameof(applicationSettings));
 
             Text = "EMK — управление отправкой";
             StartPosition = FormStartPosition.CenterScreen;
-            ClientSize = new Size(480, 280);
+            ClientSize = new Size(480, 320);
 
             _sendButton = new Button { Text = "Отправить данные", AutoSize = true };
             _sendButton.Click += SendButton_Click;
+            _sendPeriodButton = new Button { Text = "Отправить за период", AutoSize = true };
+            _sendPeriodButton.Click += SendPeriodButton_Click;
             _sendAccountButton = new Button { Text = "Отправить по номеру счёта", AutoSize = true };
             _sendAccountButton.Click += SendAccountButton_Click;
             _updateButton = new Button { Text = "Обновить счёт", AutoSize = true };
@@ -64,6 +70,7 @@ namespace EmkConfig.Forms
                 WrapContents = false
             };
             layout.Controls.Add(_sendButton);
+            layout.Controls.Add(_sendPeriodButton);
             layout.Controls.Add(_sendAccountButton);
             layout.Controls.Add(_updateButton);
             layout.Controls.Add(_updatePeriodButton);
@@ -110,6 +117,34 @@ namespace EmkConfig.Forms
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                     ShowResult(form.Response.Success, form.Response.Message);
+            }
+        }
+
+        private async void SendPeriodButton_Click(object sender, EventArgs e)
+        {
+            using (var periodForm = new Emk.Views.PeriodForm())
+            {
+                periodForm.Text = "Отправить данные за период";
+                if (periodForm.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                SetBusy(true, "Идёт отправка...");
+                try
+                {
+                    var request = SendPatientDataRequest.ForPeriod(
+                        periodForm.PeriodBegin.Date, periodForm.PeriodEnd.Date);
+                    var response = await _sendUseCase.ExecuteAsync(request);
+                    ShowResult(response.Success, response.Message);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError("Ошибка отправки данных за период", exception);
+                    ShowResult(false, exception.Message);
+                }
+                finally
+                {
+                    SetBusy(false, _statusLabel.Text);
+                }
             }
         }
 
@@ -179,7 +214,7 @@ namespace EmkConfig.Forms
 
         private void SettingsButton_Click(object sender, EventArgs e)
         {
-            using (var form = new EmkSettingsForm())
+            using (var form = new EmkSettingsForm(_applicationSettings))
                 form.ShowDialog(this);
         }
 
@@ -199,24 +234,18 @@ namespace EmkConfig.Forms
                     return null;
                 }
 
-                return new SendPatientDataRequest
-                {
-                    StartDate = settings.IntervalFrom.Date,
-                    EndDate = settings.IntervalTo.Date
-                };
+                return SendPatientDataRequest.ForPeriod(settings.IntervalFrom.Date, settings.IntervalTo.Date);
             }
 
             var endDate = DateTime.Today;
-            return new SendPatientDataRequest
-            {
-                StartDate = endDate.AddDays(-Math.Max(settings.DateInterval, 0)),
-                EndDate = endDate
-            };
+            return SendPatientDataRequest.ForPeriod(
+                endDate.AddDays(-Math.Max(settings.DateInterval, 0)), endDate);
         }
 
         private void SetBusy(bool isBusy, string status)
         {
             _sendButton.Enabled = !isBusy;
+            _sendPeriodButton.Enabled = !isBusy;
             _sendAccountButton.Enabled = !isBusy;
             _updateButton.Enabled = !isBusy;
             _updatePeriodButton.Enabled = !isBusy;

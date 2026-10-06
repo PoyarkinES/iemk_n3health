@@ -68,6 +68,7 @@ namespace EmkTests
 
             Assert.AreEqual(from.Date, useCase.Request.StartDate.Value);
             Assert.AreEqual(to.Date, useCase.Request.EndDate.Value);
+            Assert.IsNotNull(useCase.Request.Period);
         }
 
         private sealed class CapturingSendUseCase : ISendPatientDataUseCase
