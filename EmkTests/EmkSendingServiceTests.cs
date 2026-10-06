@@ -186,6 +186,18 @@ namespace EmkTests
             Assert.AreEqual(0, repository.MarkedAccountIds.Count);
         }
 
+        [TestMethod]
+        public async Task DocSelector_LoadsDocumentsFromInjectedRepository()
+        {
+            var repository = new StubDocSelectorRepository();
+            var selector = new DocSelector(CreatePatientAccount(), repository);
+
+            var documents = await selector.GetDocs(123);
+
+            Assert.AreEqual(123, repository.RequestedAccountId);
+            Assert.AreEqual(0, documents.Count);
+        }
+
         private static EmkSendingService CreateService(
             StubSendingRepository repository,
             StubSendingClientFactory clients) =>
@@ -275,6 +287,20 @@ namespace EmkTests
                 MarkedAccountIds.Add(account.AccountId);
                 return Task.CompletedTask;
             }
+        }
+
+        private sealed class StubDocSelectorRepository : IDocSelectorRepository
+        {
+            public int RequestedAccountId { get; private set; }
+
+            public Task<List<Emk.Models.DocumentsDto>> GetDocumentByAccountIdAsync(int accountId)
+            {
+                RequestedAccountId = accountId;
+                return Task.FromResult(new List<Emk.Models.DocumentsDto>());
+            }
+
+            public Task<string> GetFileDirectoryAsync(int practiceId) =>
+                Task.FromResult(string.Empty);
         }
 
         private sealed class StubSendingClientFactory : IEmkSendingClientFactory

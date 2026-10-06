@@ -6,18 +6,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
-using Emk.Repository;
 using Emk.Services.Docs;
 using Emk.Services.Docs.Referrals;
-using Microsoft.SqlServer.Server;
 
 namespace Emk.Services
 {
-    public class DocSelector(PatientAccount pa)
+    public interface IDocSelectorRepository
     {
-        private readonly DateTime _fileDate = pa.TreatDate;
-        private readonly PatientAccount _pa = pa;
-        private readonly TreatRepository _treatRepository = Factory.GetTreatRepository;
+        Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId);
+        Task<string> GetFileDirectoryAsync(int practiceId);
+    }
+
+    public class DocSelector
+    {
+        private readonly DateTime _fileDate;
+        private readonly PatientAccount _pa;
+        private readonly IDocSelectorRepository _repository;
+
+        public DocSelector(PatientAccount pa)
+            : this(pa, new FactoryDocSelectorRepository())
+        {
+        }
+
+        public DocSelector(PatientAccount pa, IDocSelectorRepository repository)
+        {
+            _pa = pa ?? throw new ArgumentNullException(nameof(pa));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _fileDate = pa.TreatDate;
+        }
 
         public async Task<List<MedRecord>> GetDocs(int accountId)
         {
@@ -67,7 +83,7 @@ namespace Emk.Services
         {
             try
             {
-                var filedir = await _treatRepository.GetFileDirectoryAsync(_pa.PracticeId);
+                var filedir = await _repository.GetFileDirectoryAsync(_pa.PracticeId);
                 FileData fd = new FileData();
                 fd.FilePath = filedir + "\\" + filePath;
                 if (!fd.FileExists)
@@ -150,7 +166,7 @@ namespace Emk.Services
 
         private async Task<List<DocumentsDto>> GetFileFromDB(int accountId)
         {
-            return await _treatRepository.GetDocumentByAccountIdAsync(accountId);
+            return await _repository.GetDocumentByAccountIdAsync(accountId);
         }
 
         private async Task<MedRecord> GetMedRecord(DocumentsDto file, int accountId)

@@ -10,6 +10,15 @@ using Emk.Services.Files;
 
 namespace Emk.Services
 {
+    internal sealed class FactoryDocSelectorRepository : IDocSelectorRepository
+    {
+        public Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId) =>
+            Factory.GetTreatRepository.GetDocumentByAccountIdAsync(accountId);
+
+        public Task<string> GetFileDirectoryAsync(int practiceId) =>
+            Factory.GetTreatRepository.GetFileDirectoryAsync(practiceId);
+    }
+
     public interface IEmkSendingRepository
     {
         Task<List<EmkSettings>> LoadSettings(bool reload);
