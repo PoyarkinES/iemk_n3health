@@ -20,42 +20,14 @@ namespace Emk.Services.Docs
 
         protected override int DocCode { get; }
         protected override string NsType { get; }
-        public override MedRecord CreateDocument()
+        public override async Task<MedRecord> CreateDocumentAsync()
         {
             try
             {
-                var data = File.ReadAllBytes(FilePath);
-
-                // ReSharper disable UseStringInterpolation
-                var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
-                var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
-                // ReSharper restore UseStringInterpolation
-
-                byte[] dsgn = null, osgn = null;
-                if (File.Exists(sgn1))
-                    dsgn = File.ReadAllBytes(sgn1);
-                if (File.Exists(sgn2))
-                    osgn = File.ReadAllBytes(sgn2);
                 Log.Info("Формирую консультативное заключение с PDF");
                 _doc = new ConsultNote
                 {
-                    Attachments = new[]
-                    {
-                        new MedDocumentDtoDocumentAttachment
-                        {
-                            Data = data, //Encoding.UTF8.GetBytes(s),
-                            MimeType = "application/pdf",
-                            OrganizationSign = osgn,
-                            PersonalSigns = dsgn == null ? null : new[]
-                            {
-                                new MedDocumentDtoPersonalSign
-                                {
-                                    Doctor = DocDoctor.ToMedicalStaff(),
-                                    Sign = dsgn
-                                }
-                            }
-                        }
-                    },
+                    Attachments = await CreateAttachmentsAsync("application/pdf", DocDoctor),
                     Author = DocDoctor.ToMedicalStaff(),
                     CreationDate = DateTime.Now.Date,
                     Header = "Header",

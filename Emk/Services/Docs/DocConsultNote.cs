@@ -32,11 +32,11 @@ namespace Emk.Services.Docs
 
         protected override int DocCode { get; } = 198;
         protected override string NsType { get; }
-        public override MedRecord CreateDocument()
+        public override async Task<MedRecord> CreateDocumentAsync()
         {
             try
             {
-                _doc.Attachments = AddAttachments();
+                _doc.Attachments = await CreateAttachmentsAsync("text/xml", _doctor);
                 _doc.Author = _doctor.ToMedicalStaff();
                 _doc.CreationDate = DateTime.Now.Date;
                 _doc.Header = "Протокол консультации";
@@ -53,45 +53,5 @@ namespace Emk.Services.Docs
 
         protected override int DocType { get; set; }
         
-        private MedDocumentDtoDocumentAttachment[] AddAttachments()
-        {
-            try
-            {
-                Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
-                var data = File.ReadAllBytes(FilePath);
-                var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
-                var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
-
-                byte[] dsgn = null, osgn = null;
-                if (File.Exists(sgn1))
-                    dsgn = File.ReadAllBytes(sgn1);
-                if (File.Exists(sgn2))
-                    osgn = File.ReadAllBytes(sgn2);
-                return new[]
-                {
-                    new MedDocumentDtoDocumentAttachment
-                    {
-                        Data = data, //Encoding.UTF8.GetBytes(s),
-                        MimeType = "text/xml",
-                        OrganizationSign = osgn,
-                        PersonalSigns = dsgn == null
-                            ? null
-                            : new[]
-                            {
-                                new MedDocumentDtoPersonalSign
-                                {
-                                    Doctor = _doctor.ToMedicalStaff(),
-                                    Sign = dsgn
-                                }
-                            }
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
     }
 }

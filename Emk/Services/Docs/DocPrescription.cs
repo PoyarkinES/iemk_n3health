@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
 
@@ -15,13 +16,12 @@ namespace Emk.Services.Docs
 
         protected override int DocCode => 86;
         protected override string NsType { get; }
-        public override MedRecord CreateDocument()
+        public override Task<MedRecord> CreateDocumentAsync()
         {
             Log.Info("Формирую рецепт тип " + DocCode);
             SetData();
-            AddAttachments();
             Log.Info("Рецепт с типом " + DocCode + " сформирован.");
-            return _doc;
+            return Task.FromResult<MedRecord>(_doc);
         }
 
         protected override int DocType { get; set; }
@@ -41,46 +41,5 @@ namespace Emk.Services.Docs
                 throw new Exception(e.Message);
             }
         }
-        private MedDocumentDtoDocumentAttachment[] AddAttachments()
-        {
-            try
-            {
-                Log.Info($"Прикрепляю файл {Path.GetFileName(FilePath)}");
-                var data = File.ReadAllBytes(FilePath);
-                var sgn1 = string.Format("{0}.sgn", string.Copy(FilePath));
-                var sgn2 = string.Format("{0}2.sgn", string.Copy(FilePath));
-
-                byte[] dsgn = null, osgn = null;
-                if (File.Exists(sgn1))
-                    dsgn = File.ReadAllBytes(sgn1);
-                if (File.Exists(sgn2))
-                    osgn = File.ReadAllBytes(sgn2);
-                return new[]
-                {
-                    new MedDocumentDtoDocumentAttachment
-                    {
-                        Data = data, //Encoding.UTF8.GetBytes(s),
-                        MimeType = "text/xml",
-                        OrganizationSign = osgn,
-                        PersonalSigns = dsgn == null
-                            ? null
-                            : new[]
-                            {
-                                new MedDocumentDtoPersonalSign
-                                {
-                                    Doctor = DocDoctor.ToMedicalStaff(),
-                                    Sign = dsgn
-                                }
-                            }
-                    }
-                };
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-
-
     }
 }

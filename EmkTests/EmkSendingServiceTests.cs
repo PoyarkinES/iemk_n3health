@@ -247,6 +247,38 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DocumentCreation_LoadsPdfAndSignaturesAsAttachments()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var path = Path.Combine(directory, "consult.pdf");
+            var pdf = new byte[] { 1, 2, 3 };
+            var personalSign = new byte[] { 4, 5 };
+            var organizationSign = new byte[] { 6, 7 };
+            File.WriteAllBytes(path, pdf);
+            File.WriteAllBytes(path + ".sgn", personalSign);
+            File.WriteAllBytes(path + "2.sgn", organizationSign);
+
+            try
+            {
+                var document = new DocConsultNotePdf(path, 17, 123);
+                await document.InitializeAsync(new StubDocumentInitializationDependencies());
+
+                var result = (ConsultNote)await document.CreateDocumentAsync();
+                var attachment = result.Attachments.Single();
+
+                CollectionAssert.AreEqual(pdf, attachment.Data);
+                CollectionAssert.AreEqual(organizationSign, attachment.OrganizationSign);
+                CollectionAssert.AreEqual(personalSign, attachment.PersonalSigns.Single().Sign);
+                Assert.AreEqual("application/pdf", attachment.MimeType);
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task PixService_GetPatientAsyncUsesInjectedWcfClient()
         {
             var clientFactory = new StubPixWcfClientFactory();
@@ -418,7 +450,12 @@ namespace EmkTests
             public Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId)
             {
                 RequestedAccountId = accountId;
-                return Task.FromResult(new DoctorEmk());
+                return Task.FromResult(new DoctorEmk
+                {
+                    BirthDay = new DateTime(1980, 1, 1),
+                    Surname = "Test",
+                    Name = "Doctor"
+                });
             }
 
             public Task<Patient> GetPatient(int patientId)
