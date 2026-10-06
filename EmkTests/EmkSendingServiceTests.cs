@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emk.Models;
 using Emk.Services;
+using Emk.Services.Docs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmkTests
@@ -198,6 +199,19 @@ namespace EmkTests
             Assert.AreEqual(0, documents.Count);
         }
 
+        [TestMethod]
+        public async Task DocumentInitialization_UsesInjectedDependencies()
+        {
+            var dependencies = new StubDocumentInitializationDependencies();
+            var document = new DocPrescription("unused.xml", 17, 123);
+
+            await document.InitializeAsync(dependencies);
+
+            Assert.AreEqual(17, dependencies.RequestedCartNoteId);
+            Assert.AreEqual(123, dependencies.RequestedAccountId);
+            Assert.AreEqual(42, dependencies.RequestedPatientId);
+        }
+
         private static EmkSendingService CreateService(
             StubSendingRepository repository,
             StubSendingClientFactory clients) =>
@@ -301,6 +315,35 @@ namespace EmkTests
 
             public Task<string> GetFileDirectoryAsync(int practiceId) =>
                 Task.FromResult(string.Empty);
+        }
+
+        private sealed class StubDocumentInitializationDependencies :
+            IDocumentInitializationDependencies
+        {
+            public int RequestedCartNoteId { get; private set; }
+            public int RequestedAccountId { get; private set; }
+            public int RequestedPatientId { get; private set; }
+
+            public Task<CartNote> GetCartNote(int cartNoteId)
+            {
+                RequestedCartNoteId = cartNoteId;
+                return Task.FromResult(new CartNote { PatientId = 42 });
+            }
+
+            public Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId)
+            {
+                RequestedAccountId = accountId;
+                return Task.FromResult(new DoctorEmk());
+            }
+
+            public Task<Patient> GetPatient(int patientId)
+            {
+                RequestedPatientId = patientId;
+                return Task.FromResult(new Patient());
+            }
+
+            public Task<Patient> GetPatient(string patientCartNum) =>
+                Task.FromResult(new Patient { CartNum = patientCartNum });
         }
 
         private sealed class StubSendingClientFactory : IEmkSendingClientFactory

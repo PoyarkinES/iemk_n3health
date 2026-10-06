@@ -21,8 +21,8 @@ namespace Emk.Services.Docs
         protected override async Task InitializeDocumentAsync()
         {
             _fd = ParseFile(FilePath);
-            _patient = await PatRep.GetPatient(_fd.PatientCartNum);
-            _doctor = await EmkRep.GetDoctorOfPatientTreat(AccountId);
+            _patient = await InitializationDependencies.GetPatient(_fd.PatientCartNum);
+            _doctor = await InitializationDependencies.GetDoctorOfPatientTreat(AccountId);
         }
 
         protected override int DocCode { get; }

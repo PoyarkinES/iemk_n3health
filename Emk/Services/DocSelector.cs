@@ -22,16 +22,27 @@ namespace Emk.Services
         private readonly DateTime _fileDate;
         private readonly PatientAccount _pa;
         private readonly IDocSelectorRepository _repository;
+        private readonly IDocumentInitializationDependencies _documentDependencies;
 
         public DocSelector(PatientAccount pa)
-            : this(pa, new FactoryDocSelectorRepository())
+            : this(pa, new FactoryDocSelectorRepository(), new FactoryDocumentInitializationDependencies())
         {
         }
 
         public DocSelector(PatientAccount pa, IDocSelectorRepository repository)
+            : this(pa, repository, new FactoryDocumentInitializationDependencies())
+        {
+        }
+
+        public DocSelector(
+            PatientAccount pa,
+            IDocSelectorRepository repository,
+            IDocumentInitializationDependencies documentDependencies)
         {
             _pa = pa ?? throw new ArgumentNullException(nameof(pa));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _documentDependencies = documentDependencies ??
+                throw new ArgumentNullException(nameof(documentDependencies));
             _fileDate = pa.TreatDate;
         }
 
@@ -192,7 +203,7 @@ namespace Emk.Services
                     return null;
                 }
 
-                await srv.InitializeAsync();
+                await srv.InitializeAsync(_documentDependencies);
                 return srv.CreateDocument();
             }
 
