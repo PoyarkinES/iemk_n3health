@@ -250,6 +250,19 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DocumentInitialization_LoadsDoctorAndPatientConcurrently()
+        {
+            var dependencies = new ConcurrentDocumentInitializationDependencies();
+            var document = new DocPrescription("unused.xml", 17, 123);
+
+            var initialization = document.InitializeAsync(dependencies);
+            var completed = await Task.WhenAny(initialization, Task.Delay(TimeSpan.FromSeconds(5)));
+
+            Assert.AreSame(initialization, completed);
+            await initialization;
+        }
+
+        [TestMethod]
         public async Task DocumentCreation_LoadsPdfAndSignaturesAsAttachments()
         {
             var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
@@ -642,6 +655,43 @@ namespace EmkTests
 
             public Task<Patient> GetPatient(string patientCartNum) =>
                 Task.FromResult(new Patient { CartNum = patientCartNum });
+        }
+
+        private sealed class ConcurrentDocumentInitializationDependencies :
+            IDocumentInitializationDependencies
+        {
+            private readonly TaskCompletionSource<DoctorEmk> _doctor =
+                new TaskCompletionSource<DoctorEmk>();
+            private readonly TaskCompletionSource<Patient> _patient =
+                new TaskCompletionSource<Patient>();
+            private int _lookupCount;
+
+            public Task<CartNote> GetCartNote(int cartNoteId) =>
+                Task.FromResult(new CartNote { PatientId = 42 });
+
+            public Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId)
+            {
+                CompleteLookupsWhenBothStarted();
+                return _doctor.Task;
+            }
+
+            public Task<Patient> GetPatient(int patientId)
+            {
+                CompleteLookupsWhenBothStarted();
+                return _patient.Task;
+            }
+
+            public Task<Patient> GetPatient(string patientCartNum) =>
+                Task.FromResult(new Patient { CartNum = patientCartNum });
+
+            private void CompleteLookupsWhenBothStarted()
+            {
+                if (System.Threading.Interlocked.Increment(ref _lookupCount) == 2)
+                {
+                    _doctor.SetResult(new DoctorEmk());
+                    _patient.SetResult(new Patient());
+                }
+            }
         }
 
         private sealed class StubDoctorRepository : IDoctorRepository
