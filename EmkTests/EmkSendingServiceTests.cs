@@ -544,6 +544,30 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task PixService_AddPatientLoadsIndependentProfileDataConcurrently()
+        {
+            var dependencies = new ConcurrentPixServiceDependencies();
+            var clientFactory = new StubPixWcfClientFactory();
+            var service = new PixService(
+                new EmkSettings
+                {
+                    PixUrl = "http://pix.test",
+                    Guid = Guid.NewGuid(),
+                    IdLPU = Guid.NewGuid()
+                },
+                dependencies,
+                clientFactory);
+            var account = CreatePatientAccount();
+
+            var addPatient = service.AddPatient(account);
+            var completed = await Task.WhenAny(addPatient, Task.Delay(TimeSpan.FromSeconds(5)));
+
+            Assert.AreSame(addPatient, completed);
+            Assert.IsTrue(await addPatient);
+            Assert.AreEqual(3, dependencies.StartedLookupCount);
+        }
+
+        [TestMethod]
         public async Task EmkService_AddCaseUsesInjectedWcfClient()
         {
             var clientFactory = new StubEmkWcfClientFactory();
@@ -857,6 +881,54 @@ namespace EmkTests
 
             public Task<DocumentDto> GetPolicy(int accountId) =>
                 Task.FromResult<DocumentDto>(null);
+        }
+
+        private sealed class ConcurrentPixServiceDependencies : IPixServiceDependencies
+        {
+            private readonly TaskCompletionSource<Patient> _patient =
+                new TaskCompletionSource<Patient>();
+            private readonly TaskCompletionSource<DocumentDto> _snils =
+                new TaskCompletionSource<DocumentDto>();
+            private readonly TaskCompletionSource<DocumentDto> _policy =
+                new TaskCompletionSource<DocumentDto>();
+            private int _startedLookupCount;
+
+            public int StartedLookupCount => _startedLookupCount;
+
+            public Task<Patient> GetPatient(int patientId)
+            {
+                CompleteLookupsWhenAllStarted();
+                return _patient.Task;
+            }
+
+            public Task<DocumentDto> GetSnils(int patientId)
+            {
+                CompleteLookupsWhenAllStarted();
+                return _snils.Task;
+            }
+
+            public Task<DocumentDto> GetPolicy(int accountId)
+            {
+                CompleteLookupsWhenAllStarted();
+                return _policy.Task;
+            }
+
+            private void CompleteLookupsWhenAllStarted()
+            {
+                if (System.Threading.Interlocked.Increment(ref _startedLookupCount) == 3)
+                {
+                    _patient.SetResult(new Patient
+                    {
+                        Id = 42,
+                        LastName = "Test",
+                        FirstName = "Patient",
+                        CartNum = "card-42",
+                        Sex = "M"
+                    });
+                    _snils.SetResult(new DocumentDto { DocN = "123" });
+                    _policy.SetResult(null);
+                }
+            }
         }
 
         private sealed class StubPixWcfClientFactory : IPixWcfClientFactory

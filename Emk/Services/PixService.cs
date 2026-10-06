@@ -115,7 +115,12 @@ namespace Emk.Services
 
 		private async Task<PatientDto> SetPatient(PatientAccount pa)
 		{
-			var patient = await _dependencies.GetPatient(pa.PatientId);
+            var patientTask = _dependencies.GetPatient(pa.PatientId);
+            var snilsTask = _dependencies.GetSnils(pa.PatientId);
+            var policyTask = _dependencies.GetPolicy(pa.AccountId);
+            await Task.WhenAll(patientTask, snilsTask, policyTask);
+
+			var patient = await patientTask;
             var patientDto = new PatientDto
             {
                 FamilyName = patient.LastName,
@@ -132,13 +137,13 @@ namespace Emk.Services
             }
 
             var documents = new List<DocumentDto>();
-            var snils = await _dependencies.GetSnils(pa.PatientId);
+            var snils = await snilsTask;
             if (snils == null)
             {
                 throw new Exception("Для пациента не указан СНИЛС");
             }
             documents.Add(snils);
-            var policy = await _dependencies.GetPolicy(pa.AccountId);
+            var policy = await policyTask;
             if (policy != null)
                 documents.Add(policy);
 
