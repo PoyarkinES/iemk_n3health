@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
@@ -11,6 +12,33 @@ using Emk.Services.Files;
 
 namespace Emk.Services
 {
+    internal static class WcfClientLifecycle
+    {
+        public static void Close(ICommunicationObject client)
+        {
+            if (client.State == CommunicationState.Faulted)
+            {
+                client.Abort();
+                return;
+            }
+
+            try
+            {
+                client.Close();
+            }
+            catch (CommunicationException ex)
+            {
+                client.Abort();
+                Log.Warning($"WCF client close failed: {ex.Message}");
+            }
+            catch (TimeoutException ex)
+            {
+                client.Abort();
+                Log.Warning($"WCF client close timed out: {ex.Message}");
+            }
+        }
+    }
+
     internal sealed class FactoryDocumentInitializationDependencies : IDocumentInitializationDependencies
     {
         private readonly EmkRepository _emkRepository = Factory.GetEmkRepository;

@@ -42,18 +42,22 @@ namespace Emk.Services
 		{
 
 			try {
-				var binding = new BasicHttpBinding();
-				var endpointAddress = new EndpointAddress(new Uri(Url), Array.Empty<AddressHeader>());
-                var client = new PixServiceClient(binding, endpointAddress);
-
                 var setResult = SetPatient(pa);
                 if (string.IsNullOrEmpty(await setResult))
                 {
                     Log.Info(
                         $"PIX Добавляю пациента {_patient1.FamilyName} {_patient1.GivenName} {_patient1.MiddleName}.");
 
-                    await client.AddPatientAsync(guid, idLPU, _patient1);
-                    client.Close();
+                    var client = CreateClient();
+                    try
+                    {
+                        await client.AddPatientAsync(guid, idLPU, _patient1);
+                    }
+                    finally
+                    {
+                        WcfClientLifecycle.Close(client);
+                    }
+
                     Log.Info($"PIX Пациент добавлен.");
                     return true;
                 }
@@ -79,15 +83,19 @@ namespace Emk.Services
 		public async Task<bool> UpdatePatient(PatientAccount pa)
 		{
 			try {
-				BasicHttpBinding binding = new BasicHttpBinding();
-				EndpointAddress endpointAddress = new EndpointAddress(new Uri(Url));
-				PixServiceClient client = new PixServiceClient(binding, endpointAddress);
-
                 var setResult = SetPatient(pa);
                 if (string.IsNullOrEmpty(await setResult))
                 {
-                    await client.UpdatePatientAsync(guid, idLPU, _patient1);
-                    client.Close();
+                    var client = CreateClient();
+                    try
+                    {
+                        await client.UpdatePatientAsync(guid, idLPU, _patient1);
+                    }
+                    finally
+                    {
+                        WcfClientLifecycle.Close(client);
+                    }
+
                     Log.Info($"PIX Пациент обновлен.");
                     return true;
                 }
@@ -108,6 +116,13 @@ namespace Emk.Services
 			}
 
             return false;
+        }
+
+        private PixServiceClient CreateClient()
+        {
+            var binding = new BasicHttpBinding();
+            var endpointAddress = new EndpointAddress(new Uri(Url));
+            return new PixServiceClient(binding, endpointAddress);
         }
 
 		private async Task<string> SetPatient(PatientAccount pa)
@@ -175,10 +190,9 @@ namespace Emk.Services
 
 		public Patient GetPatient(int patientId)
 		{
+            PixServiceClient client = null;
 			try {
-				BasicHttpBinding binding = new BasicHttpBinding();
-				EndpointAddress endpointAddress = new EndpointAddress(new Uri(Url));
-				PixServiceClient client = new PixServiceClient(binding, endpointAddress);
+                client = CreateClient();
 
 				PatientDto patient = new PatientDto
 				{
@@ -201,7 +215,6 @@ namespace Emk.Services
                         Sex = patientResult[0].Sex.ToString(),
                         GlobalId = patientResult[0].IdGlobal
                     };
-                    client.Close();
                     return p;
                 }
 
@@ -217,6 +230,11 @@ namespace Emk.Services
             }
             catch (Exception ex) {
 				Log.Error("PIX Ошибка при получении пациента: " + ex.Message);   
+            }
+            finally
+            {
+                if (client != null)
+                    WcfClientLifecycle.Close(client);
             }
             return null;
         }

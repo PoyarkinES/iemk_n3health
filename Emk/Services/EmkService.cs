@@ -52,10 +52,6 @@ namespace Emk.Services
             {
                 if (!checkTreat(treat)) return -1;
 
-                var binding = new BasicHttpBinding();
-                var endpointAddress = new EndpointAddress(new Uri(Url));
-                var client = new EmkServiceClient(binding, endpointAddress);
-
                 if (treat.EsfDate != null && treat.EsfDate != DateTime.MinValue &&  treat.TreatDate != treat.EsfDate)
                 {
                     Log.Warning($"AccountId: {treat.AccountId} дата случая: {treat.TreatDate} отличается от даты подписания документа: {treat.EsfDate}.");
@@ -76,15 +72,31 @@ namespace Emk.Services
 
                 if (updateOnly)
                 {
-                    await client.UpdateCaseAsync(guid, case1);
-                    client.Close();
+                    var client = CreateClient();
+                    try
+                    {
+                        await client.UpdateCaseAsync(guid, case1);
+                    }
+                    finally
+                    {
+                        WcfClientLifecycle.Close(client);
+                    }
+
                     Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} обновлен.");
                     await SaveCase(updateOnly, treat, null, null);
                     return 0;
                 }
 
-                await client.AddCaseAsync(guid, case1);
-                client.Close();
+                var addClient = CreateClient();
+                try
+                {
+                    await addClient.AddCaseAsync(guid, case1);
+                }
+                finally
+                {
+                    WcfClientLifecycle.Close(addClient);
+                }
+
                 Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
                 await SaveCase(updateOnly, treat, null, null);
 
@@ -120,6 +132,13 @@ namespace Emk.Services
                 await SaveCase(updateOnly, treat, null, ex.Message);
                 return -1;
             }
+        }
+
+        private EmkServiceClient CreateClient()
+        {
+            var binding = new BasicHttpBinding();
+            var endpointAddress = new EndpointAddress(new Uri(Url));
+            return new EmkServiceClient(binding, endpointAddress);
         }
 
         private Task SaveCase(bool updateOnly, PatientAccount treat, string responseText, string errorText) =>
