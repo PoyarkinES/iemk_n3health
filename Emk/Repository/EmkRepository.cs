@@ -70,8 +70,6 @@ namespace Emk.Repository
             {
                 Parameter("accountId", accountId)
             };
-            var data = (await Query(Resources.GetPayType, GetPayTypeMap, [.. param])).First();
-
             return (await Query(Resources.GetPayType, GetPayTypeMap, [.. param])).First();
         }
 
