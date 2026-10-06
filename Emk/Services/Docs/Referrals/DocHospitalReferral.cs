@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics.PerformanceData;
-using System.IO;
-using System.Text;
+using System;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
@@ -20,26 +17,19 @@ namespace Emk.Services.Docs.Referrals
         protected override string NsType => "1";
         public override async Task<MedRecord> CreateDocumentAsync()
         {
-            try
-            {
-                Log.Info("Формирую направление с типом " + DocCode);
-                _doctor = DocDoctor;
-                _doc.DepartmentHead = _doctor.DepartmentHead.ToMedicalStaff();
-                _doc.IdSourceLpu = _doctor.IdLpu;
-                _doc.IdTargetLpu = _doctor.IdLpu;
-                _doc.ReferralInfo = FillInfo();
-                _doc.Attachments = await CreateAttachmentsAsync("text/xml", _doctor);
-                _doc.IdDocumentMis = CartNote.Id.ToString();
-                _doc.CreationDate = CartNote.DateAdded;
-                _doc.Header = "Header";
-                _doc.Author = _doctor.ToMedicalStaff();
-                Log.Info("Направление с типом " + DocCode + " сформировано.");
-                return _doc;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            Log.Info("Формирую направление с типом " + DocCode);
+            _doctor = DocDoctor;
+            _doc.DepartmentHead = _doctor.DepartmentHead.ToMedicalStaff();
+            _doc.IdSourceLpu = _doctor.IdLpu;
+            _doc.IdTargetLpu = _doctor.IdLpu;
+            _doc.ReferralInfo = FillInfo();
+            _doc.Attachments = await CreateAttachmentsAsync("text/xml", _doctor);
+            _doc.IdDocumentMis = CartNote.Id.ToString();
+            _doc.CreationDate = CartNote.DateAdded;
+            _doc.Header = "Header";
+            _doc.Author = _doctor.ToMedicalStaff();
+            Log.Info("Направление с типом " + DocCode + " сформировано.");
+            return _doc;
         }
 
         protected override int DocType { get; set; }
