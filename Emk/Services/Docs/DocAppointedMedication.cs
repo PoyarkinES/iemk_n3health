@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 
@@ -9,8 +6,6 @@ namespace Emk.Services.Docs
 {
     public class DocAppointedMedication : DocBase
     {
-        private AppointedMedication _doc;
-
         public DocAppointedMedication(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
         }
@@ -23,10 +18,5 @@ namespace Emk.Services.Docs
         }
 
         protected override int DocType { get; set; }
-
-        public void ParseCartNote()
-        {
-
-        }
     }
 }
