@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Emk.Repository.Interface;
 
 namespace Emk.Services.Files
 {
@@ -15,9 +16,16 @@ namespace Emk.Services.Files
         private SmoSettings _smo;
         private string _smoPath;
         private bool _needsInitialLoad;
+        private readonly IDoctorRepository _doctorRepository;
 
         public DoctorFileService()
+            : this(Factory.GetDoctorRepository)
         {
+        }
+
+        public DoctorFileService(IDoctorRepository doctorRepository)
+        {
+            _doctorRepository = doctorRepository ?? throw new ArgumentNullException(nameof(doctorRepository));
             Log.Info("Загружаю данные из файла SmoSettings.xml...");
             _smoPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "SmoSettings.xml");
             _needsInitialLoad = !File.Exists(_smoPath);
@@ -45,7 +53,7 @@ namespace Emk.Services.Files
                 return;
 
             Log.Warning("SmoSettings.xml не найден, создаю файл по умолчанию...");
-            _smo.Doctors = (await Factory.GetDoctorRepository.GetDoctors()).ToList();
+            _smo.Doctors = (await _doctorRepository.GetDoctors()).ToList();
             SaveNewData();
             _needsInitialLoad = false;
             Log.Info("SmoSettings.xml сформирован.");
@@ -87,7 +95,7 @@ namespace Emk.Services.Files
 
         public async Task<List<Doctor>> LoadDoctorsFromDbAsync()
         {
-            var dbDocs = (await Factory.GetDoctorRepository.GetDoctors()).ToList();
+            var dbDocs = (await _doctorRepository.GetDoctors()).ToList();
             foreach (var doctor in dbDocs)
             {
                 var existing = _smo.Doctors.SingleOrDefault(x => x.MemberId == doctor.MemberId);
