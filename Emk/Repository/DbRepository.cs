@@ -53,7 +53,7 @@ namespace Emk.Repository
 
                 await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     result.Add(map(reader));
                 }
@@ -85,7 +85,7 @@ namespace Emk.Repository
 
                 await connection.OpenAsync();
                 using var reader = await command.ExecuteReaderAsync();
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     result.Add(map(reader));
                 }
