@@ -9,7 +9,6 @@ namespace Emk.Services.Docs
     {
         private Patient _patient;
         private DoctorEmk _doctor;
-        private FileData _fd;
         private DischargeSummary _doc;
 
         public DocDischargeSummary(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
@@ -19,8 +18,8 @@ namespace Emk.Services.Docs
 
         protected override async Task InitializeDocumentAsync()
         {
-            _fd = ParseFile(FilePath);
-            var patientTask = InitializationDependencies.GetPatient(_fd.PatientCartNum);
+            var fileData = ParseFile(FilePath);
+            var patientTask = InitializationDependencies.GetPatient(fileData.PatientCartNum);
             var doctorTask = InitializationDependencies.GetDoctorOfPatientTreat(AccountId);
             await Task.WhenAll(patientTask, doctorTask);
             _patient = await patientTask;
