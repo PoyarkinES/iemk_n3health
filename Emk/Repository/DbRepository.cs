@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.Odbc;
 using System.Reflection;
 using System.Threading.Tasks;
 using Emk.Repository.Interface;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Emk.Repository
 {
@@ -17,20 +19,13 @@ namespace Emk.Repository
             m_ConnectionString = connectionString;
         }
 
-        public async Task<T> Scalar<T>(string commandText, params SqlParameter[] args)
+        public async Task<T> Scalar<T>(string commandText, params OdbcParameter[] args)
         {
             try
             {
-                using var connection = new SqlConnection(m_ConnectionString);
+                using var connection = new OdbcConnection(m_ConnectionString);
                 using var command = connection.CreateCommand();
-                command.CommandText = commandText;
-
-                foreach (var value in args)
-                {
-                    var param = command.CreateParameter();
-                    param.Value = value;
-                    command.Parameters.Add(param);
-                }
+                BindParameters(command, commandText, args);
 
                 connection.Open();
                 var result = (T) Convert.ChangeType(await command.ExecuteScalarAsync(), typeof(T));
@@ -45,22 +40,15 @@ namespace Emk.Repository
             }
         }
 
-        public async Task<List<T>> Query<T>(string commandText, Func<IDataReader, T> map, params SqlParameter[] args)
+        public async Task<List<T>> Query<T>(string commandText, Func<IDataReader, T> map, params OdbcParameter[] args)
         {
             try
             {
                 var result = new List<T>();
 
-                using var connection = new SqlConnection(m_ConnectionString);
+                using var connection = new OdbcConnection(m_ConnectionString);
                 using var command = connection.CreateCommand();
-                command.CommandText = commandText;
-
-                foreach (var value in args)
-                {
-                    var param = command.CreateParameter();
-                    param.Value = value;
-                    command.Parameters.Add(param);
-                }
+                BindParameters(command, commandText, args);
 
                 connection.Open();
                 using var reader = await command.ExecuteReaderAsync();
@@ -84,18 +72,15 @@ namespace Emk.Repository
             {
                 var result = new List<T>();
 
-                using var connection = new SqlConnection(m_ConnectionString);
-                using var command = connection.CreateCommand(commandType);
-                command.CommandText = commandText;
-
+                using var connection = new OdbcConnection(m_ConnectionString);
+                using var command = (OdbcCommand)connection.CreateCommand(commandType);
+                var parameters = new List<OdbcParameter>();
                 foreach (var prop in @object.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    var param = command.CreateParameter();
-                    param.ParameterName = prop.Name;
-                    param.Value = prop.GetValue(@object, null);
-                    command.Parameters.Add(param);
+                    parameters.Add(Parameter(prop.Name, prop.GetValue(@object, null)));
                 }
+                BindParameters(command, commandText, parameters.ToArray());
 
                 connection.Open();
                 using var reader = await command.ExecuteReaderAsync();
@@ -115,22 +100,15 @@ namespace Emk.Repository
             }
         }
 
-        public async Task<int> ExecuteNonQuery(string commandText, params object[] args)
+        public async Task<int> ExecuteNonQuery(string commandText, params OdbcParameter[] args)
         {
             try
             {
                 var result = -1;
 
-                using var connection = new SqlConnection(m_ConnectionString);
+                using var connection = new OdbcConnection(m_ConnectionString);
                 using var command = connection.CreateCommand();
-                command.CommandText = commandText;
-
-                foreach (var value in args)
-                {
-                    var param = command.CreateParameter();
-                    param.Value = value;
-                    command.Parameters.Add(param);
-                }
+                BindParameters(command, commandText, args);
 
                 connection.Open();
                 result = await command.ExecuteNonQueryAsync();
@@ -144,6 +122,39 @@ namespace Emk.Repository
                 Log.Error(e.ToString());
                 throw new Exception($"MethodName: 'ExecuteNonQuery'. Ошибка при получении данных из БД" + e.ToString());
             }
+        }
+
+        private static void BindParameters(OdbcCommand command, string commandText, OdbcParameter[] parameters)
+        {
+            var lookup = parameters.ToDictionary(
+                parameter => parameter.ParameterName.TrimStart('@'),
+                parameter => parameter,
+                System.StringComparer.OrdinalIgnoreCase);
+
+            command.CommandText = Regex.Replace(commandText, @"@([A-Za-z_][A-Za-z0-9_]*)", match =>
+            {
+                if (parameters.Length == 0)
+                    return match.Value;
+
+                var name = match.Groups[1].Value;
+                if (!lookup.TryGetValue(name, out var value))
+                    throw new System.InvalidOperationException($"No value supplied for SQL parameter '{name}'.");
+
+                command.Parameters.Add(new OdbcParameter
+                {
+                    Value = value.Value ?? System.DBNull.Value
+                });
+                return "?";
+            });
+        }
+
+        protected static OdbcParameter Parameter(string name, object value)
+        {
+            return new OdbcParameter
+            {
+                ParameterName = name,
+                Value = value ?? System.DBNull.Value
+            };
         }
     }
 }

@@ -6,5 +6,5 @@ from treat
     left join mkb10 
 where (treat_diagnosis.treat_id is not null OR treat_diagnosis_mkb10.treat_id is not null) 
     and treat.patient_id = @patient_id 
-    and treat.treat_date = @treat.treat_date 
+    and treat.treat_date = @treat_date
 order by treat.treat_id DESC

@@ -3,7 +3,7 @@ using Emk.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.Odbc;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -15,10 +15,10 @@ namespace Emk.Repository
     {
         public async Task<IEnumerable<PatientTreat>> GetPatientsTreatsAsync(DateTime sinceDate, DateTime toDate)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "since", value: sinceDate),
-                new(parameterName: "to", value: toDate)
+                Parameter("since", sinceDate),
+                Parameter("to", toDate)
             };
             var data = await Query(Resources.GetPatientsTreatsByPeriod, patientTreatMap, [.. param]).ConfigureAwait(false);
             return data;
@@ -26,9 +26,9 @@ namespace Emk.Repository
 
         public async Task<PatientAccount> GetPatientAccountByIdAsync(int accountId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "account_id", value: accountId),
+                Parameter("account_id", accountId),
             };
             var data = await Query(Resources.GetPatientAccountById, PatientAccountMap, [.. param]).ConfigureAwait(false);
             return data.FirstOrDefault();
@@ -36,13 +36,13 @@ namespace Emk.Repository
 
         public async Task<List<PatientAccount>> GetPatientAccountsAsync(DateTime sinceDate, DateTime toDate)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "since", value: sinceDate),
+                Parameter("since", sinceDate),
             };
 
-            if (toDate == DateTime.MinValue)
-                param.Add(new SqlParameter(parameterName: "to", value: toDate));
+            if (toDate != DateTime.MinValue)
+                param.Add(Parameter("to", toDate));
 
             var data = await Query(
                 toDate == DateTime.MinValue ? Resources.GetPatientAccountsByDate : Resources.GetPatientAccountsByPeriod,
@@ -52,9 +52,9 @@ namespace Emk.Repository
 
         public async Task<IEnumerable<string>> GetCheckPracticIdAsync(int paccount)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "account_id", value: paccount),
+                Parameter("account_id", paccount),
             };
 
             var data = await Query(Resources.GetCheckPracticId, GetCheckPracticIdMap, [.. param]).ConfigureAwait(false);
@@ -63,9 +63,9 @@ namespace Emk.Repository
 
         public async Task<IEnumerable<string>> GetCheckDocumentEsignAsync(int paccount)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "account_id", value: paccount),
+                Parameter("account_id", paccount),
             };
 
             var data = await Query(Resources.CheckDocumentEsignByFlag, (IDataReader reader) => checkDocumentEsignMap(reader, paccount), [.. param]).ConfigureAwait(false);
@@ -75,9 +75,9 @@ namespace Emk.Repository
 
         public async Task<List<string>> CheckDocumentAccessAsync(int accId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "account_id", value: accId),
+                Parameter("account_id", accId),
             };
 
             var data = await Query(Resources.CheckDocumentAccess, (IDataReader reader) => checkDocumentAccessAsync(reader, accId).GetAwaiter().GetResult(), [.. param]);
@@ -86,24 +86,29 @@ namespace Emk.Repository
 
         public async Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new SqlParameter(parameterName: "account_id", value: accountId),
+                Parameter("account_id", accountId),
             };
 
-            var data = await Query(Resources.CheckDocumentAccess, getDocumentByAccountIdMap, param.ToArray());
+            var data = await Query(Resources.CheckDocumentAccess, getDocumentByAccountIdMap,
+                Parameter("accId", accountId));
             return data;
         }
 
         public async Task<int> CheckPatientConsentTransPersDataAsync(int patientId)
         {
-            var result = await Scalar<int>($"SELECT COUNT() FROM patients WHERE patient_id = {patientId} AND consent_transf_pers_data = 'N'");
+            var result = await Scalar<int>(
+                "SELECT COUNT(*) FROM patients WHERE patient_id = @patientId AND consent_transf_pers_data = 'N'",
+                Parameter("patientId", patientId));
             return result;
         }
 
         public async Task<string> GetFileDirectoryAsync(int practicId)
         {
-            return await Scalar<string>($"select dba.sf_get_param_value('PATH_EXT_DOCS',{practicId})");
+            return await Scalar<string>(
+                "select dba.sf_get_param_value('PATH_EXT_DOCS', @practicId)",
+                Parameter("practicId", practicId));
         }
 
         private async Task<string> checkDocumentAccessAsync(IDataReader reader, int accId)

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.Odbc;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
 using Emk.Models;
@@ -13,22 +12,32 @@ namespace Emk
 {
 	public static class Factory
 	{
-        private static string _conStr;
-
 		private static List<EmkSettings> _settings;
 
+        private static string ConnectionString
+        {
+            get
+            {
+                var setting = ConfigurationManager.ConnectionStrings["EmkDb"];
+                if (setting == null || string.IsNullOrWhiteSpace(setting.ConnectionString))
+                    throw new ConfigurationErrorsException("Connection string 'EmkDb' is missing from the application configuration.");
+
+                return setting.ConnectionString;
+            }
+        }
+
 		public static IDoctorFileService GetSmoService => new DoctorFileService();
-        public static DoctorRepository GetDoctorRepository => new DoctorRepository(_conStr);
-		public static TreatRepository GetTreatRepository => new TreatRepository(_conStr);
-		public static EmkRepository GetEmkRepository => new EmkRepository(_conStr);
+        public static DoctorRepository GetDoctorRepository => new DoctorRepository(ConnectionString);
+		public static TreatRepository GetTreatRepository => new TreatRepository(ConnectionString);
+		public static EmkRepository GetEmkRepository => new EmkRepository(ConnectionString);
 		public static ISettingsService GetSettingsService => new SettingsService();
-		public static PatientRepository GetPatientRepository => new PatientRepository(_conStr);
-        public static LicenseRepository GetLicenseRepository => new LicenseRepository(_conStr);
+		public static PatientRepository GetPatientRepository => new PatientRepository(ConnectionString);
+        public static LicenseRepository GetLicenseRepository => new LicenseRepository(ConnectionString);
 		public static List<EmkSettings> LoadSettings(bool force = false)
 		{
 			if (force || _settings == null)
             {
-                _settings = new SettingsRepository(_conStr).LoadSettings().GetAwaiter().GetResult().ToList();
+                _settings = new SettingsRepository(ConnectionString).LoadSettings().GetAwaiter().GetResult().ToList();
             }
             return _settings;
 		}

@@ -5,9 +5,7 @@ using Emk.Services.Files;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.Odbc;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -29,9 +27,7 @@ namespace Emk.Services
 		CaseAmb case1;
 		PersonWithIdentity patient1;
 		string MName = "";
-		OdbcConnection _conn;
 		string path = "";
-		string conString;
 		string patientsBaseDir;
 		IDoctorFileService _smoSrv;
         private int autoUpd = 0;
@@ -41,7 +37,6 @@ namespace Emk.Services
 			Url = s.EmkUrl;
 			guid = s.Guid.ToString();
 			IdLPU = s.IdLPU.ToString();
-			conString = ConfigurationManager.AppSettings["ODBC"];
 			patientsBaseDir = s.PatientDirectory;
 			_smoSrv = Factory.GetSmoService;
 			_rep = Factory.GetEmkRepository;
@@ -278,7 +273,7 @@ namespace Emk.Services
             // Новые требования, добавляем всегда 1. Удовлетворительное состояние пациента при поступлении.
             case1.IdAmbResult = 2;
 
-            return new CaseAmb();
+            return case1;
 		}
 
 		private bool checkTreat(PatientAccount treat)
