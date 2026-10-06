@@ -251,6 +251,41 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DocSelector_LoadsPracticeDirectoryOnlyOnceForMultipleDocuments()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var firstFile = "20261002_17_86_123_5_Test_Name.xml";
+            var secondFile = "20261003_17_86_123_5_Test_Name.xml";
+            File.WriteAllText(Path.Combine(directory, firstFile), string.Empty);
+            File.WriteAllText(Path.Combine(directory, secondFile), string.Empty);
+
+            try
+            {
+                var repository = new StubDocSelectorRepository
+                {
+                    Directory = directory,
+                    Documents = new List<DocumentsDto>
+                    {
+                        new DocumentsDto { uuid = "doc-1", efiles_name = firstFile },
+                        new DocumentsDto { uuid = "doc-2", efiles_name = secondFile }
+                    }
+                };
+                var selector = new DocSelector(
+                    CreatePatientAccount(), repository, new StubDocumentInitializationDependencies());
+
+                var documents = await selector.GetDocs(123);
+
+                Assert.AreEqual(0, documents.Count);
+                Assert.AreEqual(1, repository.FileDirectoryCalls);
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task DocumentInitialization_UsesInjectedDependencies()
         {
             var dependencies = new StubDocumentInitializationDependencies();
@@ -624,6 +659,7 @@ namespace EmkTests
         private sealed class StubDocSelectorRepository : IDocSelectorRepository
         {
             public int RequestedAccountId { get; private set; }
+            public int FileDirectoryCalls { get; private set; }
             public string Directory { get; set; } = string.Empty;
             public List<DocumentsDto> Documents { get; set; } = new List<DocumentsDto>();
 
@@ -633,8 +669,11 @@ namespace EmkTests
                 return Task.FromResult(Documents);
             }
 
-            public Task<string> GetFileDirectoryAsync(int practiceId) =>
-                Task.FromResult(Directory);
+            public Task<string> GetFileDirectoryAsync(int practiceId)
+            {
+                FileDirectoryCalls++;
+                return Task.FromResult(Directory);
+            }
         }
 
         private sealed class StubDocumentInitializationDependencies :

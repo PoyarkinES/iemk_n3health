@@ -23,6 +23,7 @@ namespace Emk.Services
         private readonly PatientAccount _pa;
         private readonly IDocSelectorRepository _repository;
         private readonly IDocumentInitializationDependencies _documentDependencies;
+        private Task<string> _fileDirectoryTask;
 
         public DocSelector(PatientAccount pa)
             : this(pa, new FactoryDocSelectorRepository(), new FactoryDocumentInitializationDependencies())
@@ -96,7 +97,7 @@ namespace Emk.Services
         {
             try
             {
-                var filedir = await _repository.GetFileDirectoryAsync(_pa.PracticeId);
+                var filedir = await GetFileDirectoryAsync();
                 FileData fd = new FileData();
                 fd.FilePath = filedir + "\\" + filePath;
                 if (!fd.FileExists)
@@ -181,6 +182,9 @@ namespace Emk.Services
         {
             return await _repository.GetDocumentByAccountIdAsync(accountId);
         }
+
+        private Task<string> GetFileDirectoryAsync() =>
+            _fileDirectoryTask ?? (_fileDirectoryTask = _repository.GetFileDirectoryAsync(_pa.PracticeId));
 
         private async Task<MedRecord> GetMedRecord(DocumentsDto file, int accountId)
         {
