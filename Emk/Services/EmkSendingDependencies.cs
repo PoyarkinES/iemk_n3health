@@ -13,26 +13,31 @@ namespace Emk.Services
 {
     internal sealed class FactoryDocumentInitializationDependencies : IDocumentInitializationDependencies
     {
+        private readonly EmkRepository _emkRepository = Factory.GetEmkRepository;
+        private readonly PatientRepository _patientRepository = Factory.GetPatientRepository;
+
         public Task<CartNote> GetCartNote(int cartNoteId) =>
-            Factory.GetEmkRepository.GetCartNote(cartNoteId);
+            _emkRepository.GetCartNote(cartNoteId);
 
         public Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId) =>
-            Factory.GetEmkRepository.GetDoctorOfPatientTreat(accountId);
+            _emkRepository.GetDoctorOfPatientTreat(accountId);
 
         public Task<Patient> GetPatient(int patientId) =>
-            Factory.GetPatientRepository.GetPatient(patientId);
+            _patientRepository.GetPatient(patientId);
 
         public Task<Patient> GetPatient(string patientCartNum) =>
-            Factory.GetPatientRepository.GetPatient(patientCartNum);
+            _patientRepository.GetPatient(patientCartNum);
     }
 
     internal sealed class FactoryDocSelectorRepository : IDocSelectorRepository
     {
+        private readonly TreatRepository _treatRepository = Factory.GetTreatRepository;
+
         public Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId) =>
-            Factory.GetTreatRepository.GetDocumentByAccountIdAsync(accountId);
+            _treatRepository.GetDocumentByAccountIdAsync(accountId);
 
         public Task<string> GetFileDirectoryAsync(int practiceId) =>
-            Factory.GetTreatRepository.GetFileDirectoryAsync(practiceId);
+            _treatRepository.GetFileDirectoryAsync(practiceId);
     }
 
     public interface IEmkSendingRepository
@@ -88,30 +93,34 @@ namespace Emk.Services
 
     internal sealed class FactoryEmkSendingRepository : IEmkSendingRepository
     {
+        private readonly TreatRepository _treatRepository = Factory.GetTreatRepository;
+        private readonly EmkRepository _emkRepository = Factory.GetEmkRepository;
+        private readonly LicenseRepository _licenseRepository = Factory.GetLicenseRepository;
+
         public Task<List<EmkSettings>> LoadSettings(bool reload) => Factory.LoadSettingsAsync(reload);
 
-        public Task<bool> IsLicenseValid() => Factory.GetLicenseRepository.IsLicenseValid();
+        public Task<bool> IsLicenseValid() => _licenseRepository.IsLicenseValid();
 
         public Task<List<PatientAccount>> GetPatientAccountsAsync(DateTime from, DateTime to) =>
-            Factory.GetTreatRepository.GetPatientAccountsAsync(from, to);
+            _treatRepository.GetPatientAccountsAsync(from, to);
 
         public Task<PatientAccount> GetPatientAccountByIdAsync(int accountId) =>
-            Factory.GetTreatRepository.GetPatientAccountByIdAsync(accountId);
+            _treatRepository.GetPatientAccountByIdAsync(accountId);
 
         public Task<IEnumerable<string>> GetCheckDocumentEsignAsync(int accountId) =>
-            Factory.GetTreatRepository.GetCheckDocumentEsignAsync(accountId);
+            _treatRepository.GetCheckDocumentEsignAsync(accountId);
 
         public Task<List<string>> CheckDocumentAccessAsync(int accountId) =>
-            Factory.GetTreatRepository.CheckDocumentAccessAsync(accountId);
+            _treatRepository.CheckDocumentAccessAsync(accountId);
 
         public Task<IEnumerable<string>> GetCheckPracticIdAsync(int accountId) =>
-            Factory.GetTreatRepository.GetCheckPracticIdAsync(accountId);
+            _treatRepository.GetCheckPracticIdAsync(accountId);
 
         public Task<int> CheckPatientConsentTransPersDataAsync(int patientId) =>
-            Factory.GetTreatRepository.CheckPatientConsentTransPersDataAsync(patientId);
+            _treatRepository.CheckPatientConsentTransPersDataAsync(patientId);
 
         public Task UpdateEsignFiles(PatientAccount account) =>
-            Factory.GetEmkRepository.UpdateEsignFiles(account);
+            _emkRepository.UpdateEsignFiles(account);
     }
 
     internal sealed class FactoryEmkSendingClientFactory : IEmkSendingClientFactory
