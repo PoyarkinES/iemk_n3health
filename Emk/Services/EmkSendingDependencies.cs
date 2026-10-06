@@ -251,6 +251,9 @@ namespace Emk.Services
         private readonly EmkRepository _emkRepository = Factory.GetEmkRepository;
         private readonly PatientRepository _patientRepository = Factory.GetPatientRepository;
         private readonly IDoctorFileService _doctorFileService = Factory.GetSmoService;
+        private readonly IDocSelectorRepository _docSelectorRepository = new FactoryDocSelectorRepository();
+        private readonly IDocumentInitializationDependencies _documentInitializationDependencies =
+            new FactoryDocumentInitializationDependencies();
 
         public Task<DoctorEmk> GetDoctorByMemberId(int memberId) =>
             _emkRepository.GetDoctorByMemberId(memberId);
@@ -262,7 +265,9 @@ namespace Emk.Services
             _patientRepository.GetPatient(patientCartNum);
 
         public Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account) =>
-            new DocSelector(account).GetDocs(account.AccountId);
+            new DocSelector(
+                account, _docSelectorRepository, _documentInitializationDependencies)
+                .GetDocs(account.AccountId);
 
         public DefaultData LoadDefaults() => _doctorFileService.LoadDefaults();
 
