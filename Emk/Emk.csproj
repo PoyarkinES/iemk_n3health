@@ -124,6 +124,7 @@
     <Compile Include="Services\Docs\Referrals\DocHospitalReferral.cs" />
     <Compile Include="Services\DoctorService.cs" />
     <Compile Include="Services\EmkSendingService.cs" />
+    <Compile Include="Services\EmkSendingDependencies.cs" />
     <Compile Include="Services\EmkService.cs" />
     <Compile Include="Services\EmkSendingServiceExt.cs" />
     <Compile Include="Services\ServiceEnum\ServiceEnum.cs" />
