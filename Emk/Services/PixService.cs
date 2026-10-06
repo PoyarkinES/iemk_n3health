@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Emk.Services
 {
-	public class PixService
+	public class PixService : IPixSendingClient
 	{
 		private string Url;
 		private string guid;

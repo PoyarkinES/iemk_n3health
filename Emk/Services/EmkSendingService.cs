@@ -8,16 +8,28 @@ namespace Emk.Services
 {
 	public class EmkSendingService
     {
-        private List<EmkSettings> _settings;
+        private readonly List<EmkSettings> _settings;
+		private readonly IEmkSendingRepository _repository;
+		private readonly IEmkSendingClientFactory _clientFactory;
 
-        public EmkSendingService(bool reloadSettings = false)
-        {
-            _settings = Factory.LoadSettings(reloadSettings);
+		public EmkSendingService(bool reloadSettings = false)
+		    : this(new FactoryEmkSendingRepository(), new FactoryEmkSendingClientFactory(), reloadSettings)
+		{
+		}
+
+		public EmkSendingService(
+		    IEmkSendingRepository repository,
+		    IEmkSendingClientFactory clientFactory,
+		    bool reloadSettings = false)
+		{
+		    _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+		    _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+		    _settings = _repository.LoadSettings(reloadSettings);
         }
 
-		public async Task Run(int? accountId = null)
+        public async Task Run(int? accountId = null)
 		{
-            if(!IsLicenseValid()) return;
+		    if (!await IsLicenseValid()) return;
 
 			Log.Info("Начинаю отправку данных по пациентам...");
             var p = accountId == null
@@ -34,10 +46,10 @@ namespace Emk.Services
 
         public async Task Update(int accountId)
         {
-            if (! IsLicenseValid()) return;
+            if (!await IsLicenseValid()) return;
 
             Log.Info("Начинаю поиск СМО с номером счета " + accountId);
-            var smo = FindPatientAccount(accountId);
+            var smo = await FindPatientAccount(accountId);
             if (smo == null)
             {
                 Log.Error("СМО не найден.");
@@ -61,13 +73,13 @@ namespace Emk.Services
 
             if(check.Any(a=> !a)) return;
 
-            await new PixService(set).UpdatePatient(smo);
-            var result = new EmkService(set).UpdateCase(smo).ConfigureAwait(false).GetAwaiter().GetResult();
-            if (result == 0) Factory.GetEmkRepository.UpdateEsignFiles(smo).ConfigureAwait(false).GetAwaiter().GetResult();
+            await _clientFactory.CreatePixClient(set).UpdatePatient(smo);
+            var result = await _clientFactory.CreateEmkClient(set).UpdateCase(smo);
+            if (result == 0) await _repository.UpdateEsignFiles(smo);
         }
 
-        private PatientAccount FindPatientAccount(int accountId) =>
-            Factory.GetTreatRepository.GetPatientAccountByIdAsync(accountId).GetAwaiter().GetResult();
+        private Task<PatientAccount> FindPatientAccount(int accountId) =>
+            _repository.GetPatientAccountByIdAsync(accountId);
 
         private async Task Send(List<PatientAccount> list)
         {
@@ -81,22 +93,22 @@ namespace Emk.Services
                 var check = await checkSend(set, i);
                 if (check.Any(a=> !a)) continue;
 
-                var pix = new PixService(set);
-                var emk = new EmkService(set);
+                var pix = _clientFactory.CreatePixClient(set);
+                var emk = _clientFactory.CreateEmkClient(set);
 
                 var result = await pix.AddPatient(i) ? 0 : -1;
                 if (result == 0)
                     result = await emk.AddCase(i, false);
                 else
                     Log.Warning($"Случай:{i.AccountId} будет пропущен.");
-                if (result == 0) await Factory.GetEmkRepository.UpdateEsignFiles(i);
+                if (result == 0) await _repository.UpdateEsignFiles(i);
 
             }
         }
 
-        private bool IsLicenseValid()
+        private async Task<bool> IsLicenseValid()
         {
-            if (Factory.GetLicenseRepository.IsLicenseValid().ConfigureAwait(false).GetAwaiter().GetResult()) {
+            if (await _repository.IsLicenseValid()) {
                 Log.Warning("Отсутствует лицензия на использование обратитесь в техническую поддержку.");
                 return false;
             }
@@ -123,8 +135,7 @@ namespace Emk.Services
 			}
 
             Log.Info($"Получаю пациентов и лечение с {startDate.ToShortDateString()} по {endDate.ToShortDateString()}");
-            var pats = await Factory.GetTreatRepository.GetPatientAccountsAsync(startDate, endDate);
-            //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
+            var pats = await _repository.GetPatientAccountsAsync(startDate, endDate);
 			Log.Info($"Получено {pats.Count}");
 			return AddPostfixForDiagnose(pats);
         }
@@ -137,10 +148,12 @@ namespace Emk.Services
             //}
 #endif
             Log.Info($"Получаю пациентов и лечение по счету № {accountId}");
-            var pats = await Factory.GetTreatRepository.GetPatientAccountByIdAsync(accountId);
+            var pats = await _repository.GetPatientAccountByIdAsync(accountId);
+            if (pats == null)
+                return new List<PatientAccount>();
+
             var result = new List<PatientAccount>();
             result.Add(pats);
-            //var pats = Factory.GetTreatRepository.GetPatientsTreats(startDate, endDate);
             Log.Info($"Получено {pats}");
             return AddPostfixForDiagnose(result);
         }
@@ -179,7 +192,7 @@ namespace Emk.Services
         // если подписи нет, случай пропускаем и не добавляем в выгрузку "continue"
         private async Task<bool> checkDocumentEsignAsync(int accountId)
         {
-            var result = await Factory.GetTreatRepository.GetCheckDocumentEsignAsync(accountId).ConfigureAwait(false);
+            var result = await _repository.GetCheckDocumentEsignAsync(accountId).ConfigureAwait(false);
             if(result.Any())
             {
                 foreach (var item in result.Where(w => w != String.Empty))
@@ -198,7 +211,7 @@ namespace Emk.Services
         // если в EsignFiles записи по номеру счета i.AccountId существуют, то проверяем наличие доступа к файлам по указанному пути из EsignFiles
         private async Task<bool> checkDocumentAccessAsync(int accountId)
         {
-            var checkdocaccess = await Factory.GetTreatRepository.CheckDocumentAccessAsync(accountId).ConfigureAwait(false);
+            var checkdocaccess = await _repository.CheckDocumentAccessAsync(accountId).ConfigureAwait(false);
             if (checkdocaccess.Any(a => a != String.Empty))
             {
                 foreach (var item in checkdocaccess.Where(w => w != String.Empty))
@@ -217,7 +230,7 @@ namespace Emk.Services
             //Проверка соответствия случая лечения и лечения пациента
             // если практика для случая лечения и лечения пациента не соответствуют, случай пропускаем и не добавляем в выгрузку "continue"
 
-            var checkPracticId = await Factory.GetTreatRepository.GetCheckPracticIdAsync(pa.AccountId).ConfigureAwait(false);
+            var checkPracticId = await _repository.GetCheckPracticIdAsync(pa.AccountId).ConfigureAwait(false);
             if (checkPracticId.Any(a => a != String.Empty))
             {
                 foreach (var item in checkPracticId.Where(w => w != String.Empty))
@@ -233,7 +246,7 @@ namespace Emk.Services
 
         private async Task<bool> checkPatientConsentTransPersDataAsync(PatientAccount pa)
         {
-            if (await Factory.GetTreatRepository.CheckPatientConsentTransPersDataAsync(pa.PatientId) > 0)
+            if (await _repository.CheckPatientConsentTransPersDataAsync(pa.PatientId) > 0)
             {
                 Log.Info(
                     $"Пациент с идентификатором:{pa.PatientId} и № карты {pa.PatientsCartNum} не дал согласие на передачу персоналных данных. № счета:{pa.AccountId} исключен из пакета данных на передачу в EmkService.");
@@ -245,25 +258,21 @@ namespace Emk.Services
 
         private async Task<bool[]> checkSend(EmkSettings set, PatientAccount pa)
         {
-            var checksettings = Task.Run(() => {
-                // Проверка насроек практики для пациента
-                if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
-                {
-                    Log.Warning(
-                        $"Не найдены настройки практики для пациента с ИД {pa.PatientId} (TreatDate:{pa.TreatDate}, Practice: {pa.PracticeId})");
-                    return false;
-                }
+            var settingsAreValid = true;
+            if (set == default || set.IdLPU == Guid.Empty || set.Guid == Guid.Empty)
+            {
+                Log.Warning(
+                    $"Не найдены настройки практики для пациента с ИД {pa.PatientId} (TreatDate:{pa.TreatDate}, Practice: {pa.PracticeId})");
+                settingsAreValid = false;
+            }
+            else if (!set.Enabled)
+            {
+                Log.Info(
+                    $"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {pa.PatientId} (TreatDate:{pa.TreatDate}, Practice: {pa.PracticeId}) пропущен.");
+                settingsAreValid = false;
+            }
 
-                //Проверка возможности отправки данных для пациента
-                if (!set.Enabled)
-                {
-                    Log.Info(
-                        $"Для практики {set.PracticeId} отключена отправка данных. СМО для пациента с ИД {pa.PatientId} (TreatDate:{pa.TreatDate}, Practice: {pa.PracticeId}) пропущен.");
-                    return false;
-                }
-
-                return true;
-            });
+            var checksettings = Task.FromResult(settingsAreValid);
             var checkPracticId = checkPracticIdAsync(pa);
             var checkPatientConsentTransPersData = checkPatientConsentTransPersDataAsync(pa);
             var checkEsign = checkDocumentEsignAsync(pa.AccountId);

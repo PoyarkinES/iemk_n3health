@@ -16,7 +16,7 @@ using System.Xml.Linq;
 
 namespace Emk.Services
 {
-	public class EmkService
+	public class EmkService : IEmkCaseSendingClient
 	{
 		private EmkRepository _rep;
 
