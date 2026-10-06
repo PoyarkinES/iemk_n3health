@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4D5E6F7-1A2B-4C3D-8E9F-0A1B2C3D4E60}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Emk.Application</RootNamespace>
+    <AssemblyName>Emk.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dto\DiagnosisDto.cs" />
+    <Compile Include="Dto\DoctorDto.cs" />
+    <Compile Include="Dto\DocumentDto.cs" />
+    <Compile Include="Dto\EmkSettingsDto.cs" />
+    <Compile Include="Dto\FileDataDto.cs" />
+    <Compile Include="Dto\PatientAccountDto.cs" />
+    <Compile Include="Dto\PatientDto.cs" />
+    <Compile Include="Dto\PatientTreatDto.cs" />
+    <Compile Include="Ports\IDoctorFileService.cs" />
+    <Compile Include="Ports\IDoctorRepository.cs" />
+    <Compile Include="Ports\IEmkClient.cs" />
+    <Compile Include="Ports\IEmkRepository.cs" />
+    <Compile Include="Ports\ILicenseRepository.cs" />
+    <Compile Include="Ports\ILoggerService.cs" />
+    <Compile Include="Ports\IPatientRepository.cs" />
+    <Compile Include="Ports\IPixClient.cs" />
+    <Compile Include="Ports\ISettingsRepository.cs" />
+    <Compile Include="Ports\ISettingsService.cs" />
+    <Compile Include="Ports\ITreatRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ApplicationServiceExtensions.cs" />
+    <Compile Include="UseCases\PatientAccountFactory.cs" />
+    <Compile Include="UseCases\Sending\ISendPatientDataUseCase.cs" />
+    <Compile Include="UseCases\Sending\SendPatientDataRequest.cs" />
+    <Compile Include="UseCases\Sending\SendPatientDataResponse.cs" />
+    <Compile Include="UseCases\Sending\SendPatientDataUseCase.cs" />
+    <Compile Include="UseCases\Sending\SendPatientDataValidator.cs" />
+    <Compile Include="UseCases\Updating\IUpdatePatientDataUseCase.cs" />
+    <Compile Include="UseCases\Updating\UpdatePatientDataRequest.cs" />
+    <Compile Include="UseCases\Updating\UpdatePatientDataResponse.cs" />
+    <Compile Include="UseCases\Updating\UpdatePatientDataUseCase.cs" />
+    <Compile Include="UseCases\Validation\IValidateSendingRulesUseCase.cs" />
+    <Compile Include="UseCases\Validation\ValidateSendingRulesRequest.cs" />
+    <Compile Include="UseCases\Validation\ValidateSendingRulesResponse.cs" />
+    <Compile Include="UseCases\Validation\ValidateSendingRulesUseCase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Emk.Domain\Emk.Domain.csproj">
+      <Project>{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}</Project>
+      <Name>Emk.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
