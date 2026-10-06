@@ -61,11 +61,11 @@ namespace Emk.Views
 			txtPatientDir.Text = fd.SelectedPath;
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private async void btnSave_Click(object sender, EventArgs e)
 		{
 			SaveSettings();
 			_srv.SaveSettings(_settings);
-			Factory.LoadSettings(true);
+			await Factory.LoadSettingsAsync(true);
 			MessageBox.Show("Настройки сохранены", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			Close();
 		}
