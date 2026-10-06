@@ -53,11 +53,18 @@
     <Compile Include="CDATests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmkSendingServiceTests.cs" />
+    <Compile Include="Domain\ValueObjectsTests.cs" />
+    <Compile Include="Domain\EntitiesTests.cs" />
+    <Compile Include="Domain\EnumsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Emk.Domain\Emk.Domain.csproj">
+      <Project>{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}</Project>
+      <Name>Emk.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EmkCda\EmkCda.csproj">
       <Project>{99BF104F-1F07-491B-96AA-3E70076351C2}</Project>
       <Name>EmkCda</Name>

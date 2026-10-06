@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmkConfig", "EmkConfig\EmkC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmkCda", "EmkCda\EmkCda.csproj", "{99BF104F-1F07-491B-96AA-3E70076351C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emk.Domain", "Emk.Domain\Emk.Domain.csproj", "{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{99BF104F-1F07-491B-96AA-3E70076351C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99BF104F-1F07-491B-96AA-3E70076351C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99BF104F-1F07-491B-96AA-3E70076351C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
