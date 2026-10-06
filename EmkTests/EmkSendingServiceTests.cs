@@ -319,6 +319,37 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DocSelector_PreservesMissingDocumentFileError()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+
+            try
+            {
+                var repository = new StubDocSelectorRepository
+                {
+                    Directory = directory,
+                    Documents = new List<DocumentsDto>
+                    {
+                        new DocumentsDto
+                        {
+                            uuid = "doc-1",
+                            efiles_name = "20261002_17_86_123_5_Test_Name.xml"
+                        }
+                    }
+                };
+                var selector = new DocSelector(
+                    CreatePatientAccount(), repository, new StubDocumentInitializationDependencies());
+
+                await Assert.ThrowsExceptionAsync<FileNotFoundException>(() => selector.GetDocs(123));
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task DocumentInitialization_UsesInjectedDependencies()
         {
             var dependencies = new StubDocumentInitializationDependencies();
