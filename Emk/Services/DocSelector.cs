@@ -105,8 +105,8 @@ namespace Emk.Services
 
                 string[] data = Path.GetFileName(filePath).Split('_');
 
-                if (!data.Any())
-                    throw new NotImplementedException();
+                if (data.Length < 7)
+                    throw new FormatException("Недостаточно частей в имени файла.");
 
                 fd.FileDate = checkDate(data[0]);
                 fd.CartNoteId = checkCartNoteId(data[1]);
@@ -121,10 +121,10 @@ namespace Emk.Services
             }
             catch (Exception e)
             {
-                throw new Exception(
+                throw new FormatException(
                     $"Неверное наименование файла ({Path.GetFileName(filePath)}). " +
                     $"Ожидается формат (<yyyyMMdd>_<cart_notes_id>_<тип файла>_<номер карты>_<код_врача>_<фио_врача>_<инициал имени>_<инициал отчества>.xml)." +
-                    e.Message);
+                    e.Message, e);
             }
         }
 
@@ -164,6 +164,13 @@ namespace Emk.Services
         {
             error = String.Empty;
             check = true;
+
+            if (s.Length < 2)
+            {
+                check = false;
+                error = "Фамилия и имя врача не определены.";
+                return;
+            }
 
             if (string.IsNullOrEmpty(s[0].Trim()))
             {
