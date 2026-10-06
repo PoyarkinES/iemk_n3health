@@ -6,10 +6,26 @@ using Emk.EmkSvc;
 using Emk.Models;
 using Emk.PixSvc;
 using Emk.Repository;
+using Emk.Services.Docs;
 using Emk.Services.Files;
 
 namespace Emk.Services
 {
+    internal sealed class FactoryDocumentInitializationDependencies : IDocumentInitializationDependencies
+    {
+        public Task<CartNote> GetCartNote(int cartNoteId) =>
+            Factory.GetEmkRepository.GetCartNote(cartNoteId);
+
+        public Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId) =>
+            Factory.GetEmkRepository.GetDoctorOfPatientTreat(accountId);
+
+        public Task<Patient> GetPatient(int patientId) =>
+            Factory.GetPatientRepository.GetPatient(patientId);
+
+        public Task<Patient> GetPatient(string patientCartNum) =>
+            Factory.GetPatientRepository.GetPatient(patientCartNum);
+    }
+
     internal sealed class FactoryDocSelectorRepository : IDocSelectorRepository
     {
         public Task<List<DocumentsDto>> GetDocumentByAccountIdAsync(int accountId) =>
@@ -116,6 +132,9 @@ namespace Emk.Services
 
         public Task<Patient> GetPatient(int patientId) =>
             _patientRepository.GetPatient(patientId);
+
+        public Task<Patient> GetPatient(string patientCartNum) =>
+            _patientRepository.GetPatient(patientCartNum);
 
         public Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account) =>
             new DocSelector(account).GetDocs(account.AccountId);

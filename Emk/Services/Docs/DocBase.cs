@@ -5,20 +5,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
-using Emk.Repository;
 
 namespace Emk.Services.Docs
 {
+    public interface IDocumentInitializationDependencies
+    {
+        Task<CartNote> GetCartNote(int cartNoteId);
+        Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId);
+        Task<Patient> GetPatient(int patientId);
+        Task<Patient> GetPatient(string patientCartNum);
+    }
+
     public interface IDocBase
     {
-        Task InitializeAsync();
+        Task InitializeAsync(IDocumentInitializationDependencies dependencies);
         MedRecord CreateDocument();
     }
 
     public abstract class DocBase : IDocBase
     {
-        protected EmkRepository EmkRep = Factory.GetEmkRepository;
-        protected PatientRepository PatRep = Factory.GetPatientRepository;
+        protected IDocumentInitializationDependencies InitializationDependencies { get; private set; }
         protected DoctorEmk DocDoctor { get; set; }
         protected Patient DocPatient { get; set; }
 
@@ -41,9 +47,10 @@ namespace Emk.Services.Docs
             AccountId = accountId;
         }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(IDocumentInitializationDependencies dependencies)
         {
-            CartNote = await EmkRep.GetCartNote(CartNoteId);
+            InitializationDependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
+            CartNote = await InitializationDependencies.GetCartNote(CartNoteId);
             await InitializeDocumentAsync();
         }
 
@@ -52,8 +59,8 @@ namespace Emk.Services.Docs
             if (CartNote == null)
                 throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
 
-            DocDoctor = await EmkRep.GetDoctorOfPatientTreat(AccountId);
-            DocPatient = await PatRep.GetPatient(CartNote.PatientId);
+            DocDoctor = await InitializationDependencies.GetDoctorOfPatientTreat(AccountId);
+            DocPatient = await InitializationDependencies.GetPatient(CartNote.PatientId);
         }
 
         public abstract MedRecord CreateDocument();
