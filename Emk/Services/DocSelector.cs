@@ -176,6 +176,7 @@ namespace Emk.Services
                     return null;
                 }
 
+                await srv.InitializeAsync();
                 return srv.CreateDocument();
             }
 

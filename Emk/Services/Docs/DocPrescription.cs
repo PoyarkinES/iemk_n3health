@@ -8,11 +8,9 @@ namespace Emk.Services.Docs
     public class DocPrescription : DocBase
     {
         private readonly AppointedMedication _doc;
-        private readonly DoctorEmk _doctor;
         public DocPrescription(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             _doc = new AppointedMedication();
-            _doctor = GetDoctor();
         }
 
         protected override int DocCode => 86;
@@ -36,7 +34,7 @@ namespace Emk.Services.Docs
                 _doc.IssuedDate = DateTime.Parse(data[1]);
                 _doc.MedicineName = data[9];
                 _doc.IdINN = int.Parse(data[19]);
-                _doc.Doctor = _doctor.ToMedicalStaff();
+                _doc.Doctor = DocDoctor.ToMedicalStaff();
             }
             catch (Exception e)
             {
@@ -70,7 +68,7 @@ namespace Emk.Services.Docs
                             {
                                 new MedDocumentDtoPersonalSign
                                 {
-                                    Doctor = _doctor.ToMedicalStaff(),
+                                    Doctor = DocDoctor.ToMedicalStaff(),
                                     Sign = dsgn
                                 }
                             }
