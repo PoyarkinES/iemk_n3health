@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Emk.Models;
 using Emk.EmkSvc;
@@ -418,6 +419,89 @@ namespace EmkTests
             Assert.AreEqual(1, clientFactory.Client.AddCaseCalls);
             Assert.IsTrue(clientFactory.Client.ClosedSafely);
         }
+
+        [TestMethod]
+        public void EmkService_AddCaseReturnsNestedFaultDetails()
+        {
+            var service = CreateEmkService();
+            var errors = new[]
+            {
+                new Emk.EmkSvc.RequestFault
+                {
+                    ErrorCode = 10,
+                    PropertyName = "Root",
+                    Message = "root",
+                    Errors = new[]
+                    {
+                        new Emk.EmkSvc.RequestFault
+                        {
+                            ErrorCode = 42,
+                            PropertyName = "Nested",
+                            Message = "nested",
+                            Errors = new[]
+                            {
+                                new Emk.EmkSvc.RequestFault
+                                {
+                                    ErrorCode = 99,
+                                    PropertyName = "Leaf",
+                                    Message = "leaf",
+                                    Errors = new Emk.EmkSvc.RequestFault[0]
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            var error = typeof(EmkService)
+                .GetMethod("getError", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(service, new object[] { errors });
+
+            Assert.AreEqual("99 : Leaf leaf ", error);
+        }
+
+        [TestMethod]
+        public void EmkService_AddCaseReturnsNestedWarningDetails()
+        {
+            var service = CreateEmkService();
+            var warnings = new[]
+            {
+                new RequestWarning
+                {
+                    WarningCode = 10,
+                    PropertyName = "Root",
+                    Message = "root",
+                    Warnings = new[]
+                    {
+                        new RequestWarning
+                        {
+                            WarningCode = 42,
+                            PropertyName = "Leaf",
+                            Message = "leaf",
+                            Warnings = new RequestWarning[0]
+                        }
+                    }
+                }
+            };
+
+            var warning = typeof(EmkService)
+                .GetMethod("getWarning", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(service, new object[] { warnings });
+
+            Assert.AreEqual("42 : Leaf leaf ", warning);
+        }
+
+        private static EmkService CreateEmkService() =>
+            new EmkService(
+                new EmkSettings
+                {
+                    EmkUrl = "http://emk.test",
+                    Guid = Guid.NewGuid(),
+                    IdLPU = Guid.NewGuid(),
+                    PatientDirectory = @"C:\patients"
+                },
+                new StubEmkServiceDependencies(),
+                new StubEmkWcfClientFactory());
 
         private static EmkSendingService CreateService(
             StubSendingRepository repository,
