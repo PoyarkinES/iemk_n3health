@@ -89,6 +89,52 @@ namespace Emk.Services
         Task<bool> UpdatePatient(PatientAccount account);
     }
 
+    public interface IPixWcfClient
+    {
+        Task AddPatientAsync(string guid, string idLpu, PatientDto patient);
+        Task UpdatePatientAsync(string guid, string idLpu, PatientDto patient);
+        Task<PatientDto[]> GetPatientAsync(
+            string guid, string idLpu, PatientDto patient, SourceType idSource);
+        void CloseSafely();
+    }
+
+    public interface IPixWcfClientFactory
+    {
+        IPixWcfClient Create(string serviceUrl);
+    }
+
+    internal sealed class FactoryPixWcfClientFactory : IPixWcfClientFactory
+    {
+        public IPixWcfClient Create(string serviceUrl)
+        {
+            var binding = new BasicHttpBinding();
+            var endpointAddress = new EndpointAddress(new Uri(serviceUrl));
+            return new PixWcfClientAdapter(new PixServiceClient(binding, endpointAddress));
+        }
+    }
+
+    internal sealed class PixWcfClientAdapter : IPixWcfClient
+    {
+        private readonly PixServiceClient _client;
+
+        public PixWcfClientAdapter(PixServiceClient client)
+        {
+            _client = client;
+        }
+
+        public Task AddPatientAsync(string guid, string idLpu, PatientDto patient) =>
+            _client.AddPatientAsync(guid, idLpu, patient);
+
+        public Task UpdatePatientAsync(string guid, string idLpu, PatientDto patient) =>
+            _client.UpdatePatientAsync(guid, idLpu, patient);
+
+        public Task<PatientDto[]> GetPatientAsync(
+            string guid, string idLpu, PatientDto patient, SourceType idSource) =>
+            _client.GetPatientAsync(guid, idLpu, patient, idSource);
+
+        public void CloseSafely() => WcfClientLifecycle.Close(_client);
+    }
+
     public interface IEmkCaseSendingClient
     {
         Task<int> AddCase(PatientAccount account, bool updateOnly);
