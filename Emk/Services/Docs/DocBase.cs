@@ -59,8 +59,11 @@ namespace Emk.Services.Docs
             if (CartNote == null)
                 throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
 
-            DocDoctor = await InitializationDependencies.GetDoctorOfPatientTreat(AccountId);
-            DocPatient = await InitializationDependencies.GetPatient(CartNote.PatientId);
+            var doctorTask = InitializationDependencies.GetDoctorOfPatientTreat(AccountId);
+            var patientTask = InitializationDependencies.GetPatient(CartNote.PatientId);
+            await Task.WhenAll(doctorTask, patientTask);
+            DocDoctor = await doctorTask;
+            DocPatient = await patientTask;
         }
 
         public abstract Task<MedRecord> CreateDocumentAsync();
