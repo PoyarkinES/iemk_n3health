@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
 
@@ -15,7 +16,13 @@ namespace Emk.Services.Docs
         public DocDischargeSummary(string filePath, int cartNoteId, int accountId) : base(filePath, cartNoteId, accountId)
         {
             _doc = new DischargeSummary();
-            SetPatientAndDoctor();
+        }
+
+        protected override async Task InitializeDocumentAsync()
+        {
+            _fd = ParseFile(FilePath);
+            _patient = await PatRep.GetPatient(_fd.PatientCartNum);
+            _doctor = await EmkRep.GetDoctorOfPatientTreat(AccountId);
         }
 
         protected override int DocCode { get; }
@@ -78,25 +85,6 @@ namespace Emk.Services.Docs
             {
                 throw new Exception(e.Message);
             }
-        }
-
-
-
-        protected override Patient GetPatient()
-        {
-            return PatRep.GetPatient(_fd.PatientCartNum).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        protected override DoctorEmk GetDoctor()
-        {
-            return EmkRep.GetDoctorOfPatientTreat(AccountId).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        private void SetPatientAndDoctor()
-        {
-            _fd = ParseFile(FilePath);
-            _patient = GetPatient();
-            _doctor = GetDoctor();
         }
     }
 }

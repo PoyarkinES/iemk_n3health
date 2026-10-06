@@ -2,26 +2,25 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
 using Emk.Repository;
-using Emk.Services.Files;
 
 namespace Emk.Services.Docs
 {
     public interface IDocBase
     {
+        Task InitializeAsync();
         MedRecord CreateDocument();
     }
 
     public abstract class DocBase : IDocBase
     {
-        protected EmkSettings Settings = Factory.LoadSettings().First();
-        protected IDoctorFileService SmoService = Factory.GetSmoService;
         protected EmkRepository EmkRep = Factory.GetEmkRepository;
         protected PatientRepository PatRep = Factory.GetPatientRepository;
-        protected DoctorEmk DocDoctor { get;  }
-        protected Patient DocPatient { get; }
+        protected DoctorEmk DocDoctor { get; set; }
+        protected Patient DocPatient { get; set; }
 
 
         protected string FilePath { get; }
@@ -40,30 +39,26 @@ namespace Emk.Services.Docs
             FilePath = filePath;
             CartNoteId = cartNoteId;
             AccountId = accountId;
-            LoadCartNote();
-            DocDoctor = GetDoctor();
-            DocPatient = GetPatient();
+        }
+
+        public async Task InitializeAsync()
+        {
+            CartNote = await EmkRep.GetCartNote(CartNoteId);
+            await InitializeDocumentAsync();
+        }
+
+        protected virtual async Task InitializeDocumentAsync()
+        {
+            if (CartNote == null)
+                throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
+
+            DocDoctor = await EmkRep.GetDoctorOfPatientTreat(AccountId);
+            DocPatient = await PatRep.GetPatient(CartNote.PatientId);
         }
 
         public abstract MedRecord CreateDocument();
 
         protected abstract int DocType { get; set; }
-
-        protected virtual DoctorEmk GetDoctor()
-        {
-            if (CartNote == null)
-                throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить доктора.");
-
-            return EmkRep.GetDoctorOfPatientTreat(AccountId).GetAwaiter().GetResult();
-        }
-
-        protected virtual Patient GetPatient()
-        {
-            if (CartNote == null)
-                throw new ArgumentException($"Не найдена запись в амбулаторной карте с ИД {CartNoteId} невозможно загрузить пациента.");
-
-            return PatRep.GetPatient(CartNote.PatientId).GetAwaiter().GetResult();
-        }
 
         protected virtual FileData ParseFile(string filePath)
         {
@@ -100,11 +95,6 @@ namespace Emk.Services.Docs
             }
         }
 
-
-        private void LoadCartNote()
-        {
-            CartNote = EmkRep.GetCartNote(CartNoteId).GetAwaiter().GetResult();
-        }
 
         private DateTime checkDate(string s)
         {

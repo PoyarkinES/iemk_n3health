@@ -22,7 +22,7 @@ namespace Emk.Services.Docs.Referrals
             try
             {
                 Log.Info("Формирую направление с типом " + DocCode);
-                _doctor = GetDoctor();
+                _doctor = DocDoctor;
                 _doc.DepartmentHead = _doctor.DepartmentHead.ToMedicalStaff();
                 _doc.IdSourceLpu = _doctor.IdLpu;
                 _doc.IdTargetLpu = _doctor.IdLpu;

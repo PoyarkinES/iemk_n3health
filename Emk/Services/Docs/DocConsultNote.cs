@@ -21,7 +21,13 @@ namespace Emk.Services.Docs
         {
             _doc = new MedDocument();
             _IdMis = idMis;
-            SetPatientAndDoctor();
+        }
+
+        protected override async Task InitializeDocumentAsync()
+        {
+            _fd = ParseFile(FilePath);
+            _patient = await PatRep.GetPatient(_fd.PatientCartNum);
+            _doctor = await EmkRep.GetDoctorOfPatientTreat(AccountId);
         }
 
         protected override int DocCode { get; } = 198;
@@ -87,25 +93,5 @@ namespace Emk.Services.Docs
             }
         }
 
-        protected override Patient GetPatient()
-        {
-            if (_fd?.PatientCartNum == null)
-                return null;
-            return PatRep.GetPatient(_fd.PatientCartNum).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        protected override DoctorEmk GetDoctor()
-        {
-            if (_patient == null)
-                return null;
-            return EmkRep.GetDoctorOfPatientTreat(AccountId).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        private void SetPatientAndDoctor()
-        {
-            _fd = ParseFile(FilePath);
-            _patient = GetPatient();
-            _doctor = GetDoctor();
-        }
     }
 }
