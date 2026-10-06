@@ -48,6 +48,22 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task Run_AssignsSuffixesToCasesWithDifferentDiagnoses()
+        {
+            var repository = CreateRepositoryWithSettings();
+            var firstCase = CreatePatientAccount();
+            var secondCase = CreatePatientAccount();
+            secondCase.DiagnoseCode = "B00";
+            secondCase.DiagnoseName = "Another diagnosis";
+            repository.PatientAccounts = new List<PatientAccount> { firstCase, secondCase };
+            var clients = new StubSendingClientFactory();
+
+            await CreateService(repository, clients).Run();
+
+            CollectionAssert.AreEqual(new[] { "a", "b" }, clients.Emk.AddedCaseSuffixes.ToArray());
+        }
+
+        [TestMethod]
         public async Task Run_DoesNotCallEmkOrMarkDocumentsWhenPixAddFails()
         {
             var repository = CreateRepositoryWithCase();
@@ -1077,11 +1093,13 @@ namespace EmkTests
             public int AddCaseCalls { get; private set; }
             public int UpdateCaseCalls { get; private set; }
             public int LastAccountId { get; private set; }
+            public List<string> AddedCaseSuffixes { get; } = new List<string>();
 
             public Task<int> AddCase(PatientAccount account, bool updateOnly)
             {
                 AddCaseCalls++;
                 LastAccountId = account.AccountId;
+                AddedCaseSuffixes.Add(account.SmoPostfix);
                 return Task.FromResult(AddCaseResult);
             }
 
