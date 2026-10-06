@@ -41,20 +41,22 @@ namespace Emk.Services
 
     internal sealed class FactoryDocumentInitializationDependencies : IDocumentInitializationDependencies
     {
-        private readonly EmkRepository _emkRepository = Factory.GetEmkRepository;
-        private readonly PatientRepository _patientRepository = Factory.GetPatientRepository;
+        private readonly Lazy<EmkRepository> _emkRepository =
+            new Lazy<EmkRepository>(() => Factory.GetEmkRepository);
+        private readonly Lazy<PatientRepository> _patientRepository =
+            new Lazy<PatientRepository>(() => Factory.GetPatientRepository);
 
         public Task<CartNote> GetCartNote(int cartNoteId) =>
-            _emkRepository.GetCartNote(cartNoteId);
+            _emkRepository.Value.GetCartNote(cartNoteId);
 
         public Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId) =>
-            _emkRepository.GetDoctorOfPatientTreat(accountId);
+            _emkRepository.Value.GetDoctorOfPatientTreat(accountId);
 
         public Task<Patient> GetPatient(int patientId) =>
-            _patientRepository.GetPatient(patientId);
+            _patientRepository.Value.GetPatient(patientId);
 
         public Task<Patient> GetPatient(string patientCartNum) =>
-            _patientRepository.GetPatient(patientCartNum);
+            _patientRepository.Value.GetPatient(patientCartNum);
     }
 
     internal sealed class FactoryDocSelectorRepository : IDocSelectorRepository
