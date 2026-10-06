@@ -1,29 +1,28 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
-using Emk;
-using Emk.Views;
-using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EmkConfig
 {
-	static class Program
-	{
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main()
-		{
+    static class Program
+    {
+        [STAThread]
+        static void Main()
+        {
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new EmkMainForm());
+                using (var provider = Bootstrapper.BuildServiceProvider())
+                using (var scope = provider.CreateScope())
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(ActivatorUtilities.CreateInstance<Forms.EmkMainForm>(scope.ServiceProvider));
+                }
             }
-			catch (Exception e)
+            catch (Exception exception)
             {
-                Log.Error(JsonConvert.SerializeObject(e));
+                MessageBox.Show(exception.Message, "Ошибка запуска", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-	}
+    }
 }

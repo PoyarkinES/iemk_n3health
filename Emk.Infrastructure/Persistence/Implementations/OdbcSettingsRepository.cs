@@ -36,6 +36,9 @@ namespace Emk.Infrastructure.Persistence.Implementations
                 EmkUrl = reader.Get<string>("N3H_EMK_URL"),
                 Enabled = reader.Get<string>("N3H_DATA_ON") == "1",
                 DateInterval = dateInterval,
+                SendingType = reader.Get<string>("N3H_TR_MODE") == "0"
+                    ? SendingType.DaysBeforeNow
+                    : SendingType.Interval,
                 IntervalFrom = reader.Get<DateTime?>("N3H_PER_FROM") ?? DateTime.MinValue,
                 IntervalTo = reader.Get<DateTime?>("N3H_PER_TO") ?? DateTime.MinValue
             };
