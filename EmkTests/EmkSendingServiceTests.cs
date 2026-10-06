@@ -286,6 +286,39 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DocSelector_ReportsMalformedDocumentFilename()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var fileName = "invalid.xml";
+            File.WriteAllText(Path.Combine(directory, fileName), string.Empty);
+
+            try
+            {
+                var repository = new StubDocSelectorRepository
+                {
+                    Directory = directory,
+                    Documents = new List<DocumentsDto>
+                    {
+                        new DocumentsDto { uuid = "doc-1", efiles_name = fileName }
+                    }
+                };
+                var selector = new DocSelector(
+                    CreatePatientAccount(), repository, new StubDocumentInitializationDependencies());
+
+                var exception = await Assert.ThrowsExceptionAsync<FormatException>(
+                    () => selector.GetDocs(123));
+
+                StringAssert.Contains(exception.Message, fileName);
+                Assert.IsInstanceOfType(exception.InnerException, typeof(FormatException));
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task DocumentInitialization_UsesInjectedDependencies()
         {
             var dependencies = new StubDocumentInitializationDependencies();
