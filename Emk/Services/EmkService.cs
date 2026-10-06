@@ -76,14 +76,14 @@ namespace Emk.Services
 
                 if (updateOnly)
                 {
-                    client.UpdateCase(guid, case1);
+                    await client.UpdateCaseAsync(guid, case1);
                     client.Close();
                     Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} обновлен.");
                     await SaveCase(updateOnly, treat, null, null);
                     return 0;
                 }
 
-                client.AddCase(guid, case1);
+                await client.AddCaseAsync(guid, case1);
                 client.Close();
                 Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
                 await SaveCase(updateOnly, treat, null, null);
