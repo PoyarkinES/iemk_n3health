@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Emk.Models;
@@ -201,6 +202,37 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DocSelector_OmitsFilesWithDifferentTreatmentDate()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var fileName = "20261002_17_86_123_5_Test_Name.xml";
+            File.WriteAllText(Path.Combine(directory, fileName), string.Empty);
+
+            try
+            {
+                var repository = new StubDocSelectorRepository
+                {
+                    Directory = directory,
+                    Documents = new List<DocumentsDto>
+                    {
+                        new DocumentsDto { uuid = "doc-1", efiles_name = fileName }
+                    }
+                };
+                var selector = new DocSelector(
+                    CreatePatientAccount(), repository, new StubDocumentInitializationDependencies());
+
+                var documents = await selector.GetDocs(123);
+
+                Assert.AreEqual(0, documents.Count);
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task DocumentInitialization_UsesInjectedDependencies()
         {
             var dependencies = new StubDocumentInitializationDependencies();
@@ -307,15 +339,17 @@ namespace EmkTests
         private sealed class StubDocSelectorRepository : IDocSelectorRepository
         {
             public int RequestedAccountId { get; private set; }
+            public string Directory { get; set; } = string.Empty;
+            public List<DocumentsDto> Documents { get; set; } = new List<DocumentsDto>();
 
             public Task<List<Emk.Models.DocumentsDto>> GetDocumentByAccountIdAsync(int accountId)
             {
                 RequestedAccountId = accountId;
-                return Task.FromResult(new List<Emk.Models.DocumentsDto>());
+                return Task.FromResult(Documents);
             }
 
             public Task<string> GetFileDirectoryAsync(int practiceId) =>
-                Task.FromResult(string.Empty);
+                Task.FromResult(Directory);
         }
 
         private sealed class StubDocumentInitializationDependencies :

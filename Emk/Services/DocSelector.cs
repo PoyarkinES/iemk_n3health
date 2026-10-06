@@ -60,7 +60,9 @@ namespace Emk.Services
             foreach (var file in files.Where(w =>
                          !string.IsNullOrEmpty(w.uuid) && !string.IsNullOrEmpty(w.efiles_name)))
             {
-                documents.Add(await GetMedRecord(file, accountId));
+                var document = await GetMedRecord(file, accountId);
+                if (document != null)
+                    documents.Add(document);
             }
 
             return documents;
