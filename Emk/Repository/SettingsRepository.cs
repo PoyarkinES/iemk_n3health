@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
 using Emk.Models;
@@ -50,12 +50,12 @@ namespace Emk.Repository
 
         private async Task<string> GetPatientsPath(int practicId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "practicId", value: practicId),
+                Parameter("practicId", practicId),
             };
 
-            var data = (await Query(Resources.GetDocumentByAccountId, CheckDocumentEsignMap, [.. param])).First();
+            var data = (await Query(Resources.GetFileDirectory, CheckDocumentEsignMap, [.. param])).First();
             return string.IsNullOrEmpty(data) ? null : data;
         }
 

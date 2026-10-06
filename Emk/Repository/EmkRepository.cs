@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.Odbc;
 using System.Globalization;
 using System.Linq;
 using Emk.Properties;
@@ -15,37 +15,37 @@ namespace Emk.Repository
     {
         public async Task<DoctorEmk> GetDoctorByMemberId(int memberId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "member_id", value: memberId),
+                Parameter("member_id", memberId),
             };
             return (await Query(Resources.GetDoctorByMemberId, GetDoctorByMemberIdMap, [.. param])).First();
         }
 
         public async virtual Task<DoctorEmk> GetDoctorOfPatientTreat(int accountId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "accountId", value: accountId),
+                Parameter("accountId", accountId),
             };
             return (await Query(Resources.GetDoctorOfPatientTreat, GetDoctorOfPatientTreatMap, [.. param])).First();
         }
 
         public async Task<CartNote> GetCartNote(int noteId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "noteId", value: noteId),
+                Parameter("noteId", noteId),
             };
             return (await Query(Resources.GetCartNote, GetCartNoteMap, [.. param])).First();
         }
 
         public async Task<DiagnosisEmk> GetPatientDiagnosis(int patientId, DateTime treatDate)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "patient_id", value: patientId),
-                new(parameterName: "treat_date", value: treatDate)
+                Parameter("patient_id", patientId),
+                Parameter("treat_date", treatDate)
             };
             return (await Query(Resources.GetPatientDiagnosis, GetPatientDiagnosisMap, [.. param])).First();
         }
@@ -53,20 +53,20 @@ namespace Emk.Repository
         public async Task<IEnumerable<ProcedureDescriptionEmk>> GetProcedureDescriptions(int patientId, DateTime procedureDate,
             int? accountId = null)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "patientId", value: patientId),
-                new(parameterName: "accountId", value: accountId),
-                new(parameterName: "procedureDate", value: procedureDate)
+                Parameter("patientId", patientId),
+                Parameter("accountId", accountId),
+                Parameter("procedureDate", procedureDate)
             };
             return await Query(Resources.GetProcedureDescriptions, GetProcedureDescriptionsMap, [.. param]);
         }
 
         public async Task<PayType> GetPayType(int accountId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "accountId", value: accountId)
+                Parameter("accountId", accountId)
             };
             var data = (await Query(Resources.GetPayType, GetPayTypeMap, [.. param])).First();
 
@@ -75,22 +75,31 @@ namespace Emk.Repository
 
         public async Task UpdateEsignFiles(PatientAccount pa)
         {
-            var sql =
-                $"Update esign_files set date_sent = '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' where account_id = {pa.AccountId}";
-            await ExecuteNonQuery(sql);
+            const string sql = "Update esign_files set date_sent = @date_sent where account_id = @account_id";
+            await ExecuteNonQuery(sql,
+                Parameter("date_sent", DateTime.Now),
+                Parameter("account_id", pa.AccountId));
         }
 
         public async Task SaveCase(int smo, DateTime upload_time, string upload_meth, int patient_id, int account_id, string response_text, char is_success, string error_text)
         {
-            var sql = $"INSERT INTO ruegisz_log VALUES({smo}, {upload_time}, {upload_meth}, {patient_id}, {account_id}, {response_text}, {is_success}, {error_text} )";
-            await ExecuteNonQuery(sql);
+            const string sql = "INSERT INTO ruegisz_log VALUES(@smo, @upload_time, @upload_meth, @patient_id, @account_id, @response_text, @is_success, @error_text)";
+            await ExecuteNonQuery(sql,
+                Parameter("smo", smo),
+                Parameter("upload_time", upload_time),
+                Parameter("upload_meth", upload_meth),
+                Parameter("patient_id", patient_id),
+                Parameter("account_id", account_id),
+                Parameter("response_text", response_text),
+                Parameter("is_success", is_success),
+                Parameter("error_text", error_text));
         }
 
         private async Task<DoctorEmk> GetDepartmentHead(int memberId, string idLpu = null)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "member_id", value: memberId),
+                Parameter("member_id", memberId),
             };
             var data = (await Query(Resources.GetDepartmentHead, (IDataReader reader) => GetDepartmentHeadMap(reader, idLpu), [.. param])).First();
             return data;

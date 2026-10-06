@@ -23,7 +23,7 @@ namespace Emk.Services
             var p = accountId == null
                 ? await GetPatientsAndTreatDates()
                 : await GetPatientsAndTreatDates(accountId.Value);
-            if (p == null || p.Any())
+            if (p == null || !p.Any())
             {
                 Log.Info("Записей лечения не найдено.");
                 return;
@@ -77,8 +77,6 @@ namespace Emk.Services
                 Log.Info("-----------------");
                 var i = smo.First();
                 var set = _settings.FirstOrDefault(x => x.PracticeId == i.PracticeId);
-                if (set != null)
-                    set.AutoUpdate = new SettingsService().LoadSettings().AutoUpdate;
 
                 var check = await checkSend(set, i);
                 if (check.Any(a=> !a)) continue;

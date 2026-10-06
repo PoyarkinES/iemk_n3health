@@ -4,7 +4,7 @@ using Emk.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,9 +14,9 @@ namespace Emk.Repository
     {
         public async Task<Patient> GetPatient(int patientId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "patientId", value: patientId),
+                Parameter("patientId", patientId),
             };
             var data = await Query(Resources.GetPatientById, PatientMap, [.. param]);
             return data.FirstOrDefault();
@@ -24,9 +24,9 @@ namespace Emk.Repository
 
         public async Task<Patient> GetPatient(string patientCartNum)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "patientCartNum", value: patientCartNum),
+                Parameter("patientCartNum", patientCartNum),
             };
             var data = await Query(Resources.GetPatientByCartNum, PatientMap, [.. param]);
             return data.FirstOrDefault();
@@ -34,18 +34,18 @@ namespace Emk.Repository
 
         public async Task<DocumentDto> GetSnils(int patientId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "patientId", value: patientId),
+                Parameter("patientId", patientId),
             };
             return (await Query(Resources.GetSnils, SnilsMap, [.. param])).FirstOrDefault();
         }
 
         public async Task<DocumentDto> GetPolicy(int accId)
         {
-            var param = new List<SqlParameter>
+            var param = new List<OdbcParameter>
             {
-                new(parameterName: "accId", value: accId),
+                Parameter("accId", accId),
             };
             return (await Query(Resources.GetPolisy, PolisyMap, [.. param])).FirstOrDefault();
         }
