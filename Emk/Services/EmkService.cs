@@ -17,6 +17,7 @@ namespace Emk.Services
 	public class EmkService : IEmkCaseSendingClient
 	{
         private readonly IEmkServiceDependencies _dependencies;
+        private readonly IEmkWcfClientFactory _clientFactory;
 
 		string Url;
 		string guid;
@@ -29,13 +30,22 @@ namespace Emk.Services
         private int autoUpd = 0;
 
 		public EmkService(EmkSettings s)
-            : this(s, new FactoryEmkServiceDependencies())
+            : this(s, new FactoryEmkServiceDependencies(), new FactoryEmkWcfClientFactory())
         {
         }
 
         public EmkService(EmkSettings s, IEmkServiceDependencies dependencies)
+            : this(s, dependencies, new FactoryEmkWcfClientFactory())
+        {
+        }
+
+        public EmkService(
+            EmkSettings s,
+            IEmkServiceDependencies dependencies,
+            IEmkWcfClientFactory clientFactory)
 		{
             _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
+            _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
 			Url = s.EmkUrl;
 			guid = s.Guid.ToString();
 			IdLPU = s.IdLPU.ToString();
@@ -72,14 +82,14 @@ namespace Emk.Services
 
                 if (updateOnly)
                 {
-                    var client = CreateClient();
+                    var client = _clientFactory.Create(Url);
                     try
                     {
                         await client.UpdateCaseAsync(guid, case1);
                     }
                     finally
                     {
-                        WcfClientLifecycle.Close(client);
+                        client.CloseSafely();
                     }
 
                     Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} обновлен.");
@@ -87,14 +97,14 @@ namespace Emk.Services
                     return 0;
                 }
 
-                var addClient = CreateClient();
+                var addClient = _clientFactory.Create(Url);
                 try
                 {
                     await addClient.AddCaseAsync(guid, case1);
                 }
                 finally
                 {
-                    WcfClientLifecycle.Close(addClient);
+                    addClient.CloseSafely();
                 }
 
                 Log.Info($"EMK Cлучай медицинского обслуживания для пациента ИД {treat.PatientId} от {treat.TreatDate.ToString("dd.MM.yyyy")} добавлен.");
@@ -132,13 +142,6 @@ namespace Emk.Services
                 await SaveCase(updateOnly, treat, null, ex.Message);
                 return -1;
             }
-        }
-
-        private EmkServiceClient CreateClient()
-        {
-            var binding = new BasicHttpBinding();
-            var endpointAddress = new EndpointAddress(new Uri(Url));
-            return new EmkServiceClient(binding, endpointAddress);
         }
 
         private Task SaveCase(bool updateOnly, PatientAccount treat, string responseText, string errorText) =>

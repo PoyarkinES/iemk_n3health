@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Emk.Models;
+using Emk.EmkSvc;
 using Emk.PixSvc;
 using Emk.Services;
 using Emk.Services.Docs;
@@ -267,6 +268,32 @@ namespace EmkTests
             Assert.IsTrue(clientFactory.Client.ClosedSafely);
         }
 
+        [TestMethod]
+        public async Task EmkService_AddCaseUsesInjectedWcfClient()
+        {
+            var clientFactory = new StubEmkWcfClientFactory();
+            var dependencies = new StubEmkServiceDependencies();
+            var service = new EmkService(
+                new EmkSettings
+                {
+                    EmkUrl = "http://emk.test",
+                    Guid = Guid.NewGuid(),
+                    IdLPU = Guid.NewGuid(),
+                    PatientDirectory = @"C:\patients"
+                },
+                dependencies,
+                clientFactory);
+            var account = CreatePatientAccount();
+            account.Code = 1;
+
+            var result = await service.AddCase(account);
+
+            Assert.AreEqual(1, dependencies.GetDoctorCalls, dependencies.LastError);
+            Assert.AreEqual(0, result, dependencies.LastError);
+            Assert.AreEqual(1, clientFactory.Client.AddCaseCalls);
+            Assert.IsTrue(clientFactory.Client.ClosedSafely);
+        }
+
         private static EmkSendingService CreateService(
             StubSendingRepository repository,
             StubSendingClientFactory clients) =>
@@ -442,6 +469,77 @@ namespace EmkTests
                     new PatientDto { IdPatientMIS = "card-42" }
                 });
             }
+
+            public void CloseSafely() => ClosedSafely = true;
+        }
+
+        private sealed class StubEmkServiceDependencies : IEmkServiceDependencies
+        {
+            public string LastError { get; private set; }
+            public int GetDoctorCalls { get; private set; }
+
+            public Task<DoctorEmk> GetDoctorByMemberId(int memberId)
+            {
+                GetDoctorCalls++;
+                return Task.FromResult(new DoctorEmk
+                {
+                    MemberId = memberId,
+                    BirthDay = new DateTime(1980, 1, 1),
+                    Surname = "Test",
+                    Name = "Doctor",
+                    SexStr = "M"
+                });
+            }
+
+            public Task<Patient> GetPatient(int patientId) =>
+                Task.FromResult(new Patient
+                {
+                    Id = patientId,
+                    CartNum = "card-42",
+                    LastName = "Test",
+                    FirstName = "Patient"
+                });
+
+            public Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account) =>
+                Task.FromResult(new List<MedRecord> { new MedDocument() });
+
+            public DefaultData LoadDefaults() => new DefaultData();
+
+            public Task<PayType> GetPayType(int accountId) =>
+                Task.FromResult(default(PayType));
+
+            public Task<IEnumerable<ProcedureDescriptionEmk>> GetProcedureDescriptions(
+                int patientId, DateTime procedureDate, int? accountId) =>
+                Task.FromResult(Enumerable.Empty<ProcedureDescriptionEmk>());
+
+            public Task SaveCase(int smo, DateTime uploadTime, string uploadMethod, int patientId,
+                int accountId, string responseText, char isSuccess, string errorText)
+            {
+                LastError = errorText;
+                return Task.CompletedTask;
+            }
+        }
+
+        private sealed class StubEmkWcfClientFactory : IEmkWcfClientFactory
+        {
+            public StubEmkWcfClient Client { get; } = new StubEmkWcfClient();
+
+            public IEmkWcfClient Create(string serviceUrl) => Client;
+        }
+
+        private sealed class StubEmkWcfClient : IEmkWcfClient
+        {
+            public int AddCaseCalls { get; private set; }
+            public bool ClosedSafely { get; private set; }
+
+            public Task AddCaseAsync(string guid, CaseBase caseData)
+            {
+                AddCaseCalls++;
+                return Task.CompletedTask;
+            }
+
+            public Task UpdateCaseAsync(string guid, CaseBase caseData) =>
+                Task.CompletedTask;
 
             public void CloseSafely() => ClosedSafely = true;
         }
