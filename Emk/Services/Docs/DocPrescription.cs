@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+using System;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
@@ -28,18 +27,11 @@ namespace Emk.Services.Docs
 
         private void SetData()
         {
-            try
-            {
-                var data = CartNote.Description.Split('Ї');
-                _doc.IssuedDate = DateTime.Parse(data[1]);
-                _doc.MedicineName = data[9];
-                _doc.IdINN = int.Parse(data[19]);
-                _doc.Doctor = DocDoctor.ToMedicalStaff();
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            var data = CartNote.Description.Split('Ї');
+            _doc.IssuedDate = DateTime.Parse(data[1]);
+            _doc.MedicineName = data[9];
+            _doc.IdINN = int.Parse(data[19]);
+            _doc.Doctor = DocDoctor.ToMedicalStaff();
         }
     }
 }

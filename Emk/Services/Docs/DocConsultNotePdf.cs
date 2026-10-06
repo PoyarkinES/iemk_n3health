@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
@@ -22,25 +18,17 @@ namespace Emk.Services.Docs
         protected override string NsType { get; }
         public override async Task<MedRecord> CreateDocumentAsync()
         {
-            try
+            Log.Info("Формирую консультативное заключение с PDF");
+            _doc = new ConsultNote
             {
-                Log.Info("Формирую консультативное заключение с PDF");
-                _doc = new ConsultNote
-                {
-                    Attachments = await CreateAttachmentsAsync("application/pdf", DocDoctor),
-                    Author = DocDoctor.ToMedicalStaff(),
-                    CreationDate = DateTime.Now.Date,
-                    Header = "Header",
-                    IdDocumentMis = $"{DocPatient.CartNum}-{DocDoctor.AccountId}"
-                    //IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
-                };
-                Log.Info("Консультативное заключение с PDF сформировано.");
-                return _doc;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+                Attachments = await CreateAttachmentsAsync("application/pdf", DocDoctor),
+                Author = DocDoctor.ToMedicalStaff(),
+                CreationDate = DateTime.Now.Date,
+                Header = "Header",
+                IdDocumentMis = $"{DocPatient.CartNum}-{DocDoctor.AccountId}"
+            };
+            Log.Info("Консультативное заключение с PDF сформировано.");
+            return _doc;
         }
 
         protected override int DocType { get; set; }

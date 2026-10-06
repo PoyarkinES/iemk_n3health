@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+using System;
 using System.Threading.Tasks;
 using Emk.EmkSvc;
 using Emk.Models;
@@ -32,20 +31,12 @@ namespace Emk.Services.Docs
         protected override string NsType { get; }
         public override async Task<MedRecord> CreateDocumentAsync()
         {
-            try
-            {
-                _doc.Attachments = await CreateAttachmentsAsync("text/xml", _doctor);
-                _doc.Author = _doctor.ToMedicalStaff();
-                _doc.CreationDate = DateTime.Now.Date;
-                _doc.Header = "Эпикриз";
-                _doc.IdDocumentMis = $"{_patient.CartNum}-{_doctor.AccountId}";
-                //IdDocumentMis = $"{patient1.IdPersonMis}-{case_id}-{Guid.NewGuid().ToString()}"
-                return _doc;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            _doc.Attachments = await CreateAttachmentsAsync("text/xml", _doctor);
+            _doc.Author = _doctor.ToMedicalStaff();
+            _doc.CreationDate = DateTime.Now.Date;
+            _doc.Header = "Эпикриз";
+            _doc.IdDocumentMis = $"{_patient.CartNum}-{_doctor.AccountId}";
+            return _doc;
         }
 
         protected override int DocType { get; set; }
