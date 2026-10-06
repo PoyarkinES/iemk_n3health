@@ -194,7 +194,7 @@ namespace Emk.Services
                         .GroupBy(x => new {x.PatientId, x.AccountId, x.ProviderId});
                     foreach (var item in group.Distinct())
                     {
-                        if (item.Select(s => new {s.PatientId, s.AccountId, s.ProviderId}).Distinct().Count() < 2)
+                        if (item.Select(s => s.DiagnoseCode).Distinct().Count() < 2)
                             continue;
                         var ch = 'a';
                         foreach (var acc in item.GroupBy(x => x.DiagnoseCode))
