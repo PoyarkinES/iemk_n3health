@@ -236,7 +236,7 @@ namespace Emk.Services
 
 		private async Task<CaseAmb> GetCaseAmb(PatientAccount treat, MedicalStaff doctor, Patient patient, IEnumerable<MedRecord> medDocuments)
 		{
-            var def = _dependencies.LoadDefaults();
+            var def = await _dependencies.LoadDefaultsAsync();
             var diag = new DiagnosisEmk()
             {
                 DiagnosisCode = treat.DiagnoseCode,

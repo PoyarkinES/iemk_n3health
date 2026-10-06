@@ -192,7 +192,7 @@ namespace Emk.Services
         Task<DoctorEmk> GetDoctorByMemberId(int memberId);
         Task<Patient> GetPatient(int patientId);
         Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account);
-        DefaultData LoadDefaults();
+        Task<DefaultData> LoadDefaultsAsync();
         Task<PayType> GetPayType(int accountId);
         Task<IEnumerable<ProcedureDescriptionEmk>> GetProcedureDescriptions(
             int patientId, DateTime procedureDate, int? accountId);
@@ -269,7 +269,11 @@ namespace Emk.Services
                 account, _docSelectorRepository, _documentInitializationDependencies)
                 .GetDocs(account.AccountId);
 
-        public DefaultData LoadDefaults() => _doctorFileService.LoadDefaults();
+        public async Task<DefaultData> LoadDefaultsAsync()
+        {
+            await _doctorFileService.InitializeAsync().ConfigureAwait(false);
+            return _doctorFileService.LoadDefaults();
+        }
 
         public Task<PayType> GetPayType(int accountId) =>
             _emkRepository.GetPayType(accountId);

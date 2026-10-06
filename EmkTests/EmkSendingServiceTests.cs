@@ -289,6 +289,7 @@ namespace EmkTests
             var result = await service.AddCase(account);
 
             Assert.AreEqual(1, dependencies.GetDoctorCalls, dependencies.LastError);
+            Assert.AreEqual(1, dependencies.DefaultsLoadCalls);
             Assert.AreEqual(0, result, dependencies.LastError);
             Assert.AreEqual(1, clientFactory.Client.AddCaseCalls);
             Assert.IsTrue(clientFactory.Client.ClosedSafely);
@@ -477,6 +478,7 @@ namespace EmkTests
         {
             public string LastError { get; private set; }
             public int GetDoctorCalls { get; private set; }
+            public int DefaultsLoadCalls { get; private set; }
 
             public Task<DoctorEmk> GetDoctorByMemberId(int memberId)
             {
@@ -503,7 +505,11 @@ namespace EmkTests
             public Task<List<MedRecord>> GetMedicalDocuments(PatientAccount account) =>
                 Task.FromResult(new List<MedRecord> { new MedDocument() });
 
-            public DefaultData LoadDefaults() => new DefaultData();
+            public Task<DefaultData> LoadDefaultsAsync()
+            {
+                DefaultsLoadCalls++;
+                return Task.FromResult(new DefaultData());
+            }
 
             public Task<PayType> GetPayType(int accountId) =>
                 Task.FromResult(default(PayType));
