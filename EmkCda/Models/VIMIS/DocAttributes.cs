@@ -59,7 +59,7 @@ namespace EmkCda.Models.VIMIS
 
     public class ValueWithXsiAttribute : ValueAttribute
     {
-        [XmlAttribute("xsi:type")]
+        [XmlAttribute("type", Namespace = VimisNamespaces.Xsi)]
         public string Type { get; set; }
     }
 }

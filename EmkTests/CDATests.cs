@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using EmkCda.Models.VIMIS;
@@ -25,7 +26,9 @@ namespace EmkTests
                 res = sw.ToString();
             }
             
-            Assert.IsTrue(true);
+            var document = new XmlDocument();
+            document.LoadXml(res);
+            Assert.AreEqual("ClinicalDocument", document.DocumentElement.LocalName);
 
         }
 

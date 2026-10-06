@@ -22,12 +22,48 @@ namespace EmkTests
             Assert.AreEqual(0, repository.PatientAccountQueries);
         }
 
+        [TestMethod]
+        public async Task Run_DoesNotCreateClientsWhenNoCasesAreFound()
+        {
+            var repository = new StubSendingRepository
+            {
+                Settings = new List<EmkSettings>
+                {
+                    new EmkSettings { SendingType = SendingType.DaysBeforeNow }
+                }
+            };
+            var service = new EmkSendingService(repository, new StubSendingClientFactory());
+
+            await service.Run();
+
+            Assert.AreEqual(1, repository.PatientAccountQueries);
+        }
+
+        [TestMethod]
+        public async Task Run_ByAccount_DoesNotCreateClientsWhenAccountIsMissing()
+        {
+            var repository = new StubSendingRepository
+            {
+                Settings = new List<EmkSettings>
+                {
+                    new EmkSettings { SendingType = SendingType.DaysBeforeNow }
+                }
+            };
+            var service = new EmkSendingService(repository, new StubSendingClientFactory());
+
+            await service.Run(123);
+
+            Assert.AreEqual(123, repository.RequestedAccountId);
+        }
+
         private sealed class StubSendingRepository : IEmkSendingRepository
         {
             public bool LicenseCheckResult { get; set; }
             public int PatientAccountQueries { get; private set; }
+            public int? RequestedAccountId { get; private set; }
+            public List<EmkSettings> Settings { get; set; } = new List<EmkSettings>();
 
-            public List<EmkSettings> LoadSettings(bool reload) => new List<EmkSettings>();
+            public List<EmkSettings> LoadSettings(bool reload) => Settings;
             public Task<bool> IsLicenseValid() => Task.FromResult(LicenseCheckResult);
 
             public Task<List<PatientAccount>> GetPatientAccountsAsync(DateTime from, DateTime to)
@@ -36,8 +72,11 @@ namespace EmkTests
                 return Task.FromResult(new List<PatientAccount>());
             }
 
-            public Task<PatientAccount> GetPatientAccountByIdAsync(int accountId) =>
-                Task.FromResult<PatientAccount>(null);
+            public Task<PatientAccount> GetPatientAccountByIdAsync(int accountId)
+            {
+                RequestedAccountId = accountId;
+                return Task.FromResult<PatientAccount>(null);
+            }
 
             public Task<IEnumerable<string>> GetCheckDocumentEsignAsync(int accountId) =>
                 Task.FromResult(Enumerable.Empty<string>());
