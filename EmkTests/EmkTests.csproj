@@ -60,6 +60,7 @@
     <Compile Include="Application\SendPatientDataUseCaseTests.cs" />
     <Compile Include="Application\UpdatePatientDataUseCaseTests.cs" />
     <Compile Include="Application\ValidateSendingRulesUseCaseTests.cs" />
+    <Compile Include="Infrastructure\InfrastructureMapperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -72,6 +73,10 @@
     <ProjectReference Include="..\Emk.Domain\Emk.Domain.csproj">
       <Project>{7B3C1D2E-4F5A-4B6C-8D9E-0A1B2C3D4E5F}</Project>
       <Name>Emk.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Emk.Infrastructure\Emk.Infrastructure.csproj">
+      <Project>{A7B2DA2A-1D5C-4B7E-94EA-1AEB0A9C9928}</Project>
+      <Name>Emk.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\EmkCda\EmkCda.csproj">
       <Project>{99BF104F-1F07-491B-96AA-3E70076351C2}</Project>
