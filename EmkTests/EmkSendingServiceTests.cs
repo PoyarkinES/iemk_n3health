@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Emk.Models;
 using Emk.EmkSvc;
 using Emk.PixSvc;
+using Emk.Repository.Interface;
 using Emk.Services;
 using Emk.Services.Docs;
+using Emk.Services.Files;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EmkTests
@@ -279,6 +281,65 @@ namespace EmkTests
         }
 
         [TestMethod]
+        public async Task DoctorFileService_InitializesExistingSettingsAsynchronously()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var path = Path.Combine(directory, "SmoSettings.xml");
+            var settings = new SmoSettings
+            {
+                Doctors = new List<Doctor>(),
+                Default = new DefaultData { VisitPurpose = 9 }
+            };
+            using (var stream = File.Create(path))
+                new System.Xml.Serialization.XmlSerializer(typeof(SmoSettings)).Serialize(stream, settings);
+
+            try
+            {
+                var repository = new StubDoctorRepository();
+                var service = new DoctorFileService(repository, path);
+
+                await service.InitializeAsync();
+
+                Assert.AreEqual(0, repository.GetDoctorsCalls);
+                Assert.AreEqual(9, service.LoadDefaults().VisitPurpose);
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
+        public async Task DoctorFileService_CreatesMissingSettingsFromRepositoryOnce()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            var path = Path.Combine(directory, "SmoSettings.xml");
+
+            try
+            {
+                var doctor = new Doctor { MemberId = 23 };
+                var repository = new StubDoctorRepository
+                {
+                    Doctors = new[] { doctor }
+                };
+                var service = new DoctorFileService(repository, path);
+
+                await service.InitializeAsync();
+                await service.InitializeAsync();
+
+                Assert.AreEqual(1, repository.GetDoctorsCalls);
+                Assert.IsTrue(File.Exists(path));
+                Assert.AreEqual(23, service.LoadDoctorsFromFile().Single().MemberId);
+            }
+            finally
+            {
+                Directory.Delete(directory, true);
+            }
+        }
+
+        [TestMethod]
         public async Task PixService_GetPatientAsyncUsesInjectedWcfClient()
         {
             var clientFactory = new StubPixWcfClientFactory();
@@ -466,6 +527,18 @@ namespace EmkTests
 
             public Task<Patient> GetPatient(string patientCartNum) =>
                 Task.FromResult(new Patient { CartNum = patientCartNum });
+        }
+
+        private sealed class StubDoctorRepository : IDoctorRepository
+        {
+            public IEnumerable<Doctor> Doctors { get; set; } = Enumerable.Empty<Doctor>();
+            public int GetDoctorsCalls { get; private set; }
+
+            public Task<IEnumerable<Doctor>> GetDoctors()
+            {
+                GetDoctorsCalls++;
+                return Task.FromResult(Doctors);
+            }
         }
 
         private sealed class StubPixServiceDependencies : IPixServiceDependencies
