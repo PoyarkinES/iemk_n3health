@@ -68,7 +68,7 @@ namespace Emk.Application.UseCases.Updating
             catch (Exception ex)
             {
                 _logger.LogError($"Ошибка обновления счёта {request.AccountId}", ex);
-                return new UpdatePatientDataResponse { Success = false, Message = ex.Message };
+                return new UpdatePatientDataResponse { Success = false, Message = "Внутренняя ошибка при обновлении данных. Подробности в журнале." };
             }
         }
 

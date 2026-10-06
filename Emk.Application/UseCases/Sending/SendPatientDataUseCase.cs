@@ -65,7 +65,7 @@ namespace Emk.Application.UseCases.Sending
             catch (Exception ex)
             {
                 _logger.LogError("Ошибка при отправке данных пациентов", ex);
-                return Fail(ex.Message);
+                return Fail("Внутренняя ошибка при отправке данных. Подробности в журнале.");
             }
         }
 

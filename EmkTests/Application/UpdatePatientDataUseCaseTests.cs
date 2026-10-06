@@ -55,5 +55,38 @@ namespace EmkTests.Application
             Assert.IsFalse(response.Success);
             Assert.AreEqual(0, _pix.Updated.Count);
         }
+
+        [TestMethod]
+        public async Task Update_NoLicense_Fails()
+        {
+            var license = new InMemoryLicenseRepository { Valid = false };
+            var useCase = new UpdatePatientDataUseCase(_treats, _emk, license, _pix, _emkClient, new InMemoryLogger());
+
+            var response = await useCase.ExecuteAsync(new UpdatePatientDataRequest { AccountId = 10 });
+
+            Assert.IsFalse(response.Success);
+            Assert.AreEqual(0, _pix.Updated.Count);
+        }
+
+        [TestMethod]
+        public async Task Update_PixRejects_Fails()
+        {
+            _pix.Result = false;
+
+            var response = await _useCase.ExecuteAsync(new UpdatePatientDataRequest { AccountId = 10 });
+
+            Assert.IsFalse(response.Success);
+            Assert.AreEqual(0, _emkClient.Updated.Count);
+        }
+
+        [TestMethod]
+        public async Task Update_EmkRejects_Fails()
+        {
+            _emkClient.Result = 0;
+
+            var response = await _useCase.ExecuteAsync(new UpdatePatientDataRequest { AccountId = 10 });
+
+            Assert.IsFalse(response.Success);
+        }
     }
 }
